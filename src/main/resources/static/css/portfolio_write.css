@@ -1,0 +1,91 @@
+.content-box-area {
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 90vh;
+}
+
+.content-box {
+  background-color: #ffffff;
+  width: 40vw;
+  padding: 3vh;
+  border-radius: 1vh;
+  box-shadow: 0 0 2vh rgba(0, 0, 0, 0.1);
+}
+
+.summary-box {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  row-gap: 1vh;
+  column-gap: 1vw;
+  margin-bottom: 3vh;
+}
+
+.about {
+  font-size: 1.5vh;
+  color: #333;
+}
+
+input[type="text"],
+input[type="date"],
+textarea {
+  width: 100%;
+  padding: 1.2vh;
+  border: 0.15vh solid #ccc;
+  border-radius: 0.5vh;
+  font-size: 1.5vh;
+}
+
+textarea {
+  min-height: 10vh;
+  resize: vertical;
+}
+
+.text-line {
+  grid-column: span 2;
+  display: flex;
+  flex-direction: column;
+  gap: 1vh;
+  font-size: 1.5vh;
+}
+
+.attach-file-list {
+  font-size: 1.5vh;
+  color: #333;
+}
+
+.image-upload {
+  margin-top: 3vh;
+  padding: 1.5vh;
+  background-color: #f9f9f9;
+  border: 0.2vh dashed #ccc;
+  border-radius: 0.5vh;
+  text-align: center;
+  width: calc(100% - 3vh);
+  overflow: hidden;
+}
+
+.upload-preview {
+  margin-top: 1.5vh;
+  background-color: #eaeaea;
+  width: 100%;
+  height: 20vh;
+  border-radius: 0.5vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #777;
+  font-size: 1.5vh;
+}
+
+.signupbtn {
+  margin-top: 1rem;
+  width: 100%;
+  padding: 10px;
+  background-color: #4758ee;
+  border-radius: 0.5rem;
+  color: white;
+}

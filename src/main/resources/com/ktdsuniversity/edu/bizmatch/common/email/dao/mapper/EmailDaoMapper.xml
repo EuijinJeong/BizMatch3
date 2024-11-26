@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ktdsuniversity.edu.bizmatch.common.email.dao.EmailDao">
+	<!-- 인증번호 발급한거 데이터베이스에 저장하는 쿼리문. -->
+	<insert id="insertTempEmailAuthNum"
+			parameterType="com.ktdsuniversity.edu.bizmatch.common.email.vo.UserEmailAuthNumVO">
+		INSERT INTO EMIL_ADDR_CNFRM
+		( EMIL_ADDR_CNFRM_ID
+		 ,EMIL_ADDR_CNFRM_NMBR
+		 ,EMIL_ADDR
+		 ,EMIL_ADDR_CNFRM_DT)
+		VALUES
+		( EMIL_ADDR_CNFRM_PK_SEQ.NEXTVAL
+		,#{emilAddrCnfrmNmbr}
+		, #{emilAddr}
+		, SYSDATE
+		)
+	</insert>
+	<select id="selectMemberForSignUp"
+			parameterType="string">
+		SELECT EMIL_ADDR 
+		  FROM MBR_INFO 
+		 WHERE EMIL_ADDR = #{_parameter}
+	</select>
+	<!-- 인증번호 찾는 쿼리문. 유효시간 5분~ -->
+	<select id="selectTempEmailAuthNum"
+			parameterType="com.ktdsuniversity.edu.bizmatch.common.email.vo.UserEmailAuthNumVO">
+		SELECT COUNT(1) 
+		  FROM EMIL_ADDR_CNFRM
+		 WHERE EMIL_ADDR_CNFRM_NMBR = #{emilAddrCnfrmNmbr}
+		   AND EMIL_ADDR = #{emilAddr}
+		   AND SYSDATE BETWEEN EMIL_ADDR_CNFRM_DT AND EMIL_ADDR_CNFRM_DT + (5/(24*60))
+	</select>
+	<!-- 회원가입 완료하면 해당 인증번호 컬럼 지우는 쿼리문. -->
+	<delete id="deleteTempEmailAuthNum"
+			parameterType="string">
+		 DELETE FROM EMIL_ADDR_CNFRM 
+		  WHERE EMIL_ADDR = #{_parameter}
+	</delete>
+</mapper>

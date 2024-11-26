@@ -1,0 +1,141 @@
+@charset "UTF-8";
+
+.main-container-header {
+  display: flex;
+  gap: 1rem;
+}
+
+.main-container {
+  padding-top: 5rem;
+  width: 70%;
+  margin: 0 auto;
+  padding-bottom: 3rem;
+  font-size: 1.5rem;
+}
+
+.main-title2 {
+  color: rgb(167, 166, 166);
+  cursor: pointer;
+}
+
+.main-title1 {
+  color: black;
+  text-decoration: underline;
+}
+
+/* 모달 창 스타일 */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 998;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+}
+
+.modal-content {
+  background-color: #fff;
+  margin: 15vh auto;
+  padding: 4vh 4vw;
+  border-radius: 2vh;
+  width: 30vw;
+  box-shadow: 0 0.8vw 1.6vw rgba(0, 0, 0, 0.3);
+  position: relative;
+  cursor: move;
+}
+
+.review-box {
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 2vh 2vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.custom-dropdown {
+  width: 100%;
+  position: relative;
+  margin-bottom: 2vh;
+}
+
+.dropdown-selected {
+  padding: 1vh 2vw;
+  border: 1px solid #dfe3e8;
+  border-radius: 5px;
+  background-color: #ffffff;
+  color: #4758ee;
+  font-weight: bold;
+  cursor: pointer;
+  text-align: center;
+}
+
+.dropdown-options {
+  display: none;
+  position: absolute;
+  width: 100%;
+  background-color: #ffffff;
+  border: 1px solid #dfe3e8;
+  border-radius: 5px;
+  margin-top: 1vh;
+  z-index: 10;
+}
+
+.dropdown-option {
+  padding: 1vh 2vw;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: #333333;
+  transition: background 0.2s ease;
+  justify-content: center;
+}
+
+.dropdown-option:hover {
+  background-color: #eef3ff;
+}
+
+.star-icons {
+  color: #ffd700;
+  margin-right: 1vw;
+}
+
+.review-background {
+  width: 100%;
+  margin-bottom: 2vh;
+}
+
+.review-background textarea {
+  width: 92%;
+  height: 11vh;
+  padding: 1vw;
+  border: 1px solid #ddd;
+  resize: none;
+}
+
+.modal-button-box {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+}
+
+#submitReview {
+  background-color: #4758ee;
+  color: #ffffff;
+  font-size: 1vw;
+  padding: 1vh 2vw;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+#submitReview:hover {
+  background-color: #394cbf;
+}

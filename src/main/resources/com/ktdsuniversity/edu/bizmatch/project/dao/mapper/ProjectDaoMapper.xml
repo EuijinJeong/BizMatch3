@@ -1,0 +1,1044 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.ktdsuniversity.edu.bizmatch.project.dao.ProjectDao">
+
+	<resultMap
+      type="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectVO"
+      id="projectVOMap" autoMapping="true">
+      <id column="PJ_ID" property="pjId" />
+      <result column="INDSTR_NM" property="smjrNm"/>
+      <association property="memberVO"
+         javaType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO"
+         autoMapping="true">
+         <id column="EMIL_ADDR" property="emilAddr" />
+      </association>
+      <association property="paymentVO" javaType="com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentVO" autoMapping="true">
+         <id column="PYMNT_ID" property="pymntId"/>
+      </association>
+      <collection property="projectSkillList"
+                ofType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectSkillVO"
+                autoMapping="true">
+         <id column="PJ_PRM_STK_ID" property="pjPrmStkId"/>
+         <association property="prmStkVO"
+                   javaType="com.ktdsuniversity.edu.bizmatch.member.vo.PrmStkVO"
+                   autoMapping="true">
+            <id column="PRM_STK_ID" property="prmStkId"/>
+         </association>
+      </collection>
+   </resultMap>
+
+	<resultMap
+		type="com.ktdsuniversity.edu.bizmatch.project.vo.ApplyProjectVO"
+		id="projectApplyVOMap" 
+		autoMapping="true">
+		<id column="PJ_APPLY_ID" property="pjApplyId" />
+		<association property="projectVO"
+			javaType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectVO"
+			autoMapping="true">
+			<id column="PJ_ID" property="pjId" />
+			<association property="projectIndustryVO"
+					 javaType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectIndustryVO"
+					 autoMapping="true">
+			<id column="PJ_INDSTR_ID" property="pjIndstrId"/>
+			<association property="indstrInfoVO"
+						 javaType="com.ktdsuniversity.edu.bizmatch.common.vo.IndstrInfoVO"
+						 autoMapping="true">
+				<id column="INDSTR_ID" property="indstrId"/>
+			</association>
+		</association>
+		<collection property="projectSkillList"
+					 ofType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectSkillVO"
+					 autoMapping="true">
+			<id column="PJ_PRM_STK_ID" property="pjPrmStkId"/>
+			<association property="prmStkVO"
+						 javaType="com.ktdsuniversity.edu.bizmatch.member.vo.PrmStkVO"
+						 autoMapping="true">
+				<id column="PRM_STK_ID" property="prmStkId"/>
+			</association>
+		</collection>
+		</association>
+		<collection property="projectApplyAttVOList"
+					ofType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectApplyAttVO"
+					autoMapping="true">
+			<id column="PJ_APPLY_ATT_ID" property="pjApplyAttId"/>
+		</collection>
+		
+	</resultMap>
+		
+	<sql id="selectAllProjectCodition">
+		<if test='searchKeyword != null and searchKeyword !="" '>
+			<if test=' searchType == "entire" '>
+				AND (P.PJ_TTL LIKE '%' || #{searchKeyword} || '%'
+				OR
+				P.PJ_DESC LIKE '%' || #{searchKeyword} || '%'
+				)
+			</if>
+			<if test=' searchType == "pjTtl" '>
+				AND P.PJ_TTL LIKE '%' || #{searchKeyword} || '%'
+			</if>
+			<if test=' searchType == "pjDesc" '>
+				AND P.PJ_DESC LIKE '%' || #{searchKeyword} || '%'
+			</if>
+		</if>
+	</sql>
+
+	<!-- <select id="selectOneApply" resultMap="projectApplyVOMap"> SELECT P.PJ_ID 
+		FROM PJ_APPLY A INNER JOIN PJ_INFO P ON A.PJ_ID = P.PJ_ID WHERE A.PJ_APPLY_ID 
+		= #{pjApplyId} </select> -->
+	<select id="selectProjectAllCount" resultType="_int"
+		parameterType="com.ktdsuniversity.edu.bizmatch.project.vo.SearchProjectVO">
+
+		SELECT COUNT(1)
+		FROM PJ_INFO P
+		INNER JOIN MBR_INFO M
+		ON
+		P.ORDR_ID = M.EMIL_ADDR
+	</select>
+
+	<insert id="insertOneProject"
+		parameterType="com.ktdsuniversity.edu.bizmatch.project.vo.WriteProjectVO">
+		<selectKey keyProperty="pjId" order="BEFORE"
+			resultType="string">
+			SELECT 'PJ-' || TO_CHAR(SYSDATE, 'YYYYMMDD') || '-' ||
+			LPAD(PJ_INFO_PK_SEQ.NEXTVAL, 6, '0')
+			FROM DUAL
+		</selectKey>
+		INSERT INTO PJ_INFO
+		(PJ_ID,
+		ORDR_ID,
+		OBTN_ID,
+		PJ_TTL,
+		RGSTR_DT,
+		STRT_DT,
+		END_DT,
+		CNTRCT_ACCNT,
+		PJ_DESC,
+		IS_DLT,
+		DLT_DT,
+		LST_MOD_DT,
+		IS_RCRUT_ADD,
+		PJ_STT,
+		VIEW_CNT,
+		PJ_RCRUT_CNT,
+		PJ_RCRUT_STRT_DT,
+		PJ_RCRUT_END_DT)
+		VALUES
+		(#{pjId},
+		#{ordrId},
+		NULL,
+		#{pjTtl},
+		SYSDATE,
+		TO_DATE(#{strtDt},
+		'YYYY-MM-DD'),
+		TO_DATE(#{endDt}, 'YYYY-MM-DD'),
+		#{cntrctAccnt},
+		#{pjDesc},
+		NULL,
+		NULL,
+		SYSDATE,
+		0,
+		0,
+		0,
+		0,
+		TO_DATE(#{pjRcrutStrtDt},
+		'YYYY-MM-DD'),
+		TO_DATE(#{pjRcrutEndDt}, 'YYYY-MM-DD'))
+	</insert>
+
+	<insert id="insertOneProjectApply"
+		parameterType="com.ktdsuniversity.edu.bizmatch.project.vo.ApplyProjectVO">
+		<selectKey keyProperty="pjApplyId" order="BEFORE"
+			resultType="string">
+			SELECT 'PJ-APPLY' || TO_CHAR(SYSDATE, 'YYYYMMDD') || '-'
+			||
+			LPAD(PJ_APPLY_PK_SEQ.NEXTVAL, 6, '0')
+			FROM DUAL
+		</selectKey>
+		INSERT INTO PJ_APPLY
+		(PJ_APPLY_ID, EMIL_ADDR, PJ_ID, PJ_APPLY_RGSTR_DT,
+		PJ_APPLY_TTL, PJ_APPLY_DESC)
+		VALUES
+		(#{pjApplyId},
+		#{emilAddr},
+		#{pjId},
+		SYSDATE,
+		#{pjApplyTtl},
+		#{pjApplyDesc})
+	</insert>
+
+	<!-- <select id="selectAllCardProject" parameterType="com.ktdsuniversity.edu.bizmatch.project.vo.SearchProjectVO" 
+		resultMap="projectVOMap"> SELECT P.PJ_ID , P.ORDR_ID , P.OBTN_ID , P.PJ_TTL 
+		, TO_CHAR(P.RGSTR_DT,'YYYY"년" MM"월" DD"일"') RGSTR_DT , TO_CHAR(P.STRT_DT,'YYYY"년" 
+		MM"월" DD"일"') STRT_DT , TO_CHAR(P.END_DT,'YYYY"년" MM"월" DD"일"') END_DT , 
+		P.CNTRCT_ACCNT , P.PJ_DESC , P.IS_RCRUT_ADD , P.PJ_STT , P.VIEW_CNT , P.PJ_RCRUT_CNT 
+		, TO_CHAR(P.PJ_RCRUT_STRT_DT , 'YYYY"년" MM"월" DD"일"') RCRUT_STRT_DT , TO_CHAR(P.PJ_RCRUT_END_DT 
+		, 'YYYY"년" MM"월" DD"일"') PJ_RCRUT_END_DT FROM PJ_INFO P INNER JOIN MBR_INFO 
+		M ON P.ORDR_ID = M.EMIL_ADDR <if test="_parameter != null"> <include refid="com.ktdsuniversity.edu.bizmatch.project.dao.ProjectDao.selectAllProjectCodition" 
+		/> </if> ORDER BY P.PJ_ID DESC <<<<<<< HEAD </select> -->
+
+	<!-- 하나의 프로젝트 아이디를 조회하는 쿼리문. -->
+	<select id="selectOneProjectInfo" parameterType="string"
+		resultType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectVO">
+		SELECT PJ_ID
+		,ORDR_ID
+		,OBTN_ID
+		,PJ_TTL
+		,RGSTR_DT
+		,STRT_DT
+		,END_DT
+		,CNTRCT_ACCNT
+		,PJ_DESC
+		,IS_DLT
+		,DLT_DT
+		,LST_MOD_DT
+		,IS_RCRUT_ADD
+		,PJ_STT
+		,VIEW_CNT
+		,PJ_RCRUT_CNT
+		,PJ_RCRUT_STRT_DT
+		,PJ_RCRUT_END_DT
+		FROM PJ_INFO
+		WHERE ORDR_ID = #{_parameter}
+		AND PJ_STT NOT IN 4
+	</select>
+	
+	<select id= "selectOneApplyProject" parameterType= "com.ktdsuniversity.edu.bizmatch.project.vo.SearchApplyVO" resultMap="applyProjectVOMap">
+		SELECT P.PJ_APPLY_ID 
+    		 , P.EMIL_ADDR 
+    		 , P.PJ_ID 
+    		 , TO_CHAR(P.PJ_APPLY_RGSTR_DT,'YYYY-MM-DD') PJ_APPLY_RGSTR_DT 
+    		 , P.PJ_APPLY_TTL 
+    		 , P.PJ_APPLY_DESC 
+    		 , TO_CHAR(P.PJ_APPLY_MDFY_DT, 'YYYY-MM-DD') PJ_APPLY_MDFY_DT 
+    		 , PA.PJ_APPLY_ATT_ID 
+    		 , PA.PJ_APPLY_ATT_URL 
+    		 , PA.PJ_APPLY_ATT_URL_NONREAD 
+  		  FROM PJ_APPLY P
+  		  JOIN PJ_APPLY_ATT PA
+    		ON P.PJ_APPLY_ID = PA.PJ_APPLY_ID 
+ 		 WHERE P.PJ_ID = #{pjId}
+   		   AND P.EMIL_ADDR = #{emilAddr}
+	</select>
+
+	<update id="updateOneProjectStt"
+		parameterType="com.ktdsuniversity.edu.bizmatch.project.vo.UpdateProjectSttVO">
+		UPDATE PJ_INFO
+		SET PJ_STT = #{pjStt}
+		WHERE PJ_ID =#{pjId}
+	</update>
+
+	<select id="selectAllCardProject"
+		parameterType="com.ktdsuniversity.edu.bizmatch.project.vo.SearchProjectVO"
+		resultMap="projectVOMap">
+
+		SELECT P.PJ_ID
+		, P.ORDR_ID
+		, P.OBTN_ID
+		, P.PJ_TTL
+		,
+		TO_CHAR(P.RGSTR_DT,'YYYY"년" MM"월" DD"일"') RGSTR_DT
+		,
+		TO_CHAR(P.STRT_DT,'YYYY"년" MM"월" DD"일"') STRT_DT
+		,
+		TO_CHAR(P.END_DT,'YYYY"년" MM"월" DD"일"') END_DT
+		, P.CNTRCT_ACCNT
+		,
+		P.PJ_DESC
+		, P.IS_RCRUT_ADD
+		, P.PJ_STT
+		, P.VIEW_CNT
+		, P.PJ_RCRUT_CNT
+		, TO_CHAR(P.PJ_RCRUT_STRT_DT ,
+		'YYYY"년" MM"월" DD"일"') RCRUT_STRT_DT
+		, TO_CHAR(P.PJ_RCRUT_END_DT ,
+		'YYYY"년" MM"월" DD"일"') PJ_RCRUT_END_DT
+		, II.INDSTR_NM 
+		FROM PJ_INFO P
+		INNER JOIN MBR_INFO M
+		ON P.ORDR_ID = M.EMIL_ADDR
+		JOIN PJ_INDSTR PN
+		ON PN.PJ_ID = P.PJ_ID 
+		JOIN INDSTR_INFO II
+		ON II.INDSTR_ID = PN.SMJR_ID 
+		WHERE P.OBTN_ID IS NULL 
+		<if test="_parameter != null">
+			<include
+				refid="selectAllProjectCodition" />
+		</if>
+		ORDER BY
+		<choose>
+			<when test="orderBy == 'latest'">P.RGSTR_DT DESC</when>
+			<when test="orderBy == 'deadline'">P.PJ_RCRUT_END_DT ASC</when>
+			<when test="orderBy == 'amount'">P.CNTRCT_ACCNT DESC</when>
+			<otherwise>P.RGSTR_DT DESC</otherwise> <!-- 기본 정렬 기준 -->
+		</choose>
+
+	</select>
+	
+	
+	<resultMap type="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectVO" 
+			   id="projectVOMap1" 
+			   autoMapping="true">
+	<id column="PJ_ID" property="pjId"/>
+		<collection property="projectCommentList" 
+					ofType="com.ktdsuniversity.edu.bizmatch.comment.vo.CommentVO" autoMapping="true">
+			<id column="PRNT_CMMNT_ID" property="prntCmmntId"/>
+		</collection>
+	</resultMap>
+	<select id="selectProjectInfo"
+			parameterType="string"
+			resultMap="projectVOMap">
+		  SELECT P.PJ_ID
+			, P.ORDR_ID
+			, P.OBTN_ID
+			, P.PJ_TTL
+			, TO_CHAR(P.RGSTR_DT,'YYYY-MM-DD') RGSTR_DT 
+			, TO_CHAR(P.STRT_DT, 'YYYY-MM-DD') STRT_DT 
+			, TO_CHAR(P.END_DT, 'YYYY-MM-DD') END_DT
+			, P.CNTRCT_ACCNT
+			, P.PJ_DESC
+			, TO_CHAR(P.IS_DLT, 'YYYY-MM-DD') IS_DLT
+			, TO_CHAR(P.DLT_DT, 'YYYY-MM-DD') DLT_DT
+			, P.LST_MOD_DT
+			, P.IS_RCRUT_ADD
+			, P.PJ_STT
+			, P.VIEW_CNT
+			, P.PJ_RCRUT_CNT
+			, TO_CHAR(P.PJ_RCRUT_STRT_DT, 'YYYY-MM-DD') PJ_RCRUT_STRT_DT
+			, TO_CHAR(P.PJ_RCRUT_END_DT,'YYYY-MM-DD') PJ_RCRUT_END_DT
+			, PI.PJ_INDSTR_ID
+			, PI.MJR_ID
+			, PI.SMJR_ID
+			, PPS.PJ_PRM_STK_ID 
+			, II.INDSTR_ID
+			, II.INDSTR_NM
+			, II.UPPR_INDSTR_ID
+			, PRM.PRM_STK_ID
+			, PRM.PRM_STK
+			, PY.PYMNT_ID 
+			, PY.GRNT_AMT 
+			, PY.CNTRCT_AMT 
+			, PY.GRNT_PD_DT 
+			, PY.CNTRCT_PD_DT 
+			, PY.ACCNT_NM 
+			, PY.PYMNT_TYP 
+			, PY.IMP_UID 
+			, PY.DPST_RFND_AMNT 
+			, PY.DPST_RFND_DT 
+			  FROM PJ_INFO P
+			  JOIN PJ_INDSTR PI
+			    ON P.PJ_ID = PI.PJ_ID 
+			  JOIN INDSTR_INFO II
+			    ON II.INDSTR_ID = PI.SMJR_ID
+			  JOIN PJ_PRM_STK PPS
+			    ON PPS.PJ_ID = P.PJ_ID 
+			  JOIN PRM_STK PRM
+			    ON PRM.PRM_STK_ID = PPS.PRM_STK_ID
+			  JOIN PYMNT_INFO PY
+			    ON PY.PJ_ID = P.PJ_ID 
+		 WHERE P.PJ_ID = #{_parameter}
+	</select>
+
+	<select id="selectForPagination"
+			parameterType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectPaginationVO"
+			resultMap="projectVOMap">
+		SELECT *
+		  FROM ( SELECT ROWNUM as RNUM
+		  	  , S.*
+				   FROM (SELECT P.PJ_ID
+						, P.ORDR_ID
+						, P.OBTN_ID
+						, P.PJ_TTL
+						, TO_CHAR(P.RGSTR_DT,'YYYY"년" MM"월" DD"일"') RGSTR_DT
+						, TO_CHAR(P.STRT_DT,'YYYY"년" MM"월" DD"일"') STRT_DT
+						, TO_CHAR(P.END_DT,'YYYY"년" MM"월" DD"일"') END_DT
+						, P.CNTRCT_ACCNT
+						, P.PJ_DESC
+						, P.IS_RCRUT_ADD
+						, P.PJ_STT
+						, P.VIEW_CNT
+						, P.PJ_RCRUT_CNT
+						, TO_CHAR(P.PJ_RCRUT_STRT_DT , 'YYYY"년" MM"월" DD"일"') RCRUT_STRT_DT
+						, TO_CHAR(P.PJ_RCRUT_END_DT , 'YYYY"년" MM"월" DD"일"') PJ_RCRUT_END_DT
+						, II.INDSTR_NM 
+							FROM PJ_INFO P
+						   INNER JOIN MBR_INFO M
+							  ON P.ORDR_ID = M.EMIL_ADDR
+		  					JOIN PJ_INDSTR PN
+							  ON PN.PJ_ID = P.PJ_ID 
+							JOIN INDSTR_INFO II
+							  ON II.INDSTR_ID = PN.SMJR_ID 
+						   WHERE P.OBTN_ID IS NULL 
+			<if test='searchKeyword != null and searchKeyword !="" '>
+				<if test=' searchType == "entire" '>
+					AND (P.PJ_TTL LIKE '%' || #{searchKeyword} || '%'
+					OR P.PJ_DESC LIKE '%' || #{searchKeyword} || '%')
+				</if>
+				<if test=' searchType == "pjTtl" '>
+					AND P.PJ_TTL LIKE '%' || #{searchKeyword} || '%'
+				</if>
+				<if test=' searchType == "pjDesc" '>
+					AND P.PJ_DESC LIKE '%' || #{searchKeyword} || '%'
+				</if>
+			</if>
+		<choose>
+			<when test="orderBy == 'deadline'">
+				AND (P.PJ_STT = 0 OR P.PJ_STT = 3)
+				ORDER BY P.PJ_RCRUT_END_DT ASC
+			</when>
+			<when test="orderBy == 'latest'">
+				ORDER BY P.RGSTR_DT DESC
+			</when>
+			<when test="orderBy == 'amount'">
+				ORDER BY P.CNTRCT_ACCNT DESC
+			</when>
+			<otherwise>
+				ORDER BY P.RGSTR_DT DESC
+			</otherwise>
+		</choose>
+		) S
+
+		WHERE ROWNUM <![CDATA[<=]]> (#{currPageNo} + 1) * #{exposureListSize}
+		)
+		WHERE RNUM <![CDATA[>=]]> #{currPageNo} * #{exposureListSize} + 1
+</select>
+	
+
+	
+	<select id="selectAllComment" 
+			parameterType="string"
+			resultType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentVO">
+		 SELECT LEVEL as LV
+		 	  , p.PJ_CMMNT_ID
+		      , p.PJ_ID
+		      , p.PRNT_CMMNT_ID
+			  , p.CMMNT_CNTNT
+			  , p.CRTD_DT
+			  , p.LST_MOD_DT
+			  , p.IS_DLT
+			  , p.DLT_DT
+			  , p.ATHR_ID
+			  , m.MBR_NM
+	  	   FROM PJ_CMMNT p
+	  	  INNER JOIN MBR_INFO m
+	  	     ON p.ATHR_ID = m.EMIL_ADDR
+	 	  WHERE PJ_ID = #{_parameter}
+	   		<!-- AND DLT_DT IS NULL -->
+	   	  START WITH PRNT_CMMNT_ID IS NULL
+	   	    AND IS_DLT = '0'
+	   	CONNECT BY PRIOR PJ_CMMNT_ID = PRNT_CMMNT_ID
+	   	  ORDER SIBLINGS BY CRTD_DT DESC
+		<!-- CONNECT BY PRIOR PJ_CMMNT_ID = PRNT_CMMNT_ID     -->
+	</select>
+
+
+
+	<update id="updateOneComment"
+			parameterType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentModifyVO">
+	     UPDATE PJ_CMMNT
+			SET 
+			    CMMNT_CNTNT= #{cmmntCntnt}
+			  , LST_MOD_DT= SYSDATE
+		  WHERE PJ_CMMNT_ID= #{pjCmmntId} 
+			
+			
+	</update>
+	
+	<update id ="deleteChildComment">
+		UPDATE PJ_CMMNT
+		   SET DLT_DT = SYSDATE
+		     , IS_DLT = 1
+		 WHERE PJ_CMMNT_ID
+		    IN (
+				SELECT PJ_CMMNT_ID 
+				  FROM PJ_CMMNT
+				 START WITH PRNT_CMMNT_ID IS NULL
+	   	   		   AND IS_DLT = '1'
+	   		    CONNECT BY PRIOR PJ_CMMNT_ID = PRNT_CMMNT_ID
+	   		    )   
+	</update>
+		
+	 <update id="deleteOneComment"
+			parameterType="string">
+			
+		UPDATE PJ_CMMNT
+		   SET DLT_DT = SYSDATE
+		     , IS_DLT = 1
+		  WHERE PJ_CMMNT_ID = #{_parameter} 
+	</update>
+	<insert id= "insertNewComment" 
+			parameterType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentWriteVO"
+			>
+		INSERT INTO PJ_CMMNT
+			 ( PJ_CMMNT_ID
+			 , PJ_ID
+			 , PRNT_CMMNT_ID
+			 , CMMNT_CNTNT
+			 , CRTD_DT
+			 , LST_MOD_DT
+			 , IS_DLT
+			 , DLT_DT
+			 , ATHR_ID)
+		VALUES(
+			   PJ_CMMNT_PK_SEQ.NEXTVAL
+		     , #{pjId}
+		     , #{prntCmmntId} <!-- #{prntCmmntId} -->
+		     , #{cmmntCntnt}
+		     , SYSDATE
+		     , NULL
+		     , 0
+		     , NULL
+		     , #{athrId} )
+					
+	</insert>
+	
+	<select id="selectPaginationComment" 
+			parameterType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentPaginationVO"
+			resultType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentVO">
+		  SELECT *
+		    FROM ( SELECT ROWNUM as RNUM
+			 	 	    , S.*
+				     FROM ( SELECT LEVEL as LV
+					 	  , p.PJ_CMMNT_ID
+					      , p.PJ_ID
+					      , p.PRNT_CMMNT_ID
+						  , p.CMMNT_CNTNT
+						  , p.CRTD_DT
+						  , p.LST_MOD_DT
+						  , p.IS_DLT
+						  , p.DLT_DT
+						  , p.ATHR_ID
+						  , m.MBR_NM
+				  	   FROM PJ_CMMNT p
+				  	  INNER JOIN MBR_INFO m
+				  	     ON p.ATHR_ID = m.EMIL_ADDR
+				 	  WHERE PJ_ID = #{searchIdParam}
+				   	  START WITH PRNT_CMMNT_ID IS NULL
+				   	    AND IS_DLT = '0'
+				   	CONNECT BY PRIOR PJ_CMMNT_ID = PRNT_CMMNT_ID
+					ORDER SIBLINGS BY CRTD_DT DESC ) S
+					WHERE ROWNUM <![CDATA[<=]]> (#{currPageNo} + 1)*#{exposureListSize} )
+				  WHERE RNUM <![CDATA[>=]]> #{currPageNo} * #{exposureListSize} + 1
+	</select>
+	<!-- 프로젝트 정보에 대한 내용 수정 쿼리문. (삭제 제외) -->
+	<update id="updateOneProject"
+		parameterType="com.ktdsuniversity.edu.bizmatch.project.vo.ModifyProjectVO">
+		UPDATE PJ_INFO
+		SET PJ_TTL=#{pjTtl},
+		CNTRCT_ACCNT=#{cntrctAccnt},
+		PJ_DESC=#{pjDesc},
+		LST_MOD_DT=SYSDATE,
+		PJ_RCRUT_CNT=#{pjRcrutCnt},
+		WHERE PJ_ID=#{pjId}
+	</update>
+
+	<!-- 조회수를 증가하는 쿼리문. -->
+	<update id="updateProjectViewCnt" parameterType="string">
+		UPDATE PJ_INFO
+		SET VIEW_CNT = VIEW_CNT + 1
+		WHERE PJ_ID = #{_parameterType}
+	</update>
+
+	<!-- 프로젝트의 산업군 정보를 업데이트하는 쿼리문. -->
+	<update id="updateProjectIndustry"
+		parameterType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectIndustryVO">
+		UPDATE PJ_INDSTR
+		SET INDSTR_ID = #{indstrId}
+		WHERE PJ_ID = #{pjId}
+	</update>
+
+	<!-- 프로젝트 추가모집시 정보를 수정하는 쿼리문. -->
+	<update id="updateAddtionalRecruitment"
+			parameterType="com.ktdsuniversity.edu.bizmatch.project.vo.ModifyProjectVO">
+		UPDATE PJ_INFO
+		SET PJ_TTL = #{pjTtl},
+		STRT_DT = #{strtDt},
+		END_DT = #{endDt},
+		CNTRCT_ACCNT = #{cntrctAccnt},
+		PJ_DESC = #{pjDesc},
+		IS_RCRUT_ADD = 1,
+		PJ_RCRUT_CNT = #{pjRcrutCnt},
+		PJ_RCRUT_STRT_DT = #{pjRcrutStrtDt},
+		PJ_RCRUT_END_DT = #{pjRcrutEndDt},
+		PJ_STT = 3,
+		LST_MOD_DT =
+		SYSDATE
+		WHERE PJ_ID = #{pjId}
+	</update>
+
+	<!-- 하나의 프로젝트를 삭제하는 쿼리문. -->
+	<update id="deleteOneProject" parameterType="string">
+		UPDATE PJ_INFO
+		SET IS_DLT = 1,
+		DLT_DT = SYSDATE
+		WHERE PJ_ID = #{_parameter}
+	</update>
+
+	<!-- 프로젝트 지원서 내용을 수정하는 쿼리문. -->
+	<update id="updateProjectApply"
+		parameterType="com.ktdsuniversity.edu.bizmatch.project.vo.ApplyProjectVO">
+		UPDATE PJ_APPLY
+		SET PJ_APPLY_TTL = #{pjApplyTtl},
+		PJ_APPLY_DESC = #{pjApplyDesc},
+		PJ_APPLY_MDFY_DT = SYSDATE
+		WHERE PJ_APPLY_ID = #{pjApplyId}
+		AND EMIL_ADDR = #{emilAddr}
+	</update>
+
+	<delete id="deleteProjectApply"
+		parameterType="com.ktdsuniversity.edu.bizmatch.project.vo.ApplyProjectVO">
+		DELETE
+		FROM PJ_APPLY
+		WHERE PJ_APPLY_ID = #{pjApplyId}
+	</delete>
+
+	<resultMap
+		type="com.ktdsuniversity.edu.bizmatch.project.vo.ApplyProjectVO"
+		id="applyProjectVOMap" autoMapping="true">
+		<id column="PJ_APPLY_ID" property="pjApplyId" />
+		<association property="memberVO"
+			javaType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO"
+			autoMapping="true">
+			<id column="EMIL_ADDR" property="emilAddr" />
+		</association>
+		<collection property="projectApplyAttVOList"
+			ofType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectApplyAttVO"
+			autoMapping="true">
+			<id column="PJ_APPLY_ATT_ID" property="pjApplyAttId" />
+		</collection>
+	</resultMap>
+	
+	<update id="updateProjectApplyMember"
+		parameterType="com.ktdsuniversity.edu.bizmatch.project.vo.SelectApplyMemberVO">
+		UPDATE PJ_INFO
+		SET OBTN_ID = #{emilAddr},
+		PJ_STT = 2
+		WHERE PJ_ID =
+		#{pjId}
+	</update>
+	
+	<!-- 한 프로젝트에 지원한 모든 지원자 정보를 조회하는 쿼리문. -->
+	<select id="selectAllApplyMember" 
+			parameterType="string" 
+			resultMap="applyProjectVOMap">
+		SELECT P.PJ_APPLY_ID 
+			 , M.EMIL_ADDR
+			 , M.MBR_CTGRY 
+			 , M.CMP_ID
+			 , P.PJ_ID 
+			 , P.PJ_APPLY_RGSTR_DT 
+			 , P.PJ_APPLY_TTL 
+			 , P.PJ_APPLY_DESC 
+			 , P.PJ_APPLY_MDFY_DT
+			 , PA.PJ_APPLY_ATT_ID 
+			 , PA.PJ_APPLY_ATT_URL 
+		  FROM PJ_APPLY P
+		  JOIN MBR_INFO M
+		    ON M.EMIL_ADDR = P.EMIL_ADDR
+		 LEFT JOIN PJ_APPLY_ATT PA
+		    ON PA.PJ_APPLY_ID = P.PJ_APPLY_ID 
+		  WHERE p.PJ_ID = #{_parameter}
+    </select>
+    
+    <!-- 기업이 발주한 프로젝트 목록들을 가져오기 위한 resultMap과 select문이다. -의진- -->
+	<resultMap type="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectVO" 
+			   id="projectVOMapForCmp">
+		<id column = "PJ_ID" property = "pjId"/>
+		<result column="PJ_TTL" property="pjTtl"/>
+			<result column="CNTRCT_ACCNT" property="cntrctAccnt"/>
+			<result column="PJ_RCRUT_END_DT" property="pjRcrutEndDt"/>
+			<result column="RGSTR_DT" property="rgstrDt"/>
+			<result column="STRT_DT" property="strtDt"/>
+			<result column="END_DT" property="endDt"/>
+		<association property="projectIndustryVO"
+					 javaType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectIndustryVO"
+					 autoMapping="true">
+			<id column="PJ_INDSTR_ID" property="pjIndstrId" />
+			<association property="indstrInfoVO"
+						 javaType="com.ktdsuniversity.edu.bizmatch.common.vo.IndstrInfoVO"
+						 autoMapping="true">
+				<id column="INDSTR_ID" property="indstrId" />
+			</association>
+		</association>
+	</resultMap>
+	<select id="selectAllProjectCompanyOrder" 
+			parameterType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO" 
+			resultMap="projectVOMapForCmp">
+		SELECT *
+		  FROM PJ_INFO PI
+		  JOIN PJ_INDSTR PIND
+		    ON PI.PJ_ID = PIND.PJ_ID
+		  JOIN INDSTR_INFO II
+		    ON PIND.SMJR_ID = II.INDSTR_ID
+		  JOIN MBR_INFO MI
+		    ON PI.ORDR_ID = MI.EMIL_ADDR
+		  JOIN MBR_INFO MI2
+		    ON MI.CMP_ID = MI2.CMP_ID
+		 WHERE MI2.EMIL_ADDR = #{_parameter}
+	</select>
+	
+	<select id="selectAllProjectOrderRecipient" 
+	parameterType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO"
+	resultMap="projectVOMap">
+	SELECT p.PJ_ID
+		 , p.ORDR_ID
+		 , p.OBTN_ID
+		 , p.PJ_TTL
+		 , p.RGSTR_DT
+		 , p.STRT_DT
+		 , p.END_DT
+		 , p.CNTRCT_ACCNT
+		 , p.PJ_DESC
+		 , p.IS_DLT
+		 , p.DLT_DT
+		 , p.LST_MOD_DT
+		 , p.IS_RCRUT_ADD
+		 , p.PJ_STT
+		 , p.VIEW_CNT
+		 , p.PJ_RCRUT_CNT
+		 , p.PJ_RCRUT_STRT_DT
+		 , p.PJ_RCRUT_END_DT
+	  FROM PJ_INFO p
+	 WHERE OBTN_ID IN 
+		 <choose>
+			 <when test='mbrCtgry == 0'>
+			 (SELECT EMIL_ADDR
+				FROM MBR_INFO 
+				WHERE CMP_ID =( SELECT CMP_ID 
+								 FROM MBR_INFO
+								WHERE EMIL_ADDR =#{emilAddr}))
+			 </when>
+			 <otherwise>
+			 	#{emilAddr}
+			 </otherwise>
+		 </choose>
+	 </select>
+	 
+	 <select id="selectAllApply" 
+	 		 parameterType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO"
+	 		 resultMap="projectApplyVOMap">
+		SELECT PA.PJ_APPLY_ID,
+		    PA.EMIL_ADDR,
+		    TO_CHAR(PA.PJ_APPLY_RGSTR_DT, 'YYYY-MM-DD') AS PJ_APPLY_RGSTR_DT,
+		    PA.PJ_APPLY_TTL,
+		    PA.PJ_APPLY_DESC,
+		    TO_CHAR(PA.PJ_APPLY_MDFY_DT, 'YYYY-MM-DD') AS PJ_APPLY_MDFY_DT,
+		    PAA.PJ_APPLY_ATT_ID,
+		    PAA.PJ_APPLY_ID,
+		    PAA.PJ_APPLY_ATT_URL,
+		    PAA.PJ_APPLY_ATT_URL_NONREAD,
+		    PI.PJ_ID,
+		    PI.ORDR_ID,
+		    PI.OBTN_ID,
+		    PI.PJ_TTL,
+		    TO_CHAR(PI.RGSTR_DT, 'YYYY-MM-DD') AS RGSTR_DT,
+		    TO_CHAR(PI.STRT_DT, 'YYYY-MM-DD') AS STRT_DT,
+		    TO_CHAR(PI.END_DT, 'YYYY-MM-DD') AS END_DT,
+		    PI.CNTRCT_ACCNT,
+		    PI.PJ_DESC,
+		    TO_CHAR(PI.IS_DLT, 'YYYY-MM-DD') AS IS_DLT,
+		    TO_CHAR(PI.DLT_DT, 'YYYY-MM-DD') AS DLT_DT,
+		    PI.LST_MOD_DT,
+		    PI.IS_RCRUT_ADD,
+		    PI.PJ_STT,
+		    PI.VIEW_CNT,
+		    PI.PJ_RCRUT_CNT,
+		    TO_CHAR(PI.PJ_RCRUT_STRT_DT, 'YYYY-MM-DD') AS PJ_RCRUT_STRT_DT,
+		    TO_CHAR(PI.PJ_RCRUT_END_DT, 'YYYY-MM-DD') AS PJ_RCRUT_END_DT,
+		    P.PJ_INDSTR_ID,
+		    P.SMJR_ID,
+		    II.INDSTR_ID,
+		    II.INDSTR_NM,
+		    II.UPPR_INDSTR_ID,
+		    PPS.PJ_PRM_STK_ID,
+		    PRM.PRM_STK_ID,
+		    PRM.PRM_STK
+		FROM PJ_APPLY PA
+		JOIN PJ_INFO PI ON PA.PJ_ID = PI.PJ_ID
+		JOIN PJ_INDSTR P ON PI.PJ_ID = P.PJ_ID
+		JOIN PJ_APPLY_ATT PAA ON PAA.PJ_APPLY_ID = PA.PJ_APPLY_ID
+		JOIN INDSTR_INFO II ON II.INDSTR_ID = P.SMJR_ID
+		JOIN PJ_PRM_STK PPS ON PPS.PJ_ID = P.PJ_ID
+		JOIN PRM_STK PRM ON PRM.PRM_STK_ID = PPS.PRM_STK_ID
+		WHERE PI.PJ_ID IN (
+		    SELECT PJ_ID 
+		    FROM PJ_INFO
+		    WHERE PJ_STT = 0 OR PJ_STT = 3)
+	
+		   <choose>
+			   <when test='mbrCtgry==0'>
+				   AND PA.EMIL_ADDR IN (SELECT EMIL_ADDR 
+									  FROM MBR_INFO 
+									 WHERE CMP_ID = (SELECT CMP_ID 
+							   						   FROM MBR_INFO
+									   				  WHERE EMIL_ADDR = #{emilAddr}))
+			   </when>
+			   <otherwise>
+			   		AND PA.EMIL_ADDR = #{emilAddr}
+			   </otherwise>
+		   </choose>
+	 </select>
+	<!-- 사용자가 스크랩한 프로젝트 정보를 추가하는 쿼리문. -->
+	<insert id="insertProjectScrap"
+			parameterType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectScrapVO">
+		INSERT INTO PJ_SCRP 
+		(PJ_SCRP_ID
+		,EMIL_ADDR
+		,PJ_ID)
+		VALUES
+		('AL-' || TO_CHAR(SYSDATE, 'YYYYMMDD')|| '-' || LPAD(PJ_SCRP_PK_SEQ.NEXTVAL, 6, '0')
+		, #{emilAddr}
+		, #{pjId})
+	</insert>
+	
+	<!-- 해당 프로젝트에 필요한 보유 기술을 조회하는 쿼리문. -->
+	<resultMap type="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectSkillVO" 
+			   id="projectSkillVOMap"
+			   autoMapping="true">
+		<id column="PJ_PRM_STK_ID" property="pjPrmStkId" />
+		<association property="prmStkVO"
+					 javaType="com.ktdsuniversity.edu.bizmatch.member.vo.PrmStkVO"
+					 autoMapping="true">
+			<id column="PRM_STK_ID" property="prmStkId"/>
+		</association>
+	</resultMap>
+	<select id="selectAllProjectSkill"
+			parameterType="string"
+			resultMap="projectSkillVOMap">
+		SELECT *
+		  FROM PJ_PRM_STK PPS
+		  JOIN PRM_STK PS
+		    ON PPS.PRM_STK_ID = PS.PRM_STK_ID 
+		 WHERE PPS.PJ_ID = (SELECT PJ_ID
+		 					  FROM PJ_INFO PI
+		 					 WHERE PJ_ID = #{_parameter})
+	</select>
+	
+	<!-- 하나의 프로젝트에 들어있는 산업군의 정보를 가져오는 쿼리문. -->
+	<resultMap type="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectIndustryVO" 
+	           id="projectIndustryVOMap"
+	           autoMapping="true">
+	    <id column="PJ_ID" property="pjId"/>
+	    <association property="indstrInfoVO"
+	                 javaType="com.ktdsuniversity.edu.bizmatch.common.vo.IndstrInfoVO"
+	                 autoMapping="true">
+	        <id column="INDSTR_ID" property="indstrId"/>
+	    </association>
+	</resultMap>
+	<select id="selectAllProjectIndustryInfo"
+			parameterType="string"
+			resultMap="projectIndustryVOMap">
+		SELECT *
+		  FROM PJ_INDSTR PI
+		  LEFT JOIN INDSTR_INFO II
+		    ON PI.SMJR_ID = II.INDSTR_ID
+		 WHERE PI.PJ_ID = #{_parameter}
+	</select>
+	
+	<!-- 아래 부터는 산업군 관련 쿼리문 입니다 -->
+	<insert id="insertNewIndustryGroup"
+			parameterType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectIndustryVO">
+		INSERT INTO PJ_INDSTR
+			 ( PJ_INDSTR_ID
+			 , PJ_ID
+			 , MJR_ID
+			 , SMJR_ID )
+		VALUES
+		     ( 'PN' || TO_CHAR(SYSDATE, 'YYYYMMDD') || '-' || LPAD(PJ_INDSTR_PK_SEQ.NEXTVAL, 6, '0')
+		     , #{pjId}
+		     , #{mjrId}
+		     , #{smjrId} )
+	</insert>
+	
+	<!-- 특정 프로젝트의 특정 지원서를 조회하는 쿼리문. -->
+	<select id="selectOneApplyProjectInfo"
+			parameterType="com.ktdsuniversity.edu.bizmatch.project.vo.ApplyProjectVO"
+			resultType="com.ktdsuniversity.edu.bizmatch.project.vo.ApplyProjectVO">
+		SELECT PJ_APPLY_ID,
+			   EMIL_ADDR,
+			   PJ_ID,
+			   PJ_APPLY_RGSTR_DT,
+			   PJ_APPLY_TTL,
+			   PJ_APPLY_DESC,
+			   PJ_APPLY_MDFY_DT
+		  FROM PJ_APPLY PA
+		 WHERE PJ_ID = #{pjId}
+	</select>
+	
+		<!-- 특정 프로젝트의 특정 지원서를 조회하는 쿼리문. -->
+	<select id="selectOneApplyViewInfo"
+  		 parameterType="com.ktdsuniversity.edu.bizmatch.project.vo.SearchApplyVO"
+        resultType="com.ktdsuniversity.edu.bizmatch.project.vo.ApplyProjectVO">
+    SELECT PJ_APPLY_ID,
+			EMIL_ADDR,
+			PJ_ID,
+			PJ_APPLY_RGSTR_DT,
+			PJ_APPLY_TTL,
+			PJ_APPLY_DESC,
+			PJ_APPLY_MDFY_DT
+	  FROM PJ_APPLY PA
+	 WHERE PJ_ID = #{pjId}
+	   AND PJ_APPLY_ID = #{pjApplyId}
+</select>
+	
+
+	<select id="findOneApplyProjectWithoutApplyId"
+			parameterType="com.ktdsuniversity.edu.bizmatch.project.vo.ApplyProjectVO"
+			resultType="com.ktdsuniversity.edu.bizmatch.project.vo.ApplyProjectVO">
+		SELECT PJ_APPLY_ID,
+			   EMIL_ADDR,
+			   PJ_ID,
+			   PJ_APPLY_RGSTR_DT,
+			   PJ_APPLY_TTL,
+			   PJ_APPLY_DESC,
+			   PJ_APPLY_MDFY_DT
+		  FROM PJ_APPLY 
+		 WHERE EMIL_ADDR = #{emilAddr}
+		   AND PJ_ID = #{pjId}
+	</select>
+	
+	<!-- 프로젝트 관련 기술들을 등록하는 쿼리문이다. -->
+	<insert id="insertProjectSkills"
+		parameterType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectSkillVO">
+		INSERT INTO PJ_PRM_STK
+		(PJ_PRM_STK_ID
+		, PJ_ID
+		, PRM_STK_ID)
+		VALUES
+		('PJ-PRM-STK' || TO_CHAR(SYSDATE, 'YYYYMMDD') || '-' || LPAD(PJ_PRM_STK_PK_SEQ.NEXTVAL, 6, '0')
+		, #{pjId}
+		, #{prmStkId})
+	</insert>
+
+	<select id="selectAllProjectSkillList" resultType="com.ktdsuniversity.edu.bizmatch.member.vo.PrmStkVO">
+		SELECT PRM_STK_ID
+			 , PRM_STK
+		  FROM PRM_STK
+	</select>
+	
+	<!-- 아직 모집중인 프로젝트의 목록들을 불러오는 쿼리문이다 -의진- -->
+	<resultMap type="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectVO" 
+			   id="projectListVOMap"
+			   autoMapping="true">
+		<id column="PJ_ID" property="pjId"/>
+		<association property="projectIndustryVO"
+					 javaType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectIndustryVO"
+					 autoMapping="true">
+			<id column="PJ_INDSTR_ID" property="pjIndstrId"/>
+			<association property="indstrInfoVO"
+						 javaType="com.ktdsuniversity.edu.bizmatch.common.vo.IndstrInfoVO"
+						 autoMapping="true">
+				<id column="INDSTR_ID" property="indstrId"/>
+			</association>
+		</association>
+		<collection property="projectSkillList"
+					 ofType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectSkillVO"
+					 autoMapping="true">
+			<id column="PJ_PRM_STK_ID" property="pjPrmStkId"/>
+			<association property="prmStkVO"
+						 javaType="com.ktdsuniversity.edu.bizmatch.member.vo.PrmStkVO"
+						 autoMapping="true">
+				<id column="PRM_STK_ID" property="prmStkId"/>
+			</association>
+		</collection>
+	</resultMap>
+	<select id="selectProjectList" parameterType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO" resultMap="projectListVOMap">
+		SELECT P.PJ_ID
+			, P.ORDR_ID
+			, P.OBTN_ID
+			, P.PJ_TTL
+			, TO_CHAR(P.RGSTR_DT,'YYYY-MM-DD') RGSTR_DT 
+			, TO_CHAR(P.STRT_DT, 'YYYY-MM-DD') STRT_DT 
+			, TO_CHAR(P.END_DT, 'YYYY-MM-DD') END_DT
+			, P.CNTRCT_ACCNT
+			, P.PJ_DESC
+			, TO_CHAR(P.IS_DLT, 'YYYY-MM-DD') IS_DLT
+			, TO_CHAR(P.DLT_DT, 'YYYY-MM-DD') DLT_DT
+			, P.LST_MOD_DT
+			, P.IS_RCRUT_ADD
+			, P.PJ_STT
+			, P.VIEW_CNT
+			, P.PJ_RCRUT_CNT
+			, TO_CHAR(P.PJ_RCRUT_STRT_DT, 'YYYY-MM-DD') PJ_RCRUT_STRT_DT
+			, TO_CHAR(P.PJ_RCRUT_END_DT,'YYYY-MM-DD') PJ_RCRUT_END_DT
+			, PI.PJ_INDSTR_ID
+			, PI.MJR_ID
+			, PI.SMJR_ID
+			, PPS.PJ_PRM_STK_ID 
+			, II.INDSTR_ID
+			, II.INDSTR_NM
+			, II.UPPR_INDSTR_ID
+			, PRM.PRM_STK_ID
+			, PRM.PRM_STK
+			  FROM PJ_INFO P
+			  JOIN PJ_INDSTR PI
+			    ON P.PJ_ID = PI.PJ_ID 
+			  JOIN INDSTR_INFO II
+			    ON II.INDSTR_ID = PI.SMJR_ID
+			  JOIN PJ_PRM_STK PPS
+			    ON PPS.PJ_ID = P.PJ_ID 
+			  JOIN PRM_STK PRM
+			    ON PRM.PRM_STK_ID = PPS.PRM_STK_ID
+			 WHERE P.OBTN_ID IS NULL
+			 <if test="mbrCtgry == 0">
+			 	AND P.ORDR_ID NOT IN (SELECT EMIL_ADDR FROM MBR_INFO WHERE CMP_ID = #{cmpId})
+			 </if>
+   </select>
+   
+	<select id="selectAllMyOrderProjectList" 
+			parameterType="string"
+			resultMap="projectListVOMap">
+		SELECT P.PJ_ID
+			, P.ORDR_ID
+			, P.OBTN_ID
+			, P.PJ_TTL
+			, TO_CHAR(P.RGSTR_DT,'YYYY-MM-DD') RGSTR_DT 
+			, TO_CHAR(P.STRT_DT, 'YYYY-MM-DD') STRT_DT 
+			, TO_CHAR(P.END_DT, 'YYYY-MM-DD') END_DT
+			, P.CNTRCT_ACCNT
+			, P.PJ_DESC
+			, TO_CHAR(P.IS_DLT, 'YYYY-MM-DD') IS_DLT
+			, TO_CHAR(P.DLT_DT, 'YYYY-MM-DD') DLT_DT
+			, P.LST_MOD_DT
+			, P.IS_RCRUT_ADD
+			, P.PJ_STT
+			, P.VIEW_CNT
+			, P.PJ_RCRUT_CNT
+			, TO_CHAR(P.PJ_RCRUT_STRT_DT, 'YYYY-MM-DD') PJ_RCRUT_STRT_DT
+			, TO_CHAR(P.PJ_RCRUT_END_DT,'YYYY-MM-DD') PJ_RCRUT_END_DT
+			, PI.PJ_INDSTR_ID
+			, PI.MJR_ID
+			, PI.SMJR_ID
+			, PPS.PJ_PRM_STK_ID 
+			, II.INDSTR_ID
+			, II.INDSTR_NM
+			, II.UPPR_INDSTR_ID
+			, PRM.PRM_STK_ID
+			, PRM.PRM_STK
+			  FROM PJ_INFO P
+			  JOIN PJ_INDSTR PI
+			    ON P.PJ_ID = PI.PJ_ID 
+			  JOIN INDSTR_INFO II
+			    ON II.INDSTR_ID = PI.SMJR_ID
+			  JOIN PJ_PRM_STK PPS
+			    ON PPS.PJ_ID = P.PJ_ID 
+			  JOIN PRM_STK PRM
+			    ON PRM.PRM_STK_ID = PPS.PRM_STK_ID
+			 WHERE P.ORDR_ID IN (SELECT EMIL_ADDR 
+								   FROM MBR_INFO MI
+								  WHERE MI.CMP_ID = #{_parameter})
+   </select>
+   
+   <update id="updateProject" 
+   parameterType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectVO">
+   UPDATE PJ_INFO 
+      SET PJ_RCRUT_END_DT = TO_DATE(#{pjRcrutEndDt},'YYYY-MM-DD')
+     	, PJ_STT = 3
+    WHERE PJ_ID = #{pjId}
+   
+   </update>
+   
+</mapper>

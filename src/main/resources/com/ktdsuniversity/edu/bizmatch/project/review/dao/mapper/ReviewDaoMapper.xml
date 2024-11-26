@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ktdsuniversity.edu.bizmatch.project.review.dao.ReviewDao">
+
+	<!-- 특정 프로젝트 모든 리뷰 조회 쿼리문 -->
+	<select id="selectAllReviews" parameterType="string" resultType="com.ktdsuniversity.edu.bizmatch.project.review.vo.ReviewVO">
+		SELECT RVW_ID
+	 		 , RVW_CNTNT
+	 		 , RVW_DT
+	 		 , SCR
+	 		 , IS_DLT
+	 		 , DLT_DT
+	 		 , EMIL_ADDR
+	 		 , PJ_ID
+	 		 , RVW_RPRT_CNT
+  		  FROM PJ_RVW
+ 		 WHERE PJ_ID = #{_parameter}
+   		   AND IS_DLT = 0
+	</select>
+	
+	<!-- 특정 하나의 리뷰 조회 쿼리문 -->
+	<select id="selectOneReview" parameterType="string" resultType="com.ktdsuniversity.edu.bizmatch.project.review.vo.ReviewVO">
+		SELECT RVW_ID
+	 		 , RVW_CNTNT
+	 		 , RVW_DT
+	 		 , SCR
+	 		 , IS_DLT
+	 		 , DLT_DT
+	 		 , EMIL_ADDR
+	 		 , PJ_ID
+	 		 , RVW_RPRT_CNT
+  		  FROM PJ_RVW
+ 		 WHERE RVW_ID = #{_parameter}
+   		   AND IS_DLT = 0
+	</select>
+	
+	<!-- 새 리뷰 등록 쿼리문 -->
+	<insert id="insertOneReview" parameterType="com.ktdsuniversity.edu.bizmatch.project.review.vo.WriteReviewVO">
+		INSERT INTO PJ_RVW
+		( RVW_ID
+		, RVW_CNTNT
+		, RVW_DT
+		, SCR
+		, IS_DLT
+		, EMIL_ADDR
+		, PJ_ID )
+		VALUES
+		(PJ_RVW_PK_SEQ.NEXTVAL
+		, #{rvwCntnt}
+		, SYSDATE
+		, #{scr}
+		, 0
+		, #{emilAddr}
+		, #{pjId} )
+	</insert>
+	
+	<!-- 리뷰 신고 횟수 수정 퀴리문 -->
+	<update id="updateReviewReportCount" parameterType="string">
+		UPDATE PJ_RVW
+   		   SET RVW_RPRT_CNT = RVW_RPRT_CNT + 1
+ 		 WHERE RVW_ID = #{_parameter}
+	</update>
+	
+	<!-- 리뷰 삭제 쿼리문 -->
+	<delete id="deleteOneReview" parameterType="com.ktdsuniversity.edu.bizmatch.project.review.vo.DeleteReviewVO">
+		UPDATE PJ_RVW
+   		   SET IS_DLT = 1
+   		 	 , DLT_DT = SYSDATE
+ 		 WHERE RVW_ID = #{rvwId}
+	</delete>
+</mapper>

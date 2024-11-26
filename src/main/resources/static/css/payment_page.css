@@ -1,0 +1,271 @@
+@charset "UTF-8";
+.header {
+  display: flex;
+  justify-content: space-between;
+  width: 80%;
+  margin: 0 auto;
+  padding-top: 1rem;
+}
+
+.header-menu {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  padding-right: 16rem;
+}
+
+.header-menu a {
+  text-decoration: none;
+  color: gray;
+  font-size: 1.45rem;
+  font-weight: 700;
+  /* padding: 2.8rem 0; */
+  position: relative;
+}
+
+.header-menu a:hover {
+  color: black;
+}
+
+.header-menu a::after {
+  position: absolute;
+  content: "";
+  background-color: black;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 0;
+  transition: width 0.3s;
+}
+
+.header-menu a:hover::after {
+  width: 100%;
+}
+
+.header-btn {
+  /* display: flex; */
+  gap: 2rem;
+  align-items: center;
+}
+
+.border-line {
+  border-top: 2px solid rgb(206, 206, 206);
+  padding-bottom: 5rem;
+}
+.project-card {
+  width: 60%;
+  height: 50vh;
+  margin-bottom: 4%;
+  margin: 0 auto;
+}
+
+.project-box {
+  margin-top: 6rem;
+  background-color: #ffffff;
+  padding: 1rem;
+  height: 100%;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.status {
+  background-color: #e0ffe0;
+  color: #008000;
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+  font-size: 1.5rem;
+  display: inline-block;
+}
+
+.project-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1%;
+}
+
+.project-head-front {
+  display: flex;
+  align-items: center;
+  width: 50%;
+  /* justify-content: space-between; */
+  gap: 2rem;
+}
+
+.post-date {
+  color: gray;
+}
+
+.project-body {
+  background-color: #f2f2f2;
+  border-radius: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: start;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  height: 80%;
+  align-items: start;
+  margin-bottom: 2%;
+  padding: 1rem;
+}
+
+.project-body-title {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.project-body-content {
+  display: flex;
+}
+
+.bold {
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
+.circle-box {
+  display: flex;
+  align-items: center;
+}
+
+.circle {
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: blue;
+  border-radius: 50%;
+}
+
+.sidebar {
+  height: 5vh;
+  border-right: 2px solid lightgray;
+}
+
+.button-box {
+  display: flex;
+  align-items: center;
+  width: 17%;
+}
+
+.estimated-amount {
+  display: flex;
+  width: 25%;
+  justify-content: space-evenly;
+  align-items: center;
+  font-size: 1.5rem;
+}
+
+.half-sidebar {
+  height: 2vh;
+  border-right: 2px solid lightgray;
+}
+
+.apply {
+  padding: 0.5rem 1rem;
+  background-color: #4758ee;
+  color: #fff;
+  border: none;
+  border-radius: 1rem;
+  cursor: pointer;
+  width: 100%;
+  font-size: 1.5rem;
+}
+
+@media (max-width: 1300px) {
+  .project-head-front {
+    width: 50%;
+  }
+
+  .status {
+    font-size: 1rem;
+  }
+}
+
+.bold {
+  font-size: 1rem;
+}
+
+.estimated-amount {
+  font-size: 1rem;
+}
+
+.apply {
+  font-size: 1rem;
+}
+
+.project-body-box {
+  font-size: 0.8rem;
+}
+
+@media (max-width: 1024px) {
+  .option {
+    font-size: 0.7rem;
+  }
+
+  .project-body-box {
+    font-size: 0.6rem;
+  }
+
+  .circle {
+    width: 0.3rem;
+    height: 0.3rem;
+  }
+
+  .estimated-amount {
+    font-size: 0.6rem;
+  }
+
+  .half-sidebar {
+    height: 1vh;
+  }
+
+  .bold {
+    font-size: 0.8rem;
+  }
+
+  .project-head-front > h2 {
+    font-size: 1rem;
+  }
+}
+.payment-box {
+  display: flex;
+  width: 100%;
+  height: 30%;
+  margin-top: 5rem;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: row;
+  background-color: #f2f2f2;
+  border-radius: 1rem;
+  padding: 0 2.5rem;
+}
+.payment-box-word1 {
+  font-size: 1.65rem;
+  font-weight: 800;
+  padding: 0.5rem;
+  color: rgb(97, 97, 97);
+}
+.payment-box-word2 {
+  font-size: 2rem;
+  font-weight: 800;
+  padding: 0.5rem;
+  color: rgb(97, 97, 97);
+}
+
+.payment-text {
+  /* display: flex; */
+  gap: 2rem;
+  align-items: center;
+}
+
+.payment-box-btn {
+  width: 30%;
+  height: 50%;
+  border-radius: 1rem;
+  background-color: #4758ee;
+  color: white;
+  font-size: 2rem;
+  font-weight: 900;
+}

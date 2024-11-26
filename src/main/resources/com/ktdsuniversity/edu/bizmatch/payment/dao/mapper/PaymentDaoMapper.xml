@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ktdsuniversity.edu.bizmatch.payment.dao.PaymentDao">
+	
+	<!-- 결제 거래금 정보 update하는 쿼리문. -->
+	<update id="updateDownPaymentInfo"
+	        parameterType="com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentRequestVO">
+	    UPDATE PYMNT_INFO
+	    SET CNTRCT_AMT = #{cntrctAmt}
+	      , CNTRCT_PD_DT = SYSDATE
+	      , IMP_UID = #{impUid}
+	    WHERE PJ_ID = #{pjId}
+	</update>
+
+	<!-- 보증금 결제 거래금 정보 update하는 쿼리문. -->
+	<update id="updateDepositPaymentInfo"
+	        parameterType="com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentRequestVO">
+	    UPDATE PYMNT_INFO
+	    SET  GRNT_AMT = #{cntrctAmt}
+	       , GRNT_PD_DT = SYSDATE
+	       , IMP_UID = #{impUid}
+	    WHERE PJ_ID = #{pjId}
+	</update>
+
+	<!-- 한  -->
+	<select id="selectProjectAmount"
+			parameterType="string"
+			resultType="_int">
+		SELECT CNTRCT_AMT 
+		  FROM PYMNT_INFO 
+		 WHERE PJ_ID =#{_parameter}
+	</select>
+	
+	<!-- 우리 계좌에서 돈 와리가리 하는거 수행해주는 쿼리문. -->
+	<update id="updateAccountBalance"
+		 	parameterType="_int">
+		UPDATE ACCNT 
+		   SET ACCNT_BL = ACCNT_BL + #{_parameter}
+		 WHERE ACCNT_NM = '3333092365472'
+	</update>
+	
+	<update id="updateDeposit" 
+			parameterType="com.ktdsuniversity.edu.bizmatch.payment.vo.RefundDepositVO">
+		UPDATE PYMNT_INFO 
+		   SET DPST_RFND_AMNT = #{dpstRfndAmnt}
+		     , DPST_RFND_DT = SYSDATE
+		 WHERE PJ_ID = #{pjId}
+	</update>
+	
+	<!-- 특정 계약금의 정보를 조회하는 쿼리문. -->
+	<select id="selectOneDeposit" 
+			parameterType="string" 
+			resultType="com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentVO">
+	SELECT PYMNT_ID 
+		 , PJ_ID 
+		 , GRNT_AMT 
+		 , CNTRCT_AMT 
+		 , GRNT_PD_DT 
+		 , CNTRCT_PD_DT 
+		 , ACCNT_NM 
+		 , IMP_UID 
+	  FROM PYMNT_INFO 
+	 WHERE PJ_ID = #{_parameter}
+	</select>
+	
+	<!-- 프로젝트를 등록할 때 필요한 결제정보를 같이 저장하는 쿼리문. -->
+	<insert id="insertNewPaymentInfoWhenInsertProject"
+			parameterType="com.ktdsuniversity.edu.bizmatch.project.vo.WriteProjectVO">
+		INSERT INTO PYMNT_INFO 
+		(PYMNT_ID,
+		PJ_ID,
+		GRNT_AMT,
+		CNTRCT_AMT)
+		VALUES
+		('AL-' || TO_CHAR(SYSDATE, 'YYYYMMDD')|| '-' || LPAD(PYMNT_INFO_PK_SEQ.NEXTVAL, 5, '0'),
+		#{pjId},
+		#{grntAmt},
+		#{cntrctAccnt})
+	</insert>
+	
+	<!-- 하나의 결제 정보를 조회하는 쿼리문. -->
+	<select id="selectOnePaymentInfo"
+			parameterType="string"
+			resultType="com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentVO">
+		SELECT PYMNT_ID,
+			   PJ_ID,
+			   GRNT_AMT,
+			   CNTRCT_AMT,
+			   GRNT_PD_DT,
+			   CNTRCT_PD_DT,
+			   ACCNT_NM,
+			   PYMNT_TYP,
+			   IMP_UID,
+			   DPST_RFND_AMNT,
+			   DPST_RFND_DT
+		  FROM PYMNT_INFO
+		 WHERE PJ_ID = #{_parameter}
+	</select>
+	
+	<update id="updatePaymentInfoBiz" parameterType="com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentReturnVO">
+		UPDATE ACCNT 
+		   SET ACCNT_BL = ACCNT_BL - #{amount}
+		 WHERE ACCNT_NM = #{bizAccount}
+	</update>
+	
+	<!-- bizmatch 계좌 정보 조회하는 쿼리문. -->
+	<select id="selectAccountInfo" 
+			resultType="com.ktdsuniversity.edu.bizmatch.payment.vo.AccntVO">
+		SELECT ACCNT_NM
+			 , ACCNT_BL
+		  FROM ACCNT
+	</select>
+	
+	<!-- 계좌 결제내역 업데이트 해주는 쿼리문. -->
+	<insert id="insertAccntHstry" 
+			parameterType="com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentHstryVO">
+	INSERT INTO ACCNT_HSTRY 
+			( ACCNT_HSTRY_ID
+			, VRTL_ACCNT_ID
+			, AMNT
+			, "TYPE"
+			, ACCNT_INFO
+			, ACCNT_DT 
+			, DPSTR
+			, BNK_INFO)
+			VALUES
+			( 'AH-'||TO_CHAR(SYSDATE, 'YYYYMMDD')|| '-'||LPAD(ACCNT_HSTRY_PK_SEQ.NEXTVAL, 5, '0')
+			, #{vrtlAccntId}
+			, #{amnt}
+			, #{type}
+			, #{accntInfo}
+			, SYSDATE
+			, #{dpstr}
+			, #{bnkInfo})
+	</insert>
+	
+	<!-- 프로젝트 완료 상태로 해주는 쿼리문. -->
+	<update id="updateOneProjectStt"
+			parameterType="com.ktdsuniversity.edu.bizmatch.project.vo.UpdateProjectSttVO">
+		UPDATE PJ_INFO 
+		   SET PJ_STT = #{pjStt}
+		 WHERE PJ_ID = #{pjId}
+	</update>
+</mapper>

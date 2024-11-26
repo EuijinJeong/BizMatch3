@@ -1,0 +1,24 @@
+@charset "UTF-8";
+
+.main-container-header {
+  display: flex;
+  gap: 1rem;
+}
+
+.main-container {
+  padding-top: 5rem;
+  width: 70%;
+  margin: 0 auto;
+  padding-bottom: 3rem;
+  font-size: 1.5rem;
+}
+
+.main-title1 {
+  color: rgb(167, 166, 166);
+  cursor: pointer;
+}
+
+.main-title2 {
+  color: black;
+  text-decoration: underline;
+}

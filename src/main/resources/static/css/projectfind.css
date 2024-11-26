@@ -1,0 +1,154 @@
+@charset "UTF-8";
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+.container {
+  width: 70%;
+  margin: 0 auto;
+  padding-top: 3rem;
+}
+
+.container-box {
+  display: flex;
+  justify-content: space-between;
+}
+
+.container-title {
+  display: flex;
+  align-items: center;
+  font-size: 3rem;
+  /* s */
+}
+
+h1 {
+  font-size: 2em;
+  font-weight: bold;
+  padding-bottom: 0.5rem;
+}
+
+.border-line {
+  border: 1px solid rgb(13, 13, 13, 0.3);
+  width: 33%;
+}
+.menu {
+  padding-top: 2rem;
+  /* border-bottom: 1px solid rgb(13, 13, 13, 0.3); */
+}
+.categories {
+  display: flex;
+  margin-bottom: 1rem;
+  list-style: none;
+  padding: 0;
+}
+.categories li {
+  margin-right: 1rem;
+  font-size: 1rem;
+}
+.categories li a {
+  text-decoration: none;
+  color: #000;
+  position: relative;
+}
+.categories li a.active {
+  color: blue;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+.categories li a::after {
+  position: absolute;
+  content: "";
+  background-color: black;
+  height: 2px;
+  bottom: -0.5rem;
+  left: 0;
+  right: 0;
+  width: 0;
+  transition: width 0.3s;
+}
+
+.categories li a:hover::after {
+  width: 100%;
+}
+
+.search-box {
+  display: flex;
+  justify-content: end;
+  width: 100%;
+  padding-top: 2rem;
+}
+.search-box input {
+  width: 20rem;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 0.25rem;
+}
+.search-box button {
+  padding: 0.5rem 1rem;
+  margin-left: 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  border: none;
+  background-color: #4758ee;
+  border-radius: 0.25rem;
+  color: white;
+}
+
+.search-type {
+  width: 4rem;
+}
+.search-box button:hover {
+  background-color: #2035f1;
+}
+
+.filters {
+  display: flex;
+  justify-content: end;
+  padding: 2rem 0 1.5rem 0;
+}
+.filters span {
+  margin-right: 1.25rem;
+  font-size: 1rem;
+  color: #666;
+  cursor: pointer;
+  position: relative;
+}
+
+.filters span::after {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  height: 2px;
+  content: "";
+  transition: background-color 0.3s, width 0.3s;
+  width: 0;
+}
+
+.filters span:hover::after {
+  width: 100%;
+  background-color: #666;
+}
+
+.filters span.active {
+  color: black;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+/* .filters span::before {
+  content: "✔️";
+} */
+
+.pagenation {
+  padding: 5rem;
+  text-align: center;
+}
+
+.filters span.active::before {
+  content: "✔️";
+}

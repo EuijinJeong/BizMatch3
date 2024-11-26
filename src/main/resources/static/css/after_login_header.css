@@ -1,0 +1,229 @@
+
+/* .header {
+  position: fixed; 
+
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+
+  width: 100%; 
+  margin: 0 auto;
+  padding: 1rem 10%;
+  background-color: white; 
+  z-index: 100;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+} */
+
+.header-container {
+  position: sticky;
+  top: 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  background-color: white;
+  height: 15vh;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  width: 80%;
+  margin: 0 auto;
+  padding-top: 1rem;
+}
+
+.header-menu {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  padding-right: 8rem;
+}
+
+.header-menu a {
+  text-decoration: none;
+  color: gray;
+  font-size: 1.45rem;
+  font-weight: 700;
+  position: relative;
+}
+
+.header-menu a:hover {
+  color: black;
+  /* text-decoration: underline; */
+}
+
+.active {
+  text-decoration: underline;
+}
+
+/* .header-menu a::after {
+  position: absolute;
+  content: "";
+  background-color: black;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 0;
+  transition: width 0.3s;
+} */
+
+/* .header-menu a:hover::after {
+  width: 100%;
+} */
+
+.header-btn {
+  display: flex;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.nofication-header {
+  padding: 0.5rem;
+  border-bottom: 1px solid #eee;
+  font-weight: 800;
+}
+
+.main-logo {
+  cursor: pointer;
+}
+
+.notification-menu {
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+}
+.notification-mypage-menu {
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+
+}
+
+.notification-menu:hover {
+  .notification-list {
+    display: block;
+  }
+}
+.notification-mypage-menu:hover {
+  .notification-mypage-list {
+    display: block;
+  }
+}
+
+.notification-list {
+  display: none;
+  position: absolute;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 0.8rem 0 0 0.8rem;
+  width: 18rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  overflow-y: auto;
+  max-height: 20vh;
+}
+
+.notification-mypage-list {
+  display: none;
+  position: absolute;
+  background-color: #fff;
+  border: 1px solid #ccc;
+
+  border-radius: 0.8rem;
+  width: 10rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+
+}
+
+/* .notification-list {
+  display: block;
+}
+.notification-mypage-list {
+  display: block;
+} */
+
+.notification-item {
+  border-bottom: 1px solid #eee;
+  padding: 0.5rem;
+  height: 5vh;
+  align-items: center;
+  display: flex;
+}
+.notification-mypage-item {
+  border-bottom: 1px solid #eee;
+  padding: 0.5rem;
+  height: 5vh;
+  align-items: center;
+  display: flex;
+}
+
+.notification-item:last-child {
+  border-bottom: none;
+}
+.notification-mypage-item:last-child {
+  border-bottom: none;
+}
+
+.notification-mypage-item:first-child:hover {
+  border-bottom: none;
+  border-radius: 0.8rem 0.8rem 0 0;
+}
+.notification-mypage-item:last-child:hover {
+  border-bottom: none;
+  border-radius: 0 0 0.8rem 0.8rem;
+}
+
+
+.notification-item:hover {
+  background-color: #f0f0f0;
+  /* border-radius: 1rem; */
+}
+.notification-mypage-item:hover {
+  background-color: #f0f0f0;
+  /* border-radius: 1rem; */
+}
+
+.notification-msg {
+  cursor: pointer;
+}
+.notification-mypage-msg {
+  cursor: pointer;
+}
+
+.notification-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.notification-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 1rem;
+}
+
+.notification-list::-webkit-scrollbar-thumb {
+  background: gray;
+  border-radius: 1rem;
+}
+
+.notification-list::-webkit-scrollbar-thumb:hover {
+  background: rgb(82, 81, 81);
+}
+
+.notification-mypage-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.notification-mypage-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 1rem;
+}
+
+.notification-mypage-list::-webkit-scrollbar-thumb {
+  background: gray;
+  border-radius: 1rem;
+}
+
+.notification-mypage-list::-webkit-scrollbar-thumb:hover {
+  background: rgb(82, 81, 81);
+}

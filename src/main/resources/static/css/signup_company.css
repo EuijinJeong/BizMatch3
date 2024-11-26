@@ -1,0 +1,180 @@
+input {
+  padding: 0.4rem;
+  border: solid 1px #dde2e4;
+  background-color: #fff;
+  outline: none;
+}
+
+.available {
+  border: 2px solid #4aa8d8;
+}
+.unusable {
+  border: 2px solid #d1180b;
+}
+.signupbox {
+  border: 1px solid #ccc;
+  border-radius: 2rem;
+  margin: 3rem auto;
+  width: 35%;
+  padding: 2rem;
+}
+.cmpMsg {
+  color: #d1180b;
+  font-size: 0.8rem;
+}
+.cmpMsg-box {
+  display: inline-block;
+}
+.red-word {
+  color: red;
+}
+.text-box {
+  width: 100%;
+  padding: 0.5rem;
+}
+p {
+  margin: 0;
+}
+
+.text-box > input {
+  width: 100%;
+}
+.com_addr {
+  width: 100%;
+  padding: 0.5rem;
+}
+.com_div {
+  width: 100%;
+  padding-bottom: 0.3rem;
+}
+.com_div > button {
+  padding: 0.3rem;
+  border: #dde2e4;
+  cursor: pointer;
+}
+.com_div > button:hover {
+  background-color: #bcc0c2;
+}
+.btn-box {
+  padding: 0.5rem;
+  width: 100%;
+}
+.addfile {
+  display: flex;
+  flex-direction: column;
+}
+
+.btn-box > div {
+  display: flex;
+  width: 100%;
+  gap: 10px;
+}
+/* .btn-box > div > input {
+  width: 100%;
+}
+.btn-box > div > button {
+  width: 50%;
+ 
+} */
+
+.btn-box > div > input {
+  width: 85%;
+}
+
+#mbrPhnNum {
+  width: 100%;
+}
+
+.btn-box > div > button {
+  width: 70%;
+  border: #dde2e4;
+  cursor: pointer;
+}
+.input-container {
+  /* display: flex;
+  align-items: center; */
+  position: relative;
+  width: 85%;
+}
+.authNumField {
+  width: 100%;
+}
+
+.timer {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-57%);
+  color: red;
+}
+
+.file-button {
+  height: 4vh;
+}
+
+.btn-box > div > button:hover {
+  background-color: #bcc0c2;
+}
+.check_box {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid #333;
+  border-radius: 1rem;
+}
+.check_box > div {
+  display: flex;
+}
+.signupbtn {
+  margin-top: 1rem;
+  width: 100%;
+  padding: 10px;
+  background-color: #4758ee;
+  border-radius: 0.5rem;
+  color: white;
+  cursor: pointer;
+}
+
+.level-category {
+  padding: 0.4rem;
+  border: solid 1px #dde2e4;
+  background-color: #fff;
+  width: 68%;
+}
+.search-input {
+  width: 100%;
+  padding: 0.45rem;
+  border: solid 1px #dde2e4;
+  background-color: #fff;
+  outline: none;
+}
+.select_box {
+  display: flex;
+  flex-direction: row;
+  padding-bottom: 0.3rem;
+  justify-content: space-between;
+  gap: 0.3rem;
+}
+
+#errorPwd {
+  font-size: 0.8rem;
+  color: red;
+}
+
+#errorConfirmPwd {
+  font-size: 0.8rem;
+  color: red;
+}
+.checkboxMsg {
+  color: red;
+}
+
+.checkbox1 {
+  display: inline-block;
+}
+
+.second-level-category {
+  padding: 0.4rem;
+  border: solid 1px #dde2e4;
+  background-color: #fff;
+  width: 68%;
+}

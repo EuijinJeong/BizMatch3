@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ktdsuniversity.edu.bizmatch.file.dao.FileDao">
+	
+	<!-- 회원가입의 첨부파일을 데이터베이스에 insert해주는 쿼리문. -->
+	<insert id="insertFile"
+			parameterType="com.ktdsuniversity.edu.bizmatch.file.vo.FileVO">
+		INSERT INTO MBR_SGNP_ATT_INFO 
+		(MBR_SGNUP_ATT_ID
+		,EMIL_ADDR
+		,ATT_URL
+		,ATT_URL_NONREAD)
+		VALUES
+		( MBR_SGNP_ATT_INFO_PK_SEQ.NEXTVAL
+		, #{emilAddr}
+		, #{attUrl}
+		, #{attUrlNonread})
+	</insert>
+	
+	<!-- 회원 포트폴리오 첨부자료를 데이터베이스에 insert해주는 쿼리문. -->
+	<insert id="insertPortfolioFile"
+			parameterType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberPortfolioAttVO">
+		INSERT INTO MBR_PRTFL_ATT 
+		(MBR_PRTFL_ATT_ID
+		,ATT_URL
+		,ATT_URL_NONREAD
+		,MBR_PRTFL_ID)
+		VALUES
+		('AL-' || TO_CHAR(SYSDATE, 'YYYYMMDD') || '-' || LPAD(MBR_PRTFL_ATT_PK_SEQ.NEXTVAL, 5, '0')
+		,#{attUrl}
+		,#{attUrlNonread}
+		,#{mbrPrtflId})
+	</insert>
+	
+	<!-- 한 포트폴리오에 대한 첨부자료들을 조회하는 쿼리문. -->
+	<select id="selectPortfolioFileList"
+			parameterType="string"
+			resultType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberPortfolioAttVO">
+		SELECT MBR_PRTFL_ATT_ID
+			   ,ATT_URL
+			   ,ATT_URL_NONREAD
+			   ,MBR_PRTFL_ID
+		  FROM MBR_PRTFL_ATT
+		 WHERE MBR_PRTFL_ID = #{_parameter}
+	</select>
+	
+	<!-- 하나의 포트폴리오에 첨부된 모든 첨부파일을 지우는 쿼리문. -->
+	<delete id="deletePortfolioAllAtt"
+			parameterType="string">
+		DELETE 
+		  FROM MBR_PRTFL_ATT
+		 WHERE MBR_PRTFL_ID = #{_parameter}
+	</delete>
+	
+	<!--  -->
+	<insert id="insertProjectFile"
+			parameterType="com.ktdsuniversity.edu.bizmatch.file.vo.ProjectFileVO">
+		INSERT INTO PJ_ATT  
+		(PJ_ATT_ID
+		,PJ_ID
+		,PJ_ATT_URL
+		,PJ_ATT_URL_NONREAD)
+		VALUES
+		( PJ_ATT_PK_SEQ.NEXTVAL
+		, #{pjId}
+		, #{pjAttUrl}
+		, #{pjAttUrlNonread} )
+	</insert>
+	
+	<!-- 지원서 첨부파일을 등록해주는 쿼리문. -->
+	<insert id="insertApplyProjectFile"
+			parameterType="com.ktdsuniversity.edu.bizmatch.file.vo.ProjectApplyFileVO">
+		INSERT INTO PJ_APPLY_ATT
+		(PJ_APPLY_ATT_ID
+		,PJ_APPLY_ID
+		,PJ_APPLY_ATT_URL
+		,PJ_APPLY_ATT_URL_NONREAD)
+		VALUES
+		( PJ_APPLY_ATT_PK_SEQ.NEXTVAL
+		, #{pjApplyId}
+		, #{pjApplyAttUrl}
+		, #{pjApplyAttUrlNoneread} )
+	</insert>
+	
+	<!-- 한 포트폴리오에 첨부된 첨부파일의 개수를 구하는 쿼리문. -->
+	<select id="selectPortfolioAllAttCnt"
+			parameterType="string"
+			resultType="_int">
+		 SELECT count(1)
+		   FROM MBR_PRTFL_ATT
+		  WHERE MBR_PRTFL_ID = #{_parameter}
+	</select>
+	
+	<select id="selectAllProjectApplyAtt"
+			parameterType="string"
+			resultType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectApplyAttVO">
+		SELECT PJ_APPLY_ATT_ID,
+			   PJ_APPLY_ID,
+			   PJ_APPLY_ATT_URL,
+			   PJ_APPLY_ATT_URL_NONREAD
+		  FROM PJ_APPLY_ATT 
+		 WHERE PJ_APPLY_ID = #{_parameter}
+	</select>
+</mapper>
