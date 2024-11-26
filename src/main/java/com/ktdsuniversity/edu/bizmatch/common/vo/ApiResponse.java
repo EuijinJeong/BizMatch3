@@ -13,6 +13,7 @@ public class ApiResponse {
 	private int count;
 	private List<String> errors;
 	private int errorsCount;
+	private String nextUrl;
 	
 	public ApiResponse() {
 		this(HttpStatus.OK);
@@ -77,5 +78,12 @@ public class ApiResponse {
 	public void setErrorsCount(int errorsCount) {
 		this.errorsCount = errorsCount;
 	}
+	public String getNextUrl() {
+		return nextUrl;
+	}
+	public void setNextUrl(String nextUrl) {
+		this.nextUrl = nextUrl;
+	}
+	
 }
 

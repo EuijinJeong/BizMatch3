@@ -53,7 +53,7 @@ public class SecurityUser implements UserDetails {
 		authorities.add(new SimpleGrantedAuthority (String.valueOf(this.memberVO.getMbrCtgry()))); // 사용자의 권한 정보 추가 
 		return authorities;
 	}
-
+	
 	/**
 	 * 로그인을 요청한 사용자의 비밀번호를 반환시키는 역할을 한다.
 	 */
