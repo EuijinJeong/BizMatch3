@@ -75,7 +75,7 @@
 		 ORDER BY SGNUP_DT
 	</select>
 	
-	<!-- 하나의 회원을 삭제하는 쿼리문. -->	
+	<!-- 회원가입 승인 거절된 회원을 삭제하는 쿼리문. -->	
 	<delete id="deleteMember"
 			parameterType="list">
 		DELETE
