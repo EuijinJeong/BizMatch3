@@ -7,45 +7,45 @@ import org.springframework.stereotype.Service;
 
 import com.ktdsuniversity.edu.bizmatch.admin.member.dao.AdminMemberDao;
 import com.ktdsuniversity.edu.bizmatch.admin.member.service.AdminMemberService;
-import com.ktdsuniversity.edu.bizmatch.common.email.dao.EmailDao;
 import com.ktdsuniversity.edu.bizmatch.common.email.service.EmailService;
 import com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO;
 
 @Service
 public class AdminMemberServiceImpl implements AdminMemberService {
-
-
-	
 	
 	@Autowired
 	private EmailService emailService;
 	
 	@Autowired
 	private AdminMemberDao adminMemberDao;
-	
+
 	@Override
-	public boolean handleMemberSignUp(String email) {
-		
-		int selectCnt = this.adminMemberDao.selectMemberCountByEmail(email);
-		if (selectCnt == 0) {
-			throw new IllegalArgumentException("해당 회원을 찾을 수 없습니다.");
-		}
-		// 회원가입 승인 이메일을 사용자에게 보냄.
-		this.emailService.sendEmailForAlertSignUp(email);
-		
-		// 회원가입 상태를 승인이라고 업데이트해줌.
-		int updateCnt = this.adminMemberDao.updateOneMemberStt(email);
-		if(updateCnt == 0) {
-			throw new IllegalArgumentException("시스템의 오류로 회원 상태를 업데이트 할 수 없습니다.");
+	public boolean updateMemberSignupStt(List<String> email) {
+		// 회원의 활성화 상태를 업데이트 해준다.
+		int updatedCnt = this.adminMemberDao.updateMemberSttActive(email);
+		if(updatedCnt == 0) {
+			new IllegalArgumentException("서버상의 이유로 상태 업데이트에 실패했습니다.");
 		}
 		return true;
 	}
 
 	@Override
 	public List<MemberVO> getNotAssignedMemberList() {
-		List<MemberVO> result = adminMemberDao.selectNotAssignedMemberList();
-		return result;
+		return null;
 	}
-	
+
+	@Override
+	public boolean updateMemberSignupSttToRefuse(List<String> email) {
+		// 회원의 정보를 먼저 조회한다. 
+		int deletedCnt = this.adminMemberDao.deleteMember(email);
+		if(deletedCnt == 0) {
+			new IllegalArgumentException("서버상의 이유로 상태 업데이트에 실패했습니다.");
+		}
+		
+		// 회원가입 거절 이메일을 날려야함.
+//		this.emailService.sendEmailForAlertFailSignUp(email);
+		
+		return true;
+	}
 	
 }

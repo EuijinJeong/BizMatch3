@@ -9,11 +9,13 @@ public interface EmailService {
 	 * @param email
 	 */
 	public void sendEmailForAlertFailSignUp(String email);
+	
 	/**
 	 * 회원가입 완료됨을 알려주는 이메일을 보내는 메서드.
 	 * @param email
 	 */
 	public void sendEmailForAlertSignUp(String email);
+	
 	/**
 	 * 비밀번호 찾는 이메일을 보내는 메서드.
 	 * @param email : 사용자의 이메일.

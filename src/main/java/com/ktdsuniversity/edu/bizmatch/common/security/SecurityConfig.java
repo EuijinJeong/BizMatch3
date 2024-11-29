@@ -21,7 +21,7 @@ import com.ktdsuniversity.edu.bizmatch.common.security.jwt.JsonWebTokenAuthentic
 import com.ktdsuniversity.edu.bizmatch.member.dao.MemberDao;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 public class SecurityConfig {
 	
 	@Autowired
@@ -71,6 +71,7 @@ public class SecurityConfig {
 //						.requestMatchers("/member/regist/**")
 				.requestMatchers("/error/**").requestMatchers("favicon.ico").requestMatchers("/member/**-delete-me")
 				.requestMatchers("/js/**").requestMatchers("/css/**");
+		
 	}
 	
 	@Bean
@@ -94,11 +95,9 @@ public class SecurityConfig {
 	
 		http.addFilterAfter(this.jsonWebTokenAuthenticationFilter, BasicAuthenticationFilter.class);
 		
-//		http.authorizeHttpRequests(httpRequest ->
-//		httpRequest.requestMatchers("/member/findpwd").permitAll() // 비밀번호 찾기 페이지.
-//				   .requestMatchers("/member/resetpwd").permitAll() // 비밀번호 재설정 페이지.
-//				   .requestMatchers("/member/select/membertype").permitAll() // 회원가입 유형 선택 페이지.
-//				   );
+		http.authorizeHttpRequests(httpRequest ->
+		httpRequest.requestMatchers("/api/**").permitAll() // 비밀번호 찾기 페이지.
+				  );
 		http.csrf(csrf -> csrf.ignoringRequestMatchers("/token", "/api/**"));
 		return http.build();
 	}

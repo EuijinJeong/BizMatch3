@@ -290,11 +290,14 @@ public class GlobalExceptionHandler {
     
     @ExceptionHandler(RuntimeException.class)
     public String handleRuntimeException(RuntimeException re) {
+    	re.printStackTrace();
     	return "/error/runtime_exception";
     }
     
     @ExceptionHandler(IllegalArgumentException.class)
     public String handleIllegalArgumentException(IllegalArgumentException iae) {
+    	
+    	iae.printStackTrace();
     	return "/error/runtime_exception";
     }
 }
