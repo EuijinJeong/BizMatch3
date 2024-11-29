@@ -11,7 +11,6 @@ import com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 public class AccessLogInterceptor implements HandlerInterceptor{
 	public static final Logger logger = LoggerFactory.getLogger(AccessLogInterceptor.class);
@@ -27,8 +26,8 @@ public class AccessLogInterceptor implements HandlerInterceptor{
 			throws Exception {
 		AccessLogVO accessLogVO = new AccessLogVO();
 		
-		HttpSession session = request.getSession();
-		MemberVO memberVO = (MemberVO)session.getAttribute("_LOGIN_USER_");
+		//HttpSession session = request.getSession();
+		MemberVO memberVO = null;
 		
 		String packageName = handler.toString().replace("com.ktdsuniversity.edu.bizmatch", "");
 		packageName = packageName.substring(0,packageName.lastIndexOf(".")).toUpperCase();

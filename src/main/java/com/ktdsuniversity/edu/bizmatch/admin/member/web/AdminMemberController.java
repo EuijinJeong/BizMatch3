@@ -1,31 +1,42 @@
 package com.ktdsuniversity.edu.bizmatch.admin.member.web;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ktdsuniversity.edu.bizmatch.admin.member.service.AdminMemberService;
+import com.ktdsuniversity.edu.bizmatch.common.vo.ApiResponse;
 
-@Controller
+@RestController
+@RequestMapping("/api/admin")
 public class AdminMemberController {
 	
 	@Autowired
 	private AdminMemberService adminMemberService;
 	
-	@PostMapping("/update/member/status")
-	public String updateMemberSignUpStatus(@RequestParam String email) {
-		
-		this.adminMemberService.handleMemberSignUp(email);
-		return "관리자 페이지 url";
+	/**
+	 * 회원가입시 회원 활성화를 수정하는 컨트롤러.
+	 * @param email
+	 * @return
+	 */
+	@PostMapping("/update/memberstt")
+	public ApiResponse postMemberStt(@RequestBody List<String> email) {
+		boolean isUpdated = this.adminMemberService.updateMemberSignupStt(email); 
+		return new ApiResponse(isUpdated);
 	}
 	
-	// 1.회원 가입 승인
-	
-	// 회원 가입 맴버 VO  가입 state 가 0 인 애들을 가져옴
-	// 
-	
-	// 2.회원 활동 정지 기능
-	
-	// 3.신고 알람 받기
+	/**
+	 * 회원가입시 회원가입 승낙을 거절하는 컨트롤러.
+	 * @param email
+	 * @return
+	 */
+	@PostMapping("/delete/memberstt")
+	public ApiResponse postMemberDeleteStt(@RequestBody List<String> email) {
+		boolean isDeleted = this.adminMemberService.updateMemberSignupSttToRefuse(email);
+		return new ApiResponse(isDeleted);
+	}
 }

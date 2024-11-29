@@ -62,9 +62,9 @@ public class WebConfig implements WebMvcConfigurer {
 	}
 	
 	@Override public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(new LoginSessionInterceptor())
-		.addPathPatterns(this.checkLoginPathpatternsList)
-		.excludePathPatterns(this.excludeLoginPatternsList);
+//		registry.addInterceptor(new LoginSessionInterceptor())
+//		.addPathPatterns(this.checkLoginPathpatternsList)
+//		.excludePathPatterns(this.excludeLoginPatternsList);
 		
 		registry.addInterceptor(new AccessLogInterceptor(accessLogDao))
 		.addPathPatterns(accessLogPathpatternsList)

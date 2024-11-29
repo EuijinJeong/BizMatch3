@@ -37,6 +37,7 @@ public class SecurityAuthenticationProvider implements AuthenticationProvider {
 	
 	public SecurityAuthenticationProvider(UserDetailsService userDetailsService
 										, PasswordEncoder passwordEncoder ) {
+		
 		this.userDetailsService = userDetailsService;
 		this.passwordEncoder = passwordEncoder;
 	}
