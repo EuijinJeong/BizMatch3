@@ -77,6 +77,57 @@
 				  JOIN PYMNT_INFO PY
 				    ON PY.PJ_ID = P.PJ_ID
 	</select>
+	<select id="selectOneProject" parameterType="string" resultMap="projectVOMap">
+	SELECT P.PJ_ID
+			, P.ORDR_ID
+			, P.OBTN_ID
+			, P.PJ_TTL
+			, TO_CHAR(P.RGSTR_DT,'YYYY-MM-DD') RGSTR_DT 
+			, TO_CHAR(P.STRT_DT, 'YYYY-MM-DD') STRT_DT 
+			, TO_CHAR(P.END_DT, 'YYYY-MM-DD') END_DT
+			, P.CNTRCT_ACCNT
+			, P.PJ_DESC
+			, P.IS_DLT
+			, TO_CHAR(P.DLT_DT, 'YYYY-MM-DD') DLT_DT
+			, P.LST_MOD_DT
+			, P.IS_RCRUT_ADD
+			, P.PJ_STT
+			, P.VIEW_CNT
+			, P.PJ_RCRUT_CNT
+			, TO_CHAR(P.PJ_RCRUT_STRT_DT, 'YYYY-MM-DD') PJ_RCRUT_STRT_DT
+			, TO_CHAR(P.PJ_RCRUT_END_DT,'YYYY-MM-DD') PJ_RCRUT_END_DT
+			, PI.PJ_INDSTR_ID
+			, PI.MJR_ID
+			, PI.SMJR_ID
+			, PPS.PJ_PRM_STK_ID 
+			, II.INDSTR_ID
+			, II.INDSTR_NM
+			, II.UPPR_INDSTR_ID
+			, PRM.PRM_STK_ID
+			, PRM.PRM_STK
+			, PY.PYMNT_ID 
+			, PY.GRNT_AMT 
+			, PY.CNTRCT_AMT 
+			, PY.GRNT_PD_DT 
+			, PY.CNTRCT_PD_DT 
+			, PY.ACCNT_NM 
+			, PY.PYMNT_TYP 
+			, PY.IMP_UID 
+			, PY.DPST_RFND_AMNT 
+			, PY.DPST_RFND_DT 
+			  FROM PJ_INFO P
+			  JOIN PJ_INDSTR PI
+			    ON P.PJ_ID = PI.PJ_ID 
+			  JOIN INDSTR_INFO II
+			    ON II.INDSTR_ID = PI.SMJR_ID
+			  JOIN PJ_PRM_STK PPS
+			    ON PPS.PJ_ID = P.PJ_ID 
+			  JOIN PRM_STK PRM
+			    ON PRM.PRM_STK_ID = PPS.PRM_STK_ID
+			  JOIN PYMNT_INFO PY
+			    ON PY.PJ_ID = P.PJ_ID 
+		 WHERE P.PJ_ID = #{_parameter}
+	</select>
 
 	<update id="deleteOneProject" parameterType="string">
 		UPDATE PJ_INFO 
