@@ -90,11 +90,11 @@ public class SecurityAuthenticationProvider implements AuthenticationProvider {
 	/**
 	 * 인증 수단을 정의하는 메서드이다.
 	 * UsernamePasswordAuthenticationToken을 사용한다.
-	 * 	-> 이메일과 비밀번호로 인증을 수행하는 방식이다.
+	 * 	-> 이메일과 비밀번호로 인증을 수행하는 방식이다... - 이 사람은 바보입니다~-
 	 */
 	@Override
 	public boolean supports(Class<?> authentication) {
 		logger.debug("Param token type: {} " , authentication);
-		return authentication.equals(UsernamePasswordAuthenticationToken.class);
+		return authentication.equals(UsernamePasswordAuthenticationToken.class);   
 	}
 }
