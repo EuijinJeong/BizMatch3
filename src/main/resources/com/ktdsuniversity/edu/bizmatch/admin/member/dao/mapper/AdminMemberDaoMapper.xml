@@ -11,7 +11,8 @@
 		 WHERE EMIL_ADDR = #{_parameter};
 	</update>
 	
-	<select id="selectOneMember"
+
+		<select id="selectOneMember"
  			parameterType="string"
  			resultType = "com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO">
  		SELECT   MBR_NM
@@ -40,5 +41,29 @@
 				,MBR_INTR
 		   FROM MBR_INFO
 		  WHERE EMIL_ADDR = #{_parameter}
- 	</select>
+ 		</select>
+
+ 	
+		<select id="selectMemberCountByEmail"
+         parameterType="string"
+         resultType="int">
+			    SELECT COUNT(*)
+			    FROM MBR_INFO
+			    WHERE EMIL_ADDR = #{_parameter}
+			      AND PNLTY >= 3
+			      AND IS_QT = 0
+		</select>
+
+		<select id="selectNotAssignedMemberList"
+		         resultType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO">
+		    SELECT MBR_NM,
+		           EMIL_ADDR,
+		           TO_CHAR(SGNUP_DT, 'YYYY-MM-DD') AS SGNUP_DT,
+		           MBR_STT,
+		           MBR_CTGRY
+		    FROM MBR_INFO
+		    WHERE MBR_STT = 0
+		    ORDER BY SGNUP_DT
+		</select>
+		 	
 </mapper>

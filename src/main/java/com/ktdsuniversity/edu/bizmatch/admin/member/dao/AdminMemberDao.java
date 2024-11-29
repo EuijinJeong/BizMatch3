@@ -1,5 +1,7 @@
 package com.ktdsuniversity.edu.bizmatch.admin.member.dao;
 
+import java.util.List;
+
 import com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO;
 
 public interface AdminMemberDao {
@@ -17,5 +19,9 @@ public interface AdminMemberDao {
 	 * @param email
 	 * @return
 	 */
+	public List<MemberVO> selectNotAssignedMemberList();
+	
+	public int selectMemberCountByEmail(String email);
+	
 	public MemberVO selectOneMember(String email);
 }
