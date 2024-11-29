@@ -1,5 +1,9 @@
 package com.ktdsuniversity.edu.bizmatch.admin.member.service;
 
+import java.util.List;
+
+import com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO;
+
 public interface AdminMemberService {
 
 	/**
@@ -8,5 +12,7 @@ public interface AdminMemberService {
 	 * @return
 	 */
 	public boolean handleMemberSignUp(String email);
+	
+	public List<MemberVO> getNotAssignedMemberList();
 	
 }

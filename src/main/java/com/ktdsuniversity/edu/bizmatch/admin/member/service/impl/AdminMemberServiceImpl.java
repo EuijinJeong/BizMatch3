@@ -1,5 +1,7 @@
 package com.ktdsuniversity.edu.bizmatch.admin.member.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -7,12 +9,13 @@ import com.ktdsuniversity.edu.bizmatch.admin.member.dao.AdminMemberDao;
 import com.ktdsuniversity.edu.bizmatch.admin.member.service.AdminMemberService;
 import com.ktdsuniversity.edu.bizmatch.common.email.dao.EmailDao;
 import com.ktdsuniversity.edu.bizmatch.common.email.service.EmailService;
+import com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO;
 
 @Service
 public class AdminMemberServiceImpl implements AdminMemberService {
 
-	@Autowired
-	private EmailDao emailDao;
+
+	
 	
 	@Autowired
 	private EmailService emailService;
@@ -23,7 +26,7 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 	@Override
 	public boolean handleMemberSignUp(String email) {
 		
-		int selectCnt = this.emailDao.selectMemberForSignUp(email);
+		int selectCnt = this.adminMemberDao.selectMemberCountByEmail(email);
 		if (selectCnt == 0) {
 			throw new IllegalArgumentException("해당 회원을 찾을 수 없습니다.");
 		}
@@ -37,4 +40,12 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 		}
 		return true;
 	}
+
+	@Override
+	public List<MemberVO> getNotAssignedMemberList() {
+		List<MemberVO> result = adminMemberDao.selectNotAssignedMemberList();
+		return result;
+	}
+	
+	
 }
