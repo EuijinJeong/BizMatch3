@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ktdsuniversity.edu.bizmatch.admin.report.dao.ReportDao">	
+<resultMap type="com.ktdsuniversity.edu.bizmatch.project.review.vo.ReviewVO" id="reviewVOMap" autoMapping="true">
+	<id column="RVW_ID" property="rvwId" />
+	<result column="RVW_DT" property="rvwDt"/>
+	<collection property="reviewReportVO" autoMapping="true" ofType="com.ktdsuniversity.edu.bizmatch.report.vo.ReviewReportVO">
+		<id column="RPRT_ID" property="rprtId"/>
+		<result column="emilAddr" property="RP_EMIL_ADDR"/>
+	</collection>
+
+</resultMap>
+<select id="selectAllReportReview" resultMap="reviewVOMap">
+	SELECT PR.RVW_ID 
+		 , PR.RVW_CNTNT 
+		 , TO_CHAR(PR.RVW_DT, 'YYYY-MM-DD') RVW_DT
+		 , PR.SCR 
+		 , PR.IS_DLT 
+		 , PR.EMIL_ADDR 
+		 , PR.PJ_ID 
+		 , RR.RPRT_ID 
+		 , PR.RVW_RPRT_CNT 
+		 , RR.EMIL_ADDR AS RP_EMIL_ADDR
+		 , RR.RPRT_CTGRY 
+		 , RR.RPRT_CNTNT 
+		 , RR.IS_RPRT 
+	  FROM PJ_RVW PR
+	  JOIN RVW_RPRT RR
+	    ON RR.CMMNT_ID = PR.RVW_ID 
+	 WHERE PR.RVW_RPRT_CNT > 0
+	   AND PR.IS_DLT != 1
+	   AND RR.IS_RPRT != 1
+</select>
+<delete id="deleteReportReview" parameterType="string">
+	DELETE 
+	  FROM RVW_RPRT 
+	 WHERE RPRT_ID IN
+	<foreach collection="list" 
+			 item="rprtId" 
+			 open="(" 
+			 separator="," 
+			 close=")">
+		#{rprtId}
+	</foreach>
+</delete>
+<update id="deleteReview" parameterType="string">
+	UPDATE PJ_RVW 
+	   SET IS_DLT = 1
+	     , DLT_DT = SYSDATE 
+	 WHERE RVW_ID IN 
+	 <foreach collection="list" 
+			 item="rvwId" 
+			 open="(" 
+			 separator="," 
+			 close=")">
+		#{rvwId}
+	</foreach>
+</update>
+<update id="updateIsRprt" parameterType="list">
+	UPDATE RVW_RPRT 
+	   SET IS_RPRT = 1
+	 WHERE RPRT_ID IN 
+	 <foreach collection="list" 
+			 item="rprtId" 
+			 open="(" 
+			 separator="," 
+			 close=")">
+		#{rprtId}
+	</foreach>
+</update>
+<select id="selectOneReviewReport" parameterType="list" 
+resultType="com.ktdsuniversity.edu.bizmatch.report.vo.ReviewReportVO">
+	SELECT *
+	  FROM RVW_RPRT
+	 WHERE RPRT_ID IN
+	<foreach collection="list" 
+			 item="rprtId" 
+			 open="(" 
+			 separator="," 
+			 close=")">
+		#{rprtId}
+	</foreach>
+</select>
+<update id="updateReviewReportCnt" parameterType="list">
+	UPDATE PJ_RVW 
+	   SET RVW_RPRT_CNT = RVW_RPRT_CNT-1
+	 WHERE RVW_ID = #{_parameter}
+</update>
+</mapper>

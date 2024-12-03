@@ -31,11 +31,6 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 		return true;
 	}
 
-	@Override
-	public List<MemberVO> getNotAssignedMemberList() {
-		return null;
-	}
-
 	@Transactional
 	@Override
 	public boolean updateMemberSignupSttToRefuse(List<String> emailList) {
@@ -51,5 +46,14 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 		}
 		
 		return true;
+	}
+
+	@Override
+	public List<MemberVO> readAllMemberList() {
+		List<MemberVO> memberList = this.adminMemberDao.selectMemberList();
+		if(memberList == null) {
+			new IllegalArgumentException("서버상의 이유로 회원 조회가 불가능합니다.");
+		}
+		return memberList;
 	}
 }

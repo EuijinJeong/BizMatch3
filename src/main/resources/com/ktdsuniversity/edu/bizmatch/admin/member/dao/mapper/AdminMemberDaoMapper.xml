@@ -89,4 +89,11 @@
 			#{email}
 		</foreach>
 	</delete>
+	
+	<!-- 전체 회원의 리스트를 조회하는 쿼리문. -->
+	<select id="selectMemberList"
+			resultType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO">
+		SELECT *
+		  FROM MBR_INFO MI
+	</select>
 </mapper>
