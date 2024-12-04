@@ -34,4 +34,16 @@ public interface AdminMemberDao {
 	 * @return
 	 */
 	public List<MemberVO> selectMemberList();
+	
+	/**
+	 * 리스트로 받아온 회원의 패널티를 1증가 시킴
+	 * @param email
+	 * @return
+	 */
+	public int updateMemberPnlty(List<String> email);
+	
+	/**
+	 * 리스트로 받아온 회원의 계정을 탈퇴시킴
+	 */
+	public int updateMemberIsqt(List<String> email);
 }

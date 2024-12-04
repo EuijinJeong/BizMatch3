@@ -56,4 +56,25 @@ public class AdminMemberServiceImpl implements AdminMemberService {
 		}
 		return memberList;
 	}
+
+	@Override
+	public boolean updateMemberPnlty(List<String> email) {
+		boolean isSuccess = this.adminMemberDao.updateMemberPnlty(email) > 0;
+		
+		if(!isSuccess) {
+			throw new IllegalArgumentException("서버 오류 잠시 후 다시 시도");
+		}
+		return true;
+	}
+
+	@Override
+	public boolean updateMemberIsqt(List<String> email) {
+		boolean isSuccess = this.adminMemberDao.updateMemberIsqt(email) > 0;
+		
+		if(!isSuccess) {
+			throw new IllegalArgumentException("서버 오류 잠시 후 다시 시도");
+		}
+		
+		return true;
+	}
 }

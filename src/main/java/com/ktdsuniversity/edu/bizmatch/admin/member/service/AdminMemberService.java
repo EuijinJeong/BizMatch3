@@ -25,4 +25,18 @@ public interface AdminMemberService {
 	 * @return
 	 */
 	public List<MemberVO> readAllMemberList();
+	
+	/**
+	 * 선택된 회원의 패널티를 +1 하는 메소드
+	 * @param email
+	 * @return
+	 */
+	public boolean updateMemberPnlty(List<String> email);
+	
+	/**
+	 * 선택된 회원을 탈퇴 시키는 메소드
+	 * @param email
+	 * @return
+	 */
+	public boolean updateMemberIsqt(List<String> email);
 }

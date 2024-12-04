@@ -47,4 +47,18 @@ public class AdminMemberController {
 		List<MemberVO> memberList = this.adminMemberService.readAllMemberList();
 		return new ApiResponse(memberList);
 	}
+	
+	@PostMapping("/update/member/penalty")
+	public ApiResponse updateMemberPenalty(@RequestBody List<String> email) {
+		boolean isSuccess = this.adminMemberService.updateMemberPnlty(email);
+		
+		return new ApiResponse(isSuccess);
+	}
+	
+	@PostMapping("/update/member/isqt")
+	public ApiResponse updateMemberIsqt(@RequestBody List<String> email) {
+		boolean isSuccess = this.adminMemberService.updateMemberIsqt(email);
+		
+		return new ApiResponse(isSuccess);
+	}
 }
