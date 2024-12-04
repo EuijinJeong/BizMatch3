@@ -313,11 +313,15 @@
  	<resultMap type="com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO" id="memberVOMap" autoMapping="true">
  		<id column="EMIL_ADDR" property="emilAddr" />
  		<!-- CompanyVO 매핑 -->
-    	<association property="companyVO" javaType="com.ktdsuniversity.edu.bizmatch.member.vo.CompanyVO" autoMapping="true">
+    	<association property="companyVO" 
+    				 javaType="com.ktdsuniversity.edu.bizmatch.member.vo.CompanyVO"
+    				 autoMapping="true">
         	<id column="CMPNY_ID" property="cmpnyId" />
     	</association>
  		<!-- MbrPrmStkVO 매핑 -->
- 		<collection property="mbrPrmStkList" ofType="com.ktdsuniversity.edu.bizmatch.common.skills.vo.MbrPrmStkVO" autoMapping="true">
+ 		<collection property="mbrPrmStkList" 
+ 					ofType="com.ktdsuniversity.edu.bizmatch.common.skills.vo.MbrPrmStkVO" 
+ 					autoMapping="true">
  			<id column="MBR_PRM_STK_ID" property="mbrPrmStkId" />
  			<!-- PrmStkVO 매핑 -->
  			<association property="prmStkVO" javaType="com.ktdsuniversity.edu.bizmatch.member.vo.PrmStkVO" >
@@ -775,13 +779,14 @@
  		 WHERE EMIL_ADDR = #{_parameter}
  	</select>
  	
- 	<resultMap type="com.ktdsuniversity.edu.bizmatch.member.vo.MemberMyPageIndsryVO" id="MbrIndsryVOMap">
+ 	<resultMap type="com.ktdsuniversity.edu.bizmatch.member.vo.MemberMyPageIndsryVO" 
+ 			   id="MbrIndsryVOMap">
  		<result column="MJR_NM" property="mjrNm"/>
  		<result column="SMJR_NM" property="smjrNm"/>
  	</resultMap>
  	<select id="selectMbrIndsty" 
- 	parameterType="string" 
- 	resultMap="MbrIndsryVOMap">
+ 			parameterType="string" 
+ 			resultMap="MbrIndsryVOMap">
  	SELECT II.INDSTR_NM MJR_NM
 	 , III.INDSTR_NM SMJR_NM
 	  FROM CMPNY_INFO CI
@@ -793,7 +798,8 @@
  	</select>
  	
  	<!-- 특정 회사 관심산업군 변경 쿼리문 -->
- 	<update id="updateCmpnyLkIndstr" parameterType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberCompanyModifyVO">
+ 	<update id="updateCmpnyLkIndstr" 
+ 			parameterType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberCompanyModifyVO">
  		UPDATE MBR_LK_INDSTR
    		   SET MJR_ID = #{cmpnyBizCtgryId}
    	 		 , SMJR_ID = #{cmpnyIndstrId}
@@ -824,8 +830,8 @@
 
  	</select>
  	<select id="selectAllCmpnyPortfolios" 
- 	parameterType="string" 
- 	resultType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberPortfolioVO">
+ 			parameterType="string" 
+ 			resultType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberPortfolioVO">
 		SELECT MBR_PRTFL_ID ,
 			   MBR_PRTFL_TTL ,
 			   MBR_PRTFL_TEXT ,

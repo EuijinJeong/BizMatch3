@@ -2,6 +2,7 @@ package com.ktdsuniversity.edu.bizmatch.payment.dao;
 
 import java.util.List;
 
+import com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO;
 import com.ktdsuniversity.edu.bizmatch.payment.vo.AccntVO;
 import com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentHstryVO;
 import com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentRequestVO;
@@ -88,4 +89,11 @@ public interface PaymentDao {
 	 * @return
 	 */
 	public int insertAccntHstry(PaymentHstryVO paymentHstryVO);
+	
+	/**
+	 * 내가 결제했던 결제 내역을 조회하는 쿼리문을 호출하는 메서드.
+	 * @param memberVO
+	 * @return
+	 */
+	public List<PaymentVO>selectAllPaymentList(MemberVO memberVO);
 }
