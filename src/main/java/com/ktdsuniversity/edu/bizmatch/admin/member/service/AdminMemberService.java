@@ -20,5 +20,9 @@ public interface AdminMemberService {
 	 */
 	public boolean updateMemberSignupSttToRefuse(List<String> email);
 	
-	public List<MemberVO> getNotAssignedMemberList();
+	/**
+	 * 전체 회원의 정보를 조회하는 메서드.
+	 * @return
+	 */
+	public List<MemberVO> readAllMemberList();
 }

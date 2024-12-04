@@ -3,6 +3,7 @@ package com.ktdsuniversity.edu.bizmatch.admin.member.web;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ktdsuniversity.edu.bizmatch.admin.member.service.AdminMemberService;
 import com.ktdsuniversity.edu.bizmatch.common.vo.ApiResponse;
+import com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -30,7 +32,7 @@ public class AdminMemberController {
 	}
 	
 	/**
-	 * 회원가입시 회원가입 승낙을 거절하는 컨트롤러.
+	 * 회원을 삭제하는 컨트롤러.
 	 * @param email
 	 * @return
 	 */
@@ -38,5 +40,11 @@ public class AdminMemberController {
 	public ApiResponse postMemberDeleteStt(@RequestBody List<String> email) {
 		boolean isDeleted = this.adminMemberService.updateMemberSignupSttToRefuse(email);
 		return new ApiResponse(isDeleted);
+	}
+	
+	@GetMapping("/memberlist")
+	public ApiResponse getMemberList() {
+		List<MemberVO> memberList = this.adminMemberService.readAllMemberList();
+		return new ApiResponse(memberList);
 	}
 }

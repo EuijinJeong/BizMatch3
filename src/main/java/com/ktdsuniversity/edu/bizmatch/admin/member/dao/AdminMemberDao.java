@@ -28,4 +28,10 @@ public interface AdminMemberDao {
 	 * @return
 	 */
 	public MemberVO selectOneMember(String email);
+	
+	/**
+	 * 전체 회원의 정보를 조회하는 쿼리문을 호출하는 메서드.
+	 * @return
+	 */
+	public List<MemberVO> selectMemberList();
 }

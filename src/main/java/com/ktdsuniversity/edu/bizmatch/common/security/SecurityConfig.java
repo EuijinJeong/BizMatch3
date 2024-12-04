@@ -101,6 +101,7 @@ public class SecurityConfig {
 			
 			cors.configurationSource(source);
 		});
+		
 		http.authorizeHttpRequests(httpRequest->
 									httpRequest.requestMatchers("/").permitAll()
 												.requestMatchers("/member/signup/**").permitAll()
@@ -115,7 +116,7 @@ public class SecurityConfig {
 		
 		http.authorizeHttpRequests(httpRequest ->
 		httpRequest.requestMatchers("/api/**").permitAll() // 비밀번호 찾기 페이지.
-				  );
+		);
 		http.csrf(csrf -> csrf.ignoringRequestMatchers("/token", "/api/**"));
 		return http.build();
 	}

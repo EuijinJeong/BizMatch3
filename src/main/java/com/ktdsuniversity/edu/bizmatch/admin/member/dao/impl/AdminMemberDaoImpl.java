@@ -33,4 +33,9 @@ public class AdminMemberDaoImpl extends SqlSessionDaoSupport implements AdminMem
 	public int updateMemberSttActive(List<String> email) {
  		return this.getSqlSession().update(NAMESPACE + ".updateMemberSttActive", email);
 	}
+
+	@Override
+	public List<MemberVO> selectMemberList() {
+		return this.getSqlSession().selectList(NAMESPACE + ".selectMemberList");
+	}
 }
