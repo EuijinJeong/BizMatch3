@@ -19,7 +19,6 @@ import com.ktdsuniversity.edu.bizmatch.project.service.ProjectService;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectVO;
 
 @Controller
-
 public class PaymentController {
 	
 	public static final Logger logger = LoggerFactory.getLogger(PaymentController.class);
@@ -34,6 +33,7 @@ public class PaymentController {
 	public String viewDownPaymentErrorPage() {
 		return "/error/payment_error";
 	}
+	
 	/**
 	 * 계약금 결제 페이지 가져오기.
 	 * @param pjId
@@ -129,4 +129,6 @@ public class PaymentController {
 	public String viewMainPage() {
 		return "redirect:/";
 	}
+	
+	
 }

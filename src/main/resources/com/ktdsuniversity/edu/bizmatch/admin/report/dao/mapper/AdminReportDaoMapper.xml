@@ -51,11 +51,11 @@
 	     , DLT_DT = SYSDATE 
 	 WHERE RVW_ID IN 
 	 <foreach collection="list" 
-			 item="rvwId" 
+			 item="rprtId" 
 			 open="(" 
 			 separator="," 
 			 close=")">
-		#{rvwId}
+		#{rprtId}
 	</foreach>
 </update>
 <update id="updateIsRprt" parameterType="list">
