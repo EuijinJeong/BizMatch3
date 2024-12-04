@@ -1,29 +1,26 @@
 package com.ktdsuniversity.edu.bizmatch.project.review.web;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.comment.ReviewFailException;
 import com.ktdsuniversity.edu.bizmatch.common.utils.ParameterCheck;
-import com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO;
+import com.ktdsuniversity.edu.bizmatch.common.vo.ApiResponse;
 import com.ktdsuniversity.edu.bizmatch.project.review.service.ReviewService;
 import com.ktdsuniversity.edu.bizmatch.project.review.vo.DeleteReviewVO;
 import com.ktdsuniversity.edu.bizmatch.project.review.vo.ReviewVO;
 import com.ktdsuniversity.edu.bizmatch.project.review.vo.WriteReviewVO;
 
-@Controller
+@RestController
 public class ReviewController {
 
 	public static final Logger logger = LoggerFactory.getLogger(ReviewController.class);
@@ -32,30 +29,29 @@ public class ReviewController {
 	private ReviewService reviewService;
 	
 
-	// 리뷰 목록 조회
-	@ResponseBody
+	/**
+	 * 리뷰 목록을 조회하는 컨트롤러.
+	 * @param pjId
+	 * @return
+	 */
 	@GetMapping("/project/{pjId}/reviewlist")
-	public Map<String, Object> selectAllReviews(@PathVariable String pjId) {
+	public ApiResponse selectAllReviews(@PathVariable String pjId) {
 		List<ReviewVO> reviewList = reviewService.selectAllReviews(pjId);
 		
-		Map<String, Object> resultMap = new HashMap<>();
-		resultMap.put("reviews", reviewList);
-		
-		return resultMap;
+		return new ApiResponse(reviewList);
 	}
 	
-	// 리뷰 등록
-	
+	/**
+	 * 리뷰 작성을 하는 컨트롤러.
+	 * @param pjId
+	 * @param writeReviewVO
+	 * @param memberVO
+	 * @return
+	 */
 	@PostMapping("/project/{pjId}/review")
-	@ResponseBody
-	public Map<String, Object> doInsertNewReviews(@PathVariable String pjId
+	public ApiResponse doInsertNewReviews(@PathVariable String pjId
 												, @RequestBody WriteReviewVO writeReviewVO
-												, @SessionAttribute(value = "_LOGIN_USER_" , required = false)MemberVO memberVO) {
-		logger.debug(writeReviewVO.toString());
-		
-		if(memberVO.getEmilAddr() == null || memberVO.getEmilAddr().isEmpty()) {
-			throw new ReviewFailException("로그인이 필요합니다");
-		}
+												, Authentication memberVO) {
 		
 		if(ParameterCheck.parameterCodeValid(writeReviewVO.getRvwCntnt(), 0)) {
 			throw new ReviewFailException("리뷰 내용을 입력해주세요");
@@ -66,35 +62,43 @@ public class ReviewController {
 		}
 		
 		writeReviewVO.setPjId(pjId);
-		writeReviewVO.setEmilAddr(memberVO.getEmilAddr());
+		writeReviewVO.setEmilAddr(memberVO.getName());
 		
 		boolean isSuccess = reviewService.insertOneReview(writeReviewVO);
-		Map<String, Object> resultMap = new HashMap<>();
-		resultMap.put("result", isSuccess);
 		
-		return resultMap;
+		return new ApiResponse(isSuccess);
 	}
 	
-	// 리뷰 수정: 리뷰 신고횟수 추가
-	@ResponseBody
+	/**
+	 * 리뷰 신고 횟수를 추가하는 컨트롤러.
+	 * @param rvwId
+	 * @param reviewVO
+	 * @param memberVO
+	 * @return
+	 */
 	@PostMapping("/project/review/modify/{rvwId}")
-	public Map<String, Object> doUpdateReview(@PathVariable String rvwId,@RequestBody ReviewVO reviewVO, @SessionAttribute("_LOGIN_USER_") MemberVO memberVO) {
+	public ApiResponse doUpdateReview(@PathVariable String rvwId
+									,@RequestBody ReviewVO reviewVO, Authentication memberVO) {
 		
 		reviewVO.setRvwId(rvwId);
-		reviewVO.setEmilAddr(memberVO.getEmilAddr());
+		reviewVO.setEmilAddr(memberVO.getName());
 		
 		boolean isSuccess = reviewService.updateReviewReportCount(rvwId);
 		
-		Map<String, Object> resultMap = new HashMap<>();
-		resultMap.put("result", isSuccess);
-		
-		return resultMap;
+		return new ApiResponse(isSuccess);
 	}
-	
-	// 리뷰 삭제: 리뷰 isDlt 변경
-	@ResponseBody
+
+	/**
+	 * 특정 리뷰 삭제하는 컨트롤러.
+	 * @param rvwId
+	 * @param deleteReviewVO
+	 * @param memberVO
+	 * @return
+	 */
 	@PostMapping("/project/review/delete/{rvwId}")
-	public Map<String, Object> doDeleteReview(@PathVariable String rvwId, DeleteReviewVO deleteReviewVO, @SessionAttribute("_LOGIN_USER_") MemberVO memberVO) {
+	public ApiResponse doDeleteReview(@PathVariable String rvwId
+											, DeleteReviewVO deleteReviewVO
+											, Authentication memberVO) {
 		
 		ReviewVO existingReview = reviewService.selectOneReview(rvwId);
 		
@@ -102,19 +106,16 @@ public class ReviewController {
 			throw new ReviewFailException("삭제하려는 리뷰가 존재하지 않습니다");
 		}
 		
-		if(!existingReview.getEmilAddr().equals(memberVO.getEmilAddr())) {
+		if(!existingReview.getEmilAddr().equals(memberVO.getName())) {
 			throw new ReviewFailException("삭제 권한이 없습니다");
 		}
 		
 		deleteReviewVO.setRvwId(rvwId);
-		deleteReviewVO.setEmilAddr(memberVO.getEmilAddr());
+		deleteReviewVO.setEmilAddr(memberVO.getName());
 		
 		boolean isSuccess = reviewService.deleteOneReview(deleteReviewVO);
 		
-		Map<String, Object> resultMap = new HashMap<>();
-		resultMap.put("result", isSuccess);
-		
-		return resultMap;
+		return new ApiResponse(isSuccess);
 	}
 	
 	@GetMapping("/review/reviewpage")

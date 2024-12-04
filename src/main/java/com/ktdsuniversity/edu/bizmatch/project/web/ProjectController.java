@@ -12,7 +12,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,7 +36,6 @@ import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectApplyAttVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentPaginationVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentWriteVO;
-import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectScrapVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectSkillVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.SearchApplyVO;
@@ -110,7 +108,6 @@ public class ProjectController {
 
 		ProjectVO projectVO = this.projectService.readOneProjectInfo(pjId);
 		return new ApiResponse(projectVO);
-//		return "project/project_info";
 	}
 
 	/**
@@ -447,13 +444,11 @@ public class ProjectController {
 	 * 지원자 리스트 사이즈 받아와서 지원자 없으면 결제를 막는다.
 	 */
 	@GetMapping("/project/apply/member/check/{pjId}")
-	@ResponseBody
-	public Map doCheckApplyMemberCnt(@PathVariable String pjId,
-			@SessionAttribute(value = "_LOGIN_USER_", required = false) MemberVO memberVO) {
+	public ApiResponse doCheckApplyMemberCnt(@PathVariable String pjId
+											, Authentication memberVO) {
 
-		List<ApplyProjectVO> applyList = this.projectService.readAllApplyMember(pjId, memberVO);
-
-		return Map.of("result", applyList.size());
+		List<ApplyProjectVO> applyList = this.projectService.readAllApplyMember(pjId, memberVO.getName());
+		return new ApiResponse(applyList);
 	}
 
 	/**
@@ -464,13 +459,14 @@ public class ProjectController {
 	 * @return
 	 */
 	@PostMapping("/project/apply/delete/{pjApplyId}")
-	public String deleteApplyContent(@SessionAttribute(value = "_LOGIN_USER_") MemberVO memberVO,
-			ApplyProjectVO applyProjectVO, @PathVariable String pjApplyId) {
+	public ApiResponse deleteApplyContent(Authentication memberVO
+									, ApplyProjectVO applyProjectVO
+									, @PathVariable String pjApplyId) {
 
 		applyProjectVO.setPjApplyId(pjApplyId);
 		this.projectService.deleteProjectApply(applyProjectVO);
 
-		return "redirect:/project/apply/member";
+		return new ApiResponse(true);
 	}
 
 	/**
@@ -482,28 +478,24 @@ public class ProjectController {
 	 * @return
 	 */
 	@GetMapping("/project/apply/member/{pjId}")
-	public String viewApplyMemberPage(@SessionAttribute(value = "_LOGIN_USER_", required = false) MemberVO memberVO,
-			@PathVariable String pjId, Model model) {
+	public ApiResponse viewApplyMemberPage(Authentication memberVO,
+									@PathVariable String pjId) {
 		ProjectVO projectVO = this.projectService.readOneProjectInfo(pjId);
-
+		
 		// 돈을 안냈으면.
 		if (projectVO.getPaymentVO().getGrntPdDt() == null) {
-			return "redirect:/bizmatch/payment/ask/deposit/" + pjId;
+			return new ApiResponse(false);
 		}
 
-		List<ApplyProjectVO> applyProjectVOList = this.projectService.readAllApplyMember(pjId, memberVO);
-		model.addAttribute("projectVO", projectVO);
-		model.addAttribute("applyProjectVOList", applyProjectVOList);
+		List<ApplyProjectVO> applyProjectVOList = this.projectService.readAllApplyMember(pjId, memberVO.getName());
 
 		// 보증금을 납부했는지 먼저 검사해야한다.
 		boolean isPaid = this.paymentService.readIsPaymentDeposit(pjId);
 
-		// 납부했으면 지원기업 리스트 페이지를 보여줘야함.
-		if (isPaid) {
-			return "project/projectapplylist";
+		if (!isPaid) {
+			return new ApiResponse(false);
 		}
-		// 납부 안했으면 결제 페이지로 리다이랙트.
-		return "redirect:/bizmatch/payment/ask/deposit/" + pjId;
+		return new ApiResponse(applyProjectVOList);
 	}
 
 	/**
@@ -512,18 +504,22 @@ public class ProjectController {
 	 * @return
 	 */
 	@GetMapping("/project/skill")
-	public ResponseEntity<List<PrmStkVO>> showSkils() {
+	public ApiResponse showSkils() {
 		List<PrmStkVO> skillist = this.projectService.selectAllProjectSkillList();
-		return new ResponseEntity<>(skillist, HttpStatus.OK);
+		
+		return new ApiResponse(skillist);
 	}
 
 	/**
-	 * 검색할때 스킬 목록 불러오기
+	 * 검색할 때 스킬 목록 불러오기.
+	 * @param pjId
+	 * @return
 	 */
 	@GetMapping("/project/skill/{pjId}")
-	public ResponseEntity<List<ProjectSkillVO>> getAllSkills(@PathVariable String pjId) {
+	public ApiResponse getAllSkills(@PathVariable String pjId) {
 		List<ProjectSkillVO> skills = this.projectService.readAllProjectSkill(pjId);
-		return new ResponseEntity<>(skills, HttpStatus.OK);
+		
+		return new ApiResponse(skills);
 	}
 
 	/**
@@ -535,13 +531,12 @@ public class ProjectController {
 	 * @return
 	 */
 	@PostMapping("/project/apply/member/{pjId}")
-	public String doChoiceApplyMember(@PathVariable String pjId,
-			@SessionAttribute(value = "_LOGIN_USER_", required = false) MemberVO memberVO,
-			SelectApplyMemberVO selectApplyMemberVO) {
-		System.out.println("선택된 사람이메일" + selectApplyMemberVO.getEmilAddr());
-		this.projectService.updateApplyMember(selectApplyMemberVO, memberVO);
-//		return "redirect:/bizmatch/payment/ask/deposit/" + pjId;
-		return "redirect:/";
+	public ApiResponse doChoiceApplyMember(@PathVariable String pjId
+									, Authentication memberVO
+									, SelectApplyMemberVO selectApplyMemberVO) {
+		boolean isUpdated = this.projectService.updateApplyMember(selectApplyMemberVO, memberVO.getName());
+		
+		return new ApiResponse(isUpdated);
 	}
 
 	/**
@@ -551,23 +546,21 @@ public class ProjectController {
 	 * @return
 	 */
 	@GetMapping("/project/myproject")
-	public String viewAllProjectOrder(@SessionAttribute(value = "_LOGIN_USER_") MemberVO memberVO) {
-		if (memberVO == null) {
-			return "redirect:/";
-		}
-		return "project/myproject";
+	public ApiResponse viewAllProjectOrder(Authentication memberVO) {
+		
+		return new ApiResponse();
 	}
 
-	/**
-	 * 한명의 회원이 수주했던 즉 수행했던 모든 프로젝트 조회하는 페이지를 로드하는 컨트롤러 -의진-
-	 * 
-	 * @param memberVO
-	 * @return
-	 */
-	@GetMapping("/project/all/order/recipient")
-	public String viewAllProject(@SessionAttribute(value = "_LOGIN_USER_") MemberVO memberVO) {
-		return "project/myproject";
-	}
+//	/**
+//	 * 한명의 회원이 수주했던 즉 수행했던 모든 프로젝트 조회하는 페이지를 로드하는 컨트롤러 -의진-
+//	 * 
+//	 * @param memberVO
+//	 * @return
+//	 */
+//	@GetMapping("/project/all/order/recipient")
+//	public String viewAllProject(Authentication memberVO) {
+//		
+//	}
 
 	/**
 	 * 
@@ -575,13 +568,9 @@ public class ProjectController {
 	 * @return
 	 */
 	@GetMapping("/project/all/order/applicant")
-	@ResponseBody
-	public List<ApplyProjectVO> myProjectApplications(
-			@SessionAttribute(value = "_LOGIN_USER_", required = false) MemberVO memberVO) {
+	public List<ApplyProjectVO> myProjectApplications(Authentication memberVO) {
+		List<ApplyProjectVO> applyProjectList = this.projectService.readAllApply(memberVO.getName());
 
-		List<ApplyProjectVO> applyProjectList = this.projectService.readAllApply(memberVO);
-		System.out.println("지원서 리스트 크기:"
-				+ applyProjectList.get(0).getProjectVO().getProjectSkillList().get(0).getPrmStkVO().getPrmStk());
 		return applyProjectList;
 	}
 
@@ -589,36 +578,33 @@ public class ProjectController {
 	 * 내가 지원한 지원서 불러오는 컨트롤러
 	 */
 	@GetMapping("/project/apply/list")
-	public String viewApplyList(@SessionAttribute(value = "_LOGIN_USER_", required = false) MemberVO memberVO,
-			Model model) {
-
-		List<ApplyProjectVO> applyProjectVOList = this.projectService.readAllApply(memberVO);
-		model.addAttribute("applyProjectVOList", applyProjectVOList);
-
-		return "project/myApplyView";
+	public ApiResponse viewApplyList(Authentication memberVO) {
+		List<ApplyProjectVO> applyProjectVOList = this.projectService.readAllApply(memberVO.getName());
+		
+		return new ApiResponse(applyProjectVOList);
 	}
 
-	/*
-	 * 프로젝트 스크랩을 요청하는 컨트롤러.
-	 * 
-	 * @param pjId
-	 * 
-	 * @param memberVO
-	 * 
-	 * @return
-	 */
-	@PostMapping("/project/scrap/{pjId}")
-	public String doScrapProject(@PathVariable String pjId, Authentication memberVO) {
-		ProjectScrapVO projectScrapVO = new ProjectScrapVO();
-
-		projectScrapVO.setEmilAddr(memberVO.getName());
-		projectScrapVO.setPjId(pjId);
-
-		this.projectService.insertProjectScrap(projectScrapVO);
-
-		return "redirect:/project/info/{pjId}";
-	}
-	
+//	/*
+//	 * 프로젝트 스크랩을 요청하는 컨트롤러.
+//	 * 
+//	 * @param pjId
+//	 * 
+//	 * @param memberVO
+//	 * 
+//	 * @return
+//	 */
+//	@PostMapping("/project/scrap/{pjId}")
+//	public ApiResponse doScrapProject(@PathVariable String pjId, Authentication memberVO) {
+//		ProjectScrapVO projectScrapVO = new ProjectScrapVO();
+//
+//		projectScrapVO.setEmilAddr(memberVO.getName());
+//		projectScrapVO.setPjId(pjId);
+//
+//		this.projectService.insertProjectScrap(projectScrapVO);
+//
+//		return "redirect:/project/info/{pjId}";
+//	}
+//	
 	/**
 	 * 
 	 * @param projectCommentWriteVO
