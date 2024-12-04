@@ -1,5 +1,6 @@
 package com.ktdsuniversity.edu.bizmatch.common.email.service;
 
+import com.ktdsuniversity.edu.bizmatch.common.email.vo.EmailVO;
 import com.ktdsuniversity.edu.bizmatch.common.email.vo.UserEmailAuthNumVO;
 
 public interface EmailService {
@@ -50,4 +51,11 @@ public interface EmailService {
 	 */
 	public void deleteTempEmailAuthNum(String email);
 
+	/**
+	 * 특정 회원에게 이메일을 전송하는 메서드.
+	 * @param emailVO
+	 */
+	public boolean sendEmailForEtc(EmailVO emailVO);
+	
+//	public void sendEmailForPayment(String email);
 }

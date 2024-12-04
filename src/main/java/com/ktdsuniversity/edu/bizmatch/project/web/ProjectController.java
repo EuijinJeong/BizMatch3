@@ -18,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,7 +33,6 @@ import com.ktdsuniversity.edu.bizmatch.member.vo.PrmStkVO;
 import com.ktdsuniversity.edu.bizmatch.payment.service.PaymentService;
 import com.ktdsuniversity.edu.bizmatch.project.service.ProjectService;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ApplyProjectVO;
-import com.ktdsuniversity.edu.bizmatch.project.vo.ModifyProjectVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectApplyAttVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentPaginationVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentVO;
@@ -45,6 +45,7 @@ import com.ktdsuniversity.edu.bizmatch.project.vo.SelectApplyMemberVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.WriteProjectVO;
 
 @RestController
+@RequestMapping("/api")
 public class ProjectController {
 
 	@Autowired
@@ -607,11 +608,10 @@ public class ProjectController {
 	 * @return
 	 */
 	@PostMapping("/project/scrap/{pjId}")
-	public String doScrapProject(@PathVariable String pjId,
-			@SessionAttribute(value = "_LOGIN_USER_") MemberVO memberVO) {
+	public String doScrapProject(@PathVariable String pjId, Authentication memberVO) {
 		ProjectScrapVO projectScrapVO = new ProjectScrapVO();
 
-		projectScrapVO.setEmilAddr(memberVO.getEmilAddr());
+		projectScrapVO.setEmilAddr(memberVO.getName());
 		projectScrapVO.setPjId(pjId);
 
 		this.projectService.insertProjectScrap(projectScrapVO);
@@ -626,14 +626,12 @@ public class ProjectController {
 	 * @return
 	 */
 	@PostMapping("/project/info/write")
-	@ResponseBody
-	public Map<String, Object> writeComment(ProjectCommentWriteVO projectCommentWriteVO,
-			@SessionAttribute(value = "_LOGIN_USER_", required = false) MemberVO memberVO) {
-		projectCommentWriteVO.setAthrId(memberVO.getEmilAddr());
+	public ApiResponse writeComment(ProjectCommentWriteVO projectCommentWriteVO,
+									Authentication memberVO) {
+		projectCommentWriteVO.setAthrId(memberVO.getName());
 		boolean result = this.projectService.createNewComment(projectCommentWriteVO);
-		Map<String, Object> resultMap = new HashMap<>();
-		resultMap.put("result", result);
-		return resultMap;
+		
+		return new ApiResponse(result);
 	}
 
 	/**
@@ -643,12 +641,9 @@ public class ProjectController {
 	 * @return
 	 */
 	@GetMapping("/project/myproject/orderproject")
-	@ResponseBody
-	public List<Map<String, Object>> getMyOrderProjectList(
-			@SessionAttribute(value = "_LOGIN_USER_", required = false) MemberVO memberVO) {
+	public ApiResponse getMyOrderProjectList(Authentication memberVO) {
 		List<Map<String, Object>> resultList = new ArrayList<>();
-		// FIXME: memberVO null.
-		List<ProjectVO> projectList = this.projectService.readAllMyOrderProjectList(memberVO.getCmpId());
+		List<ProjectVO> projectList = this.projectService.readAllMyOrderProjectList(memberVO.getName());
 
 		for (ProjectVO projectVO : projectList) {
 			Map<String, Object> tempMap = new HashMap<>();
@@ -664,6 +659,6 @@ public class ProjectController {
 			tempMap.put("projectSkillList", projectVO.getProjectSkillList());
 			resultList.add(tempMap);
 		}
-		return resultList;
+		return new ApiResponse(resultList);
 	}
 }

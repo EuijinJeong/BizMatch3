@@ -1,8 +1,11 @@
 package com.ktdsuniversity.edu.bizmatch.payment.service;
 
+import java.util.List;
+
 import com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentRequestVO;
 import com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentReturnVO;
 import com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentUpdateVO;
+import com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentVO;
 
 public interface PaymentService {
 
@@ -47,4 +50,11 @@ public interface PaymentService {
 	 * @param amount ==> 계약금
 	 */
 	public boolean updatePaymentInfo(PaymentReturnVO paymentReturnVO);
+	
+	/**
+	 * 한 회원이 발주한 모든 결제 정보를 조회하는 메소드.
+	 * @param emailAddr
+	 * @return
+	 */
+	public List<PaymentVO> readAllPaymentInfo(String emailAddr);
 }

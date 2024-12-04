@@ -3,6 +3,7 @@ package com.ktdsuniversity.edu.bizmatch.payment.service.impl;
 
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -21,6 +22,8 @@ import org.springframework.web.client.RestTemplate;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.payment.CreateDownPaymentException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.payment.PaymentException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.payment.PaymentServerSaveException;
+import com.ktdsuniversity.edu.bizmatch.member.dao.MemberDao;
+import com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO;
 import com.ktdsuniversity.edu.bizmatch.payment.dao.PaymentDao;
 import com.ktdsuniversity.edu.bizmatch.payment.service.PaymentService;
 import com.ktdsuniversity.edu.bizmatch.payment.vo.AccntVO;
@@ -54,6 +57,9 @@ public class PaymentServiceImpl implements PaymentService {
 	
 	@Autowired
 	private ProjectDao projectDao;
+	
+	@Autowired
+	private MemberDao memberDao;
 	
 	public PaymentServiceImpl(RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
@@ -292,5 +298,12 @@ public class PaymentServiceImpl implements PaymentService {
 		// 수수료 제외하고 돌려줘야함.
 		amount *= amount * 0.95;
 		return amount;
+	}
+
+	@Override
+	public List<PaymentVO> readAllPaymentInfo(String emailAddr) {
+		MemberVO memberVO = this.memberDao.selectOneMember(emailAddr);
+		List<PaymentVO> paymentList = this.paymentDao.selectAllPaymentList(memberVO);
+		return paymentList;
 	}
 }

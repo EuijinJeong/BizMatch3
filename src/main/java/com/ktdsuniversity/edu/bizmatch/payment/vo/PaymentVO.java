@@ -1,5 +1,7 @@
 package com.ktdsuniversity.edu.bizmatch.payment.vo;
 
+import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectVO;
+
 public class PaymentVO {
 
 	private String pymntId; // 결제정보 아이디.
@@ -13,7 +15,7 @@ public class PaymentVO {
 	private String impUid; // 아임포트 결제시 생성되는 고유 아이디.
 	private int dpstRfndAmnt; // 보증금 환금액.
 	private String dpstRfndDt; // 보증금을 환급해준 날짜.
-	
+	private ProjectVO projectVO;
 	
 	public int getPymntTyp() {
 		return pymntTyp;
@@ -81,5 +83,11 @@ public class PaymentVO {
 	}
 	public void setAccntNm(String accntNm) {
 		this.accntNm = accntNm;
+	}
+	public ProjectVO getProjectVO() {
+		return projectVO;
+	}
+	public void setProjectVO(ProjectVO projectVO) {
+		this.projectVO = projectVO;
 	}
 }

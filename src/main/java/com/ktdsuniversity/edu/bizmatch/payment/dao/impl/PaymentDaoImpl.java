@@ -7,6 +7,7 @@ import org.mybatis.spring.support.SqlSessionDaoSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO;
 import com.ktdsuniversity.edu.bizmatch.payment.dao.PaymentDao;
 import com.ktdsuniversity.edu.bizmatch.payment.vo.AccntVO;
 import com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentHstryVO;
@@ -76,5 +77,10 @@ public class PaymentDaoImpl extends SqlSessionDaoSupport implements PaymentDao{
 	@Override
 	public int insertAccntHstry(PaymentHstryVO paymentHstryVO) {
 		return this.getSqlSession().insert(NAMESPACE+".insertAccntHstry",paymentHstryVO);
+	}
+
+	@Override
+	public List<PaymentVO> selectAllPaymentList(MemberVO memberVO) {
+		return this.getSqlSession().selectList(NAMESPACE + ".selectAllPaymentList", memberVO);
 	}
 }

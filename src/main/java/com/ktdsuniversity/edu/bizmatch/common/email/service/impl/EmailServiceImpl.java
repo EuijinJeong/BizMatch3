@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.ktdsuniversity.edu.bizmatch.common.email.dao.EmailDao;
 import com.ktdsuniversity.edu.bizmatch.common.email.service.EmailService;
+import com.ktdsuniversity.edu.bizmatch.common.email.vo.EmailVO;
 import com.ktdsuniversity.edu.bizmatch.common.email.vo.UserEmailAuthNumVO;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.email.EmailDuplicateException;
 import com.ktdsuniversity.edu.bizmatch.common.parser.html.HtmlParser;
@@ -171,5 +172,22 @@ public class EmailServiceImpl implements EmailService{
 		if(deleteCnt == 0) {
 			throw new EmailDuplicateException("서버상의 이유로 인증번호 못지움.");
 		}
+	}
+
+	@Override
+	public boolean sendEmailForEtc(EmailVO emailVO) {
+		MimeMessage message = mailSender.createMimeMessage();
+		
+		try {
+			MimeMessageHelper simpleMailMessage = new MimeMessageHelper(message, true, "UTF-8");
+			simpleMailMessage.setFrom(from);
+			simpleMailMessage.setSubject("BizMatch | 안내메일");
+			simpleMailMessage.setText(emailVO.getContent(), true);
+			simpleMailMessage.setTo(emailVO.getEmilAddr());
+			mailSender.send(message);
+		} catch (RuntimeException | MessagingException re) {
+			re.printStackTrace();
+		}
+		return true;
 	}
 }
