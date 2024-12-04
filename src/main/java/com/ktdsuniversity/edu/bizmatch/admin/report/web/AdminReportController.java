@@ -52,7 +52,7 @@ public class AdminReportController {
 	}
 	
 	/**
-	 * 
+	 * asdasd
 	 * @param rprtIds
 	 * @return
 	 */
