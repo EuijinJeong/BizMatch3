@@ -20,28 +20,32 @@ public class AdminMemberDaoImpl extends SqlSessionDaoSupport implements AdminMem
 	}
 	
 	@Override
-	public int updateOneMemberStt(String email) {
-		return this.getSqlSession().update(NAMESPACE+".updateOneMemberStt", email);
-	}
-
-	@Override
-	public List<MemberVO> selectNotAssignedMemberList() {
-		return this.getSqlSession().selectList(NAMESPACE+".selectNotAssignedMemberList");
-	}
-
-	@Override
-	public int selectMemberCountByEmail(String email) {
-		return this.getSqlSession().selectOne(NAMESPACE+".selectMemberCountByEmail", email);
-	}
-
-	@Override
 	public MemberVO selectOneMember(String email) {
-		// TODO Auto-generated method stub
-		return this.getSqlSession().selectOne(NAMESPACE+".selectOneMember", email);
+		return this.getSqlSession().selectOne(NAMESPACE + ".selectOneMember", email);
 	}
-	
-	
-	
 
+	@Override
+	public int deleteMember(List<String> email) {
+		return this.getSqlSession().delete(NAMESPACE + ".deleteMember", email);
+	}
 
+	@Override
+	public int updateMemberSttActive(List<String> email) {
+ 		return this.getSqlSession().update(NAMESPACE + ".updateMemberSttActive", email);
+	}
+
+	@Override
+	public List<MemberVO> selectMemberList() {
+		return this.getSqlSession().selectList(NAMESPACE + ".selectMemberList");
+	}
+
+	@Override
+	public int updateMemberPnlty(List<String> email) {
+		return this.getSqlSession().update(NAMESPACE+".updateMemberPnlty", email);
+	}
+
+	@Override
+	public int updateMemberIsqt(List<String> email) {
+		return this.getSqlSession().update(NAMESPACE+".updateMemberIsqt", email);
+	}
 }

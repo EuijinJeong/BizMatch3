@@ -13,20 +13,20 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.project.ProjectApplyFailException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.project.ProjectWriteFailException;
 import com.ktdsuniversity.edu.bizmatch.common.utils.ParameterCheck;
-import com.ktdsuniversity.edu.bizmatch.member.service.MemberService;
-import com.ktdsuniversity.edu.bizmatch.member.vo.CompanyVO;
+import com.ktdsuniversity.edu.bizmatch.common.vo.ApiResponse;
 import com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO;
 import com.ktdsuniversity.edu.bizmatch.member.vo.PrmStkVO;
 import com.ktdsuniversity.edu.bizmatch.payment.service.PaymentService;
@@ -44,7 +44,7 @@ import com.ktdsuniversity.edu.bizmatch.project.vo.SearchApplyVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.SelectApplyMemberVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.WriteProjectVO;
 
-@Controller
+@RestController
 public class ProjectController {
 
 	@Autowired
@@ -53,28 +53,26 @@ public class ProjectController {
 	@Autowired
 	private PaymentService paymentService;
 
-	@Autowired
-	private MemberService memberService;
 	/**
 	 * 프로젝트 등록 페이지를 로드하는 컨트롤러.
 	 * 
 	 * @return
 	 */
-	@GetMapping("/project/regist")
-	public String viewProjectRegistPage(@SessionAttribute(value = "_LOGIN_USER_") MemberVO memberVO) {
-		// 만약 회원 유형이 프리랜서 유형이라면 접근 못하게 막아야한다.
-		if (memberVO.getMbrCtgry() == 1) {
-			// TODO: 기업 회원만 접근 가능하다고 알려줘야한다.
-			return "redirect:/";
-		}
-		CompanyVO companyVO = this.memberService.selectOneCompanyByEmilAddr(memberVO.getCmpId());
-		// TODO: 만약 회원이 계좌인증을 안했으면 접근 못하게 막아야한다.
-		if (companyVO.getCmpnyAccuuntNum() == null) {
-			// 또한, 계좌인증을 해달라고 클라이언트에게 메세지를 전달해야한다.
-			return "redirect:/";
-		}
-		return "project/project_register";
-	}
+//	@GetMapping("/project/regist")
+//	public String viewProjectRegistPage(@SessionAttribute(value = "_LOGIN_USER_") MemberVO memberVO) {
+//		// 만약 회원 유형이 프리랜서 유형이라면 접근 못하게 막아야한다.
+//		if (memberVO.getMbrCtgry() == 1) {
+//			// TODO: 기업 회원만 접근 가능하다고 알려줘야한다.
+//			return "redirect:/";
+//		}
+//		CompanyVO companyVO = this.memberService.selectOneCompanyByEmilAddr(memberVO.getCmpId());
+//		// TODO: 만약 회원이 계좌인증을 안했으면 접근 못하게 막아야한다.
+//		if (companyVO.getCmpnyAccuuntNum() == null) {
+//			// 또한, 계좌인증을 해달라고 클라이언트에게 메세지를 전달해야한다.
+//			return "redirect:/";
+//		}
+//		return "project/project_register";
+//	}
 
 	/**
 	 * 프로젝트 지원페이지를 로드하는 컨트롤러.
@@ -84,14 +82,14 @@ public class ProjectController {
 	 * @param memberVO
 	 * @return
 	 */
-	@GetMapping("/project/apply/{pjId}")
-	public String viewApplyPage(@PathVariable String pjId, Model model,
-			@SessionAttribute(value = "_LOGIN_USER_", required = false) MemberVO memberVO) {
-		if (memberVO == null) {
-			return "redirect:/";
-		}
-		return "project/project_apply";
-	}
+//	@GetMapping("/project/apply/{pjId}")
+//	public String viewApplyPage(@PathVariable String pjId, Model model,
+//			@SessionAttribute(value = "_LOGIN_USER_", required = false) MemberVO memberVO) {
+//		if (memberVO == null) {
+//			return "redirect:/";
+//		}
+//		return "project/project_apply";
+//	}
 
 	/**
 	 * 프로젝트 상세보기 페이지.
@@ -101,18 +99,17 @@ public class ProjectController {
 	 * @return
 	 */
 	@GetMapping("/project/info/{pjId}")
-	public String viewProjectInfoPage(@PathVariable String pjId, Model model,
+	public ApiResponse viewProjectInfoPage(@PathVariable String pjId,
 			ProjectCommentPaginationVO projectCommentPaginationVO,
-			@SessionAttribute(value = "_LOGIN_USER_", required = false) MemberVO loginMemberVO) {
+			Authentication loginMemberVO) {
 		int listSize = this.projectService.getAllComment(pjId).size();
 		projectCommentPaginationVO.setPageCount(listSize);
 		projectCommentPaginationVO.setSearchIdParam(pjId);
 		List<ProjectCommentVO> commentList = this.projectService.getPaginationComment(projectCommentPaginationVO, pjId);
 
 		ProjectVO projectVO = this.projectService.readOneProjectInfo(pjId);
-		model.addAttribute("projectId", pjId);
-		model.addAttribute("projectVO", projectVO);
-		return "project/project_info";
+		return new ApiResponse(projectVO);
+//		return "project/project_info";
 	}
 
 	/**
@@ -120,10 +117,10 @@ public class ProjectController {
 	 * 
 	 * @return
 	 */
-	@GetMapping("/project/inquiry")
-	public String viewProjectInquiryPage() {
-		return "project/project_inquiry_page";
-	}
+//	@GetMapping("/project/inquiry")
+//	public String viewProjectInquiryPage() {
+//		return "project/project_inquiry_page";
+//	}
 
 	/**
 	 * 프로젝트 찾기 페이지를 반환하는 컨트롤러이다.
@@ -131,43 +128,27 @@ public class ProjectController {
 	 * @param memberVO
 	 * @return
 	 */
-	@GetMapping("/project/findpage")
-	public String viewProjectFindPage(@SessionAttribute(value = "_LOGIN_USER_", required = false) MemberVO memberVO) {
-
-		if (memberVO == null) {
-			return "redirect:/";
-		}
-		return "project/project_find";
-	}
+//	@GetMapping("/project/findpage")
+//	public String viewProjectFindPage(@SessionAttribute(value = "_LOGIN_USER_", required = false) MemberVO memberVO) {
+//
+//		if (memberVO == null) {
+//			return "redirect:/";
+//		}
+//		return "project/project_find";
+//	}
 
 	/**
-	 * 프로젝트 리스트의 정보를 반환하는 컨트롤러.
+	 * 모든 프로젝트 리스트의 정보를 반환하는 컨트롤러.
 	 */
 	@GetMapping("/project/find")
-	@ResponseBody
-	public List<Map<String, Object>> getProjectList(
-			@SessionAttribute(value = "_LOGIN_USER_", required = false) MemberVO memberVO) {
+	public ApiResponse getProjectList(Authentication loginMemberVO) {
+		
+		MemberVO memberVO = (MemberVO)loginMemberVO.getPrincipal();
 
-		List<Map<String, Object>> resultList = new ArrayList<>();
 		List<ProjectVO> projectList = this.projectService.readAllProjectList(memberVO);
 
-		System.out.println("프로젝트 길이:" + projectList.size());
-
-		for (ProjectVO projectVO : projectList) {
-			Map<String, Object> tempMap = new HashMap<>();
-			tempMap.put("pjTtl", projectVO.getPjTtl());
-			tempMap.put("pjStt", projectVO.getPjStt());
-			tempMap.put("rgstrDt", projectVO.getRgstrDt());
-			tempMap.put("smjrNm", projectVO.getProjectIndustryVO().getIndstrInfoVO().getIndstrNm());
-			tempMap.put("pjRcrutEndDt", projectVO.getPjRcrutEndDt());
-			tempMap.put("strtDt", projectVO.getStrtDt());
-			tempMap.put("endDt", projectVO.getEndDt());
-			tempMap.put("pjId", projectVO.getPjId());
-			tempMap.put("cntrctAccnt", projectVO.getCntrctAccnt());
-			tempMap.put("projectSkillList", projectVO.getProjectSkillList());
-			resultList.add(tempMap);
-		}
-		return resultList;
+		return new ApiResponse(projectList);
+		
 	}
 
 	/**
@@ -180,13 +161,9 @@ public class ProjectController {
 	 * @throws ParseException
 	 */
 	@PostMapping("/project/write")
-	public String doCreateProject(WriteProjectVO writeProjectVO, Model model,
+	public ApiResponse doCreateProject(WriteProjectVO writeProjectVO, Model model,
 			@RequestParam("prmStkId") List<String> prmStkIdList,
-			@SessionAttribute(value = "_LOGIN_USER_", required = false) MemberVO loginMemberVO) throws ParseException {
-
-		if (loginMemberVO == null) {
-			return "redirect:/";
-		}
+			Authentication memberVO) throws ParseException {
 
 		// 유효성 검사들.
 		// 프로젝트 제목
@@ -241,21 +218,15 @@ public class ProjectController {
 		if (writeProjectVO.getPjRcrutCnt() <= 0) {
 			throw new ProjectWriteFailException("프로젝트 모집 인원은 필수 입력 사항입니다.", writeProjectVO);
 		}
-
+		MemberVO loginMemberVO = (MemberVO)memberVO.getPrincipal();
 		writeProjectVO.setOrdrId(loginMemberVO.getEmilAddr());
 
 		// 이제 수정된 호출
 		List<String> skillList = new ArrayList<>(prmStkIdList);
 
 		boolean isSuccessed = this.projectService.createNewProject(writeProjectVO, skillList);
-		// 프로젝트 등록에 성공한 경우.
-		if (isSuccessed) {
-			return "redirect:/project/findpage";
-		}
-		// 프로젝트 등록에 실패한 경우.
-		else {
-			return "redirect:/project/regist";
-		}
+
+		return new ApiResponse(isSuccessed);
 	}
 
 	/**
@@ -267,30 +238,21 @@ public class ProjectController {
 	 * @return
 	 */
 	@PostMapping("/project/apply/{pjId}")
-	public String doApplyProject(ApplyProjectVO applyProjectVO, @PathVariable String pjId,
-			@SessionAttribute(value = "_LOGIN_USER_", required = false) MemberVO memberVO) {
-
+	public ApiResponse doApplyProject(ApplyProjectVO applyProjectVO, @PathVariable String pjId,
+			Authentication memberVO) {
+		
+		MemberVO loginMemberVO = (MemberVO)memberVO.getPrincipal();
 		applyProjectVO.setPjId(pjId);
 
-		if (memberVO == null) {
-			return "redirect:/";
-		}
-
-		applyProjectVO.setEmilAddr(memberVO.getEmilAddr());
+		applyProjectVO.setEmilAddr(loginMemberVO.getEmilAddr());
 
 		if (ParameterCheck.parameterCodeValid(applyProjectVO.getPjApplyDesc(), 0)) {
 			throw new ProjectApplyFailException("pjApplyDesc를 입력해주세요", applyProjectVO);
 		}
 
 		boolean isSuccessed = this.projectService.createNewProjectApply(applyProjectVO);
-		// 프로젝트 지원에 성공한 경우.
-		if (isSuccessed) {
-			return "redirect:/project/findpage";
-		}
-		// 프로젝트 지원에 실패한 경우.
-		else {
-			return "redirect:/project/apply" + pjId;
-		}
+		
+		return new ApiResponse(isSuccessed);
 	}
 
 	/**
@@ -311,30 +273,30 @@ public class ProjectController {
 		return resultMap;
 	}
 
-	/**
-	 * 특정 프로젝트 수정페이지를 로드하는 컨트롤러.
-	 * 
-	 * @param memberVO
-	 * @param pjId
-	 * @return
-	 */
-	@GetMapping("/project/update/content/{pjId}")
-	public String loadUpdateProjectPage(@SessionAttribute(value = "_LOGIN_USER_") MemberVO memberVO,
-			@PathVariable String pjId) {
-		return null;
-	}
-
-	/**
-	 * 프로젝트 수정 요청을 보내는 컨트롤러.
-	 * 
-	 * @param modifyProjectVO
-	 * @return
-	 */
-	@PostMapping("/project/update/content/{pjId}")
-	public String UpdateProjectInfo(ModifyProjectVO modifyProjectVO) {
-		boolean isUpdated = this.projectService.updateOneProject(modifyProjectVO);
-		return null;
-	}
+//	/**
+//	 * 특정 프로젝트 수정페이지를 로드하는 컨트롤러. -TODO-
+//	 * 
+//	 * @param memberVO
+//	 * @param pjId
+//	 * @return
+//	 */
+//	@GetMapping("/project/update/content/{pjId}")
+//	public String loadUpdateProjectPage(@SessionAttribute(value = "_LOGIN_USER_") MemberVO memberVO,
+//			@PathVariable String pjId) {
+//		return null;
+//	}
+//
+//	/**
+//	 * 프로젝트 수정 요청을 보내는 컨트롤러.
+//	 * 
+//	 * @param modifyProjectVO
+//	 * @return
+//	 */
+//	@PostMapping("/project/update/content/{pjId}")
+//	public String UpdateProjectInfo(ModifyProjectVO modifyProjectVO) {
+//		boolean isUpdated = this.projectService.updateOneProject(modifyProjectVO);
+//		return null;
+//	}
 
 	/**
 	 * 프로젝트 추가모집 수정 페이지를 로드하는 컨트롤러.
@@ -369,7 +331,7 @@ public class ProjectController {
 	 * @return
 	 */
 	@PostMapping("/project/update/addrecruitment/{pjId}")
-	public String UpdateAddThreeDate(@SessionAttribute(value = "_LOGIN_USER_") MemberVO memberVO, @PathVariable String pjId) {
+	public ApiResponse UpdateAddThreeDate(@PathVariable String pjId) {
 		ProjectVO projectVO = this.projectService.readOneProjectInfo(pjId);
 		try {
 			// 1. 모집 종료일을 3일 연장하기
@@ -390,30 +352,30 @@ public class ProjectController {
 			projectVO.setPjRcrutEndDt(newEndDateStr);
 
 			// 5. 프로젝트 정보 업데이트 (서비스 계층 호출)
-			projectService.updateProject(projectVO);
+			boolean isSuccess = projectService.updateProject(projectVO);
 
 			// 6. 업데이트 후 페이지 리다이렉션 (예: 프로젝트 상세 페이지로 이동)
-			return "redirect:/project/myproject";
+			return new ApiResponse(isSuccess);
 
 		} catch (ParseException e) {
 			e.printStackTrace();
-			return "error"; // 날짜 포맷 오류 시 에러 페이지로 이동
+			return new ApiResponse(HttpStatus.BAD_REQUEST); // 날짜 포맷 오류 시 에러 페이지로 이동
 		}
 	}
 
-	/**
-	 * 프로젝트 삭제를 처리하는 컨트롤러.
-	 * 
-	 * @param memberVO
-	 * @param pjId
-	 * @return
-	 */
-	@PostMapping("/project/delete/")
-	public String deleteProject(@SessionAttribute(value = "_LOGIN_USER_") MemberVO memberVO, String pjId) {
-		boolean isDeleted = this.projectService.deleteOneProject(null);
-
-		return null;
-	}
+//	/**
+//	 * 프로젝트 삭제를 처리하는 컨트롤러. -TODO-
+//	 * 
+//	 * @param memberVO
+//	 * @param pjId
+//	 * @return
+//	 */
+//	@PostMapping("/project/delete/")
+//	public String deleteProject(@SessionAttribute(value = "_LOGIN_USER_") MemberVO memberVO, String pjId) {
+//		boolean isDeleted = this.projectService.deleteOneProject(null);
+//
+//		return null;
+//	}
 
 	/**
 	 * 지원서 수정페이지를 로드하는 컨트롤러.
@@ -424,17 +386,16 @@ public class ProjectController {
 	 */
 
 	@GetMapping("/project/apply/edit/{pjId}")
-	public String loadUpdateApplyContentPage(@SessionAttribute(value = "_LOGIN_USER_") MemberVO memberVO,
-			@PathVariable String pjId, Model model) {
+	public ApiResponse loadUpdateApplyContentPage(Authentication memberVO,
+			@PathVariable String pjId) {
 
 		SearchApplyVO searchApplyVO = new SearchApplyVO();
-		searchApplyVO.setEmilAddr(memberVO.getEmilAddr());
+		searchApplyVO.setEmilAddr(memberVO.getName());
 		searchApplyVO.setPjId(pjId);
 
 		ApplyProjectVO applyProjectVO = projectService.selectOneApplyProject(searchApplyVO);
-		model.addAttribute("applyProjectVO", applyProjectVO);
 
-		return "project/myApplyView";
+		return new ApiResponse(applyProjectVO);
 	}
 
 	/**

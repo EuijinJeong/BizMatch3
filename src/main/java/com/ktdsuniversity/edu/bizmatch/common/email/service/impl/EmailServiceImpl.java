@@ -43,7 +43,7 @@ public class EmailServiceImpl implements EmailService{
 		try {
 			MimeMessageHelper simpleMailMessage = new MimeMessageHelper(message, true, "UTF-8");
 			simpleMailMessage.setFrom(from);
-			simpleMailMessage.setSubject("BizMatch | 회원가입을 축하드립니다!");
+			simpleMailMessage.setSubject("BizMatch | 회원가입 승인 결과 안내");
 			simpleMailMessage.setText(html, true);
 			simpleMailMessage.setTo(email);
 			mailSender.send(message);

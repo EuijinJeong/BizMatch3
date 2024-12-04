@@ -1,31 +1,64 @@
 package com.ktdsuniversity.edu.bizmatch.admin.member.web;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.ktdsuniversity.edu.bizmatch.admin.member.service.AdminMemberService;
+import com.ktdsuniversity.edu.bizmatch.common.vo.ApiResponse;
+import com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO;
 
-@Controller
+@RestController
+@RequestMapping("/api/admin")
 public class AdminMemberController {
 	
 	@Autowired
 	private AdminMemberService adminMemberService;
 	
-	@PostMapping("/update/member/status")
-	public String updateMemberSignUpStatus(@RequestParam String email) {
-		
-		this.adminMemberService.handleMemberSignUp(email);
-		return "관리자 페이지 url";
+	/**
+	 * 회원가입시 회원 활성화를 수정하는 컨트롤러.
+	 * @param email
+	 * @return
+	 */
+	@PostMapping("/update/memberstt")
+	public ApiResponse postMemberStt(@RequestBody List<String> email) {
+		boolean isUpdated = this.adminMemberService.updateMemberSignupStt(email); 
+		return new ApiResponse(isUpdated);
 	}
 	
-	// 1.회원 가입 승인
+	/**
+	 * 회원을 삭제하는 컨트롤러.
+	 * @param email
+	 * @return
+	 */
+	@PostMapping("/delete/memberstt")
+	public ApiResponse postMemberDeleteStt(@RequestBody List<String> email) {
+		boolean isDeleted = this.adminMemberService.updateMemberSignupSttToRefuse(email);
+		return new ApiResponse(isDeleted);
+	}
 	
-	// 회원 가입 맴버 VO  가입 state 가 0 인 애들을 가져옴
-	// 
+	@GetMapping("/memberlist")
+	public ApiResponse getMemberList() {
+		List<MemberVO> memberList = this.adminMemberService.readAllMemberList();
+		return new ApiResponse(memberList);
+	}
 	
-	// 2.회원 활동 정지 기능
+	@PostMapping("/update/member/penalty")
+	public ApiResponse updateMemberPenalty(@RequestBody List<String> email) {
+		boolean isSuccess = this.adminMemberService.updateMemberPnlty(email);
+		
+		return new ApiResponse(isSuccess);
+	}
 	
-	// 3.신고 알람 받기
+	@PostMapping("/update/member/isqt")
+	public ApiResponse updateMemberIsqt(@RequestBody List<String> email) {
+		boolean isSuccess = this.adminMemberService.updateMemberIsqt(email);
+		
+		return new ApiResponse(isSuccess);
+	}
 }

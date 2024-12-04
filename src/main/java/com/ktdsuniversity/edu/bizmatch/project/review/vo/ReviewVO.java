@@ -1,5 +1,9 @@
 package com.ktdsuniversity.edu.bizmatch.project.review.vo;
 
+import java.util.List;
+
+import com.ktdsuniversity.edu.bizmatch.report.vo.ReviewReportVO;
+
 public class ReviewVO {
 
 	/**
@@ -41,7 +45,18 @@ public class ReviewVO {
 	 * 리뷰 신고 횟수
 	 */
 	private int rvwRprtCnt;
-
+	
+	/**
+	 * 신고정보
+	 */
+	private List<ReviewReportVO> reviewReportVO;
+	
+	public void setReviewReportVO(List<ReviewReportVO> reviewReportVO) {
+		this.reviewReportVO = reviewReportVO;
+	}
+	public List<ReviewReportVO> getReviewReportVO() {
+		return reviewReportVO;
+	}
 	public String getRvwId() {
 		return rvwId;
 	}

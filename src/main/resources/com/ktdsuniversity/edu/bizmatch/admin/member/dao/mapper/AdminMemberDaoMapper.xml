@@ -4,66 +4,123 @@
 	"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ktdsuniversity.edu.bizmatch.admin.member.dao.AdminMemberDao">
 
-	<!-- 회원가입 상태 활성화 1로 바꾸는 쿼리문. -->
-	<update id="updateOneMemberStt" parameterType="string">
-		UPDATE MBR_INFO 
+	<!-- 회원의 회원가입 상태 활성화를 1로 바꾸는 쿼리문. -->
+	<update id="updateMemberSttActive" 
+			parameterType="java.util.List">
+		UPDATE MBR_INFO
 		   SET MBR_STT = 1
-		 WHERE EMIL_ADDR = #{_parameter};
-	</update>
+		 WHERE EMIL_ADDR IN
+	<foreach collection="list" 
+			 item="email" 
+			 open="(" 
+			 separator="," 
+			 close=")">
+		#{email}
+	</foreach>
+</update>
 	
-
-		<select id="selectOneMember"
+	<!-- 이메일 정보로 한명의 회원 정보를 조회하는 쿼리문. -->
+	<select id="selectOneMember"
  			parameterType="string"
  			resultType = "com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO">
- 		SELECT   MBR_NM
-				,EMIL_ADDR
-				,PWD
-				,MBR_PHN_NUM
-				,TO_CHAR(BRTH_DT, 'YYYY-MM-DD') BRTH_DT
-				,ADDR
-				,MBR_STT
-				,TO_CHAR(SGNUP_DT, 'YYYY-MM-DD') SGNUP_DT
-				,MBR_CTGRY
-				,PNLTY
-				,IS_QT
-				,TO_CHAR(QT_DT, 'YYYY-MM-DD') QT_DT
-				,ACCNT_NUM
-				,TO_CHAR(ACCNT_VLD_DT, 'YYYY-MM-DD') ACCNT_VLD_DT
-				,CMP_ID
-				,SALT
-				,LGN_FAIL_CNT
-				,TO_CHAR(LTST_LGN_FAIL_DT, 'YYYY-MM-DD') LTST_LGN_FAIL_DT
-				,LTST_LGN_IP
-				,TO_CHAR(LTST_LGN_SCCSS_DT, 'YYYY-MM-DD') LTST_LGN_SCCSS_DT
-				,MJR_ID
-				,SMJR_ID
-				,CMPNY_RP
-				,MBR_INTR
-		   FROM MBR_INFO
-		  WHERE EMIL_ADDR = #{_parameter}
- 		</select>
+ 		SELECT MBR_NM
+			  ,EMIL_ADDR
+			  ,PWD
+			  ,MBR_PHN_NUM
+			  ,TO_CHAR(BRTH_DT, 'YYYY-MM-DD') BRTH_DT
+			  ,ADDR
+			  ,MBR_STT
+			  ,TO_CHAR(SGNUP_DT, 'YYYY-MM-DD') SGNUP_DT
+			  ,MBR_CTGRY
+			  ,PNLTY
+			  ,IS_QT
+			  ,TO_CHAR(QT_DT, 'YYYY-MM-DD') QT_DT
+			  ,ACCNT_NUM
+			  ,TO_CHAR(ACCNT_VLD_DT, 'YYYY-MM-DD') ACCNT_VLD_DT
+			  ,CMP_ID
+			  ,SALT
+			  ,LGN_FAIL_CNT
+			  ,TO_CHAR(LTST_LGN_FAIL_DT, 'YYYY-MM-DD') LTST_LGN_FAIL_DT
+			  ,LTST_LGN_IP
+			  ,TO_CHAR(LTST_LGN_SCCSS_DT, 'YYYY-MM-DD') LTST_LGN_SCCSS_DT
+			  ,MJR_ID
+			  ,SMJR_ID
+			  ,CMPNY_RP
+			  ,MBR_INTR
+		  FROM MBR_INFO
+		 WHERE EMIL_ADDR = #{_parameter}
+ 	</select>
 
  	
-		<select id="selectMemberCountByEmail"
-         parameterType="string"
-         resultType="int">
-			    SELECT COUNT(*)
-			    FROM MBR_INFO
-			    WHERE EMIL_ADDR = #{_parameter}
-			      AND PNLTY >= 3
-			      AND IS_QT = 0
-		</select>
+	<select id="selectMemberCountByEmail"
+			parameterType="string"
+			resultType="int">
+		SELECT COUNT(*)
+		  FROM MBR_INFO
+		 WHERE EMIL_ADDR = #{_parameter}
+		   AND PNLTY >= 3
+		   AND IS_QT = 0
+	</select>
 
-		<select id="selectNotAssignedMemberList"
-		         resultType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO">
-		    SELECT MBR_NM,
-		           EMIL_ADDR,
-		           TO_CHAR(SGNUP_DT, 'YYYY-MM-DD') AS SGNUP_DT,
-		           MBR_STT,
-		           MBR_CTGRY
-		    FROM MBR_INFO
-		    WHERE MBR_STT = 0
-		    ORDER BY SGNUP_DT
-		</select>
-		 	
+	
+	<select id="selectNotAssignedMemberList"
+			resultType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO">
+		SELECT MBR_NM,
+			   EMIL_ADDR,
+			   TO_CHAR(SGNUP_DT, 'YYYY-MM-DD') AS SGNUP_DT,
+			   MBR_STT,
+			   MBR_CTGRY
+		  FROM MBR_INFO
+		 WHERE MBR_STT = 0
+		 ORDER BY SGNUP_DT
+	</select>
+	
+	<!-- 회원가입 승인 거절된 회원을 삭제하는 쿼리문. -->	
+	<delete id="deleteMember"
+			parameterType="list">
+		DELETE
+		  FROM MBR_INFO
+		 WHERE EMIL_ADDR IN 
+		<foreach collection="list"
+				 item="email" 
+			 	 open="(" 
+			 	 separator="," 
+			 	 close=")">
+			#{email}
+		</foreach>
+	</delete>
+	
+	<!-- 전체 회원의 리스트를 조회하는 쿼리문. -->
+	<select id="selectMemberList"
+			resultType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO">
+		SELECT *
+		  FROM MBR_INFO MI
+	</select>
+	<update id="updateMemberPnlty" parameterType="list" >
+	UPDATE MBR_INFO
+	   SET PNLTY = PNLTY + 1
+	 WHERE EMIL_ADDR IN 
+	 <foreach collection="list"
+				 item="email" 
+			 	 open="(" 
+			 	 separator="," 
+			 	 close=")">
+			#{email}
+		</foreach>
+	</update>
+	<update id="updateMemberIsqt" parameterType="list" >
+	UPDATE MBR_INFO
+	   SET IS_QT = 1,
+	   	   QT_DT = SYSDATE,
+	   	   MBR_PHN_NUM = null,
+	   	   BRTH_DT = null
+	 WHERE EMIL_ADDR IN
+	 <foreach collection="list"
+				 item="email" 
+			 	 open="(" 
+			 	 separator="," 
+			 	 close=")">
+			#{email}
+		</foreach>
+	</update>
 </mapper>
