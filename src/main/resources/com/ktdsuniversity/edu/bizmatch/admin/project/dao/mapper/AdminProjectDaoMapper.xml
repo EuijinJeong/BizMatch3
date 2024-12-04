@@ -76,6 +76,7 @@
 				    ON PRM.PRM_STK_ID = PPS.PRM_STK_ID
 				  JOIN PYMNT_INFO PY
 				    ON PY.PJ_ID = P.PJ_ID
+				 WHERE P.IS_DLT != 1
 	</select>
 	<select id="selectOneProject" parameterType="string" resultMap="projectVOMap">
 	SELECT P.PJ_ID
