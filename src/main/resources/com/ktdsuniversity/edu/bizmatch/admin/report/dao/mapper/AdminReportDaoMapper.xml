@@ -8,9 +8,9 @@
 	<result column="RVW_DT" property="rvwDt"/>
 	<collection property="reviewReportVO" autoMapping="true" ofType="com.ktdsuniversity.edu.bizmatch.report.vo.ReviewReportVO">
 		<id column="RPRT_ID" property="rprtId"/>
-		<result column="emilAddr" property="RP_EMIL_ADDR"/>
+		<result column="RP_EMIL_ADDR" property="emilAddr"/>
+		<result property="cmmntId" column="CMMNT_ID"/>
 	</collection>
-
 </resultMap>
 <select id="selectAllReportReview" resultMap="reviewVOMap">
 	SELECT PR.RVW_ID 
@@ -20,6 +20,7 @@
 		 , PR.IS_DLT 
 		 , PR.EMIL_ADDR 
 		 , PR.PJ_ID 
+		 , RR.CMMNT_ID
 		 , RR.RPRT_ID 
 		 , PR.RVW_RPRT_CNT 
 		 , RR.EMIL_ADDR AS RP_EMIL_ADDR
@@ -51,11 +52,11 @@
 	     , DLT_DT = SYSDATE 
 	 WHERE RVW_ID IN 
 	 <foreach collection="list" 
-			 item="rvwId" 
+			 item="rprtId" 
 			 open="(" 
 			 separator="," 
 			 close=")">
-		#{rvwId}
+		#{rprtId}
 	</foreach>
 </update>
 <update id="updateIsRprt" parameterType="list">

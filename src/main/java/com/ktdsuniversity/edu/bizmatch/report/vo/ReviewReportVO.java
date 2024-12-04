@@ -26,6 +26,11 @@ public class ReviewReportVO {
 	 * 신고 내용
 	 */
 	private String rprtCntnt;
+	
+	/**
+	 * 처리 완료 여부. 0: 미처리 1: 처리완료.
+	 */
+	private int isRprt;
 
 	public String getRprtId() {
 		return rprtId;
@@ -65,5 +70,13 @@ public class ReviewReportVO {
 
 	public void setRprtCntnt(String rprtCntnt) {
 		this.rprtCntnt = rprtCntnt;
+	}
+
+	public int getIsRprt() {
+		return isRprt;
+	}
+
+	public void setIsRprt(int isRprt) {
+		this.isRprt = isRprt;
 	}
 }

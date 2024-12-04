@@ -24,6 +24,7 @@ import com.ktdsuniversity.edu.bizmatch.common.vo.StoreResultVO;
 import com.ktdsuniversity.edu.bizmatch.file.dao.FileDao;
 import com.ktdsuniversity.edu.bizmatch.file.vo.ProjectApplyFileVO;
 import com.ktdsuniversity.edu.bizmatch.file.vo.ProjectFileVO;
+import com.ktdsuniversity.edu.bizmatch.member.dao.MemberDao;
 import com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO;
 import com.ktdsuniversity.edu.bizmatch.member.vo.PrmStkVO;
 import com.ktdsuniversity.edu.bizmatch.payment.dao.PaymentDao;
@@ -58,6 +59,9 @@ public class ProjectServiceImple implements ProjectService {
 
 	@Autowired
 	private ProjectDao projectDao;
+	
+	@Autowired
+	private MemberDao memberDao;
 	
 	@Autowired
 	private FileHandler fileHandler;
@@ -451,7 +455,6 @@ public class ProjectServiceImple implements ProjectService {
 		}
 	}
 
-
 	@Override
 	public List<ProjectVO> readAllProjectOrderRecipient(MemberVO memberVO) {
 		return this.projectDao.selectAllProjectOrderRecipient(memberVO);
@@ -461,7 +464,6 @@ public class ProjectServiceImple implements ProjectService {
 	public List<PrmStkVO> selectAllProjectSkillList() {
 		return this.projectDao.selectAllProjectSkillList();
 	}
-
 
 	@Override
 	public ApplyProjectVO readOneApplyProject(String pjId) {
@@ -493,8 +495,12 @@ public class ProjectServiceImple implements ProjectService {
 	}
 
 	@Override
-	public List<ProjectVO> readAllMyOrderProjectList(String cmpId) {
-		List<ProjectVO> projectList = this.projectDao.selectAllMyOrderProjectList(cmpId);
+	public List<ProjectVO> readAllMyOrderProjectList(String email) {
+		MemberVO memberVO = this.memberDao.selectOneMember(email);
+		if(memberVO == null) {
+			throw new IllegalArgumentException("해당 회원이 존재하지 않습니다.");
+		}
+		List<ProjectVO> projectList = this.projectDao.selectAllMyOrderProjectList(memberVO.getCmpId());
 		return projectList;
 	}
 	
@@ -503,15 +509,11 @@ public class ProjectServiceImple implements ProjectService {
 		return this.projectDao.selectOneApplyProject(searchApplyVO);
 	}
 
-
-
 	@Override
 	public ApplyProjectVO selectOneApplyViewInfo(SearchApplyVO searchApplyVO) {
 		
 		return this.projectDao.selectOneApplyViewInfo(searchApplyVO);
 	}
-
-
 
 	@Override
 	public boolean updateProject(ProjectVO projectVO) {
