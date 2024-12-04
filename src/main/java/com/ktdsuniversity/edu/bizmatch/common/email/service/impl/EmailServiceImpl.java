@@ -175,7 +175,7 @@ public class EmailServiceImpl implements EmailService{
 	}
 
 	@Override
-	public void sendEmailForEtc(EmailVO emailVO) {
+	public boolean sendEmailForEtc(EmailVO emailVO) {
 		MimeMessage message = mailSender.createMimeMessage();
 		
 		try {
@@ -188,5 +188,6 @@ public class EmailServiceImpl implements EmailService{
 		} catch (RuntimeException | MessagingException re) {
 			re.printStackTrace();
 		}
+		return true;
 	}
 }

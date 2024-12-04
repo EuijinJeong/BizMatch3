@@ -55,7 +55,7 @@ public interface EmailService {
 	 * 특정 회원에게 이메일을 전송하는 메서드.
 	 * @param emailVO
 	 */
-	public void sendEmailForEtc(EmailVO emailVO);
+	public boolean sendEmailForEtc(EmailVO emailVO);
 	
 //	public void sendEmailForPayment(String email);
 }
