@@ -9,17 +9,13 @@ import org.springframework.stereotype.Service;
 
 import com.ktdsuniversity.edu.bizmatch.board.dao.BoardDao;
 import com.ktdsuniversity.edu.bizmatch.board.service.BoardService;
-import com.ktdsuniversity.edu.bizmatch.board.vo.BoardCommentPaginationVO;
 import com.ktdsuniversity.edu.bizmatch.board.vo.BoardCommentVO;
 import com.ktdsuniversity.edu.bizmatch.board.vo.BoardCommentWriteVO;
 import com.ktdsuniversity.edu.bizmatch.board.vo.BoardModifyCommentVO;
 import com.ktdsuniversity.edu.bizmatch.board.vo.BoardModifyVO;
-import com.ktdsuniversity.edu.bizmatch.board.vo.BoardPaginationVO;
-import com.ktdsuniversity.edu.bizmatch.board.vo.BoardSearchVO;
 import com.ktdsuniversity.edu.bizmatch.board.vo.BoardVO;
 import com.ktdsuniversity.edu.bizmatch.board.vo.BoardWriteVO;
 import com.ktdsuniversity.edu.bizmatch.comment.web.CommentController;
-import com.ktdsuniversity.edu.bizmatch.common.vo.PaginationVO;
 
 @Service
 public class BoardServiceImpl implements BoardService {
@@ -28,15 +24,9 @@ public class BoardServiceImpl implements BoardService {
 	private BoardDao boardDao;
 	
 	@Override
-	public List<BoardVO> getBoardList(BoardSearchVO BoardsearchVO) {
-		List<BoardVO> result = boardDao.selectBoardList(BoardsearchVO);
+	public List<BoardVO> getBoardList() {
+		List<BoardVO> result = boardDao.selectBoardList();
 		return result;
-	}
-
-	@Override
-	public int getBoardCount( ) {
-		int count = boardDao.selectBoardCount();
-		return count;
 	}
 
 	@Override
@@ -57,7 +47,7 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public boolean doIncreaseViews(String id) {
-		return boardDao.updateIncreaseViews(id)>0;
+		return boardDao.updateIncreaseViews(id) > 0;
 	}
 
 	@Override
@@ -65,19 +55,19 @@ public class BoardServiceImpl implements BoardService {
 		return boardDao.updateDeletePost(id)>0;
 	}
 
-	@Override
-	public List<BoardVO> getForPagination(BoardPaginationVO boardPaginationVO,BoardSearchVO BoardsearchVO) {
-		List<BoardVO> result ;
-
-		if(boardPaginationVO == null) {
-			result = boardDao.selectBoardList(BoardsearchVO);
-		}
-		else {
-			result = boardDao.selectForPagination(boardPaginationVO);
-		}
-		
-		return result;
-	}
+//	@Override
+//	public List<BoardVO> getForPagination(BoardPaginationVO boardPaginationVO,BoardSearchVO BoardsearchVO) {
+//		List<BoardVO> result ;
+//
+//		if(boardPaginationVO == null) {
+//			result = boardDao.selectBoardList(BoardsearchVO);
+//		}
+//		else {
+//			result = boardDao.selectForPagination(boardPaginationVO);
+//		}
+//		
+//		return result;
+//	}
 
 	// 이하 댓글 관련 서비스
 	@Override
@@ -86,18 +76,18 @@ public class BoardServiceImpl implements BoardService {
 		return result;
 	}
 
-	@Override
-	public List<BoardCommentVO> getPaginationComment(BoardCommentPaginationVO boardCommentPaginationVO, String id) {
-		List<BoardCommentVO> result;
-		if(boardCommentPaginationVO == null) {
-			result = boardDao.selectAllBoardComment(id);
-		}
-		else {
-			result = boardDao.selectPaginationComment(boardCommentPaginationVO);
-		}
-		
-		return result;
-	}
+//	@Override
+//	public List<BoardCommentVO> getPaginationComment(BoardCommentPaginationVO boardCommentPaginationVO, String id) {
+//		List<BoardCommentVO> result;
+//		if(boardCommentPaginationVO == null) {
+//			result = boardDao.selectAllBoardComment(id);
+//		}
+//		else {
+//			result = boardDao.selectPaginationComment(boardCommentPaginationVO);
+//		}
+//		
+//		return result;
+//	}
 
 	@Override
 	public boolean createBoardComment(BoardCommentWriteVO boardCommentWriteVO) {
