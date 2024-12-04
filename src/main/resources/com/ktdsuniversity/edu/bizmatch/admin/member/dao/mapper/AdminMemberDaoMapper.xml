@@ -96,4 +96,31 @@
 		SELECT *
 		  FROM MBR_INFO MI
 	</select>
+	<update id="updateMemberPnlty" parameterType="list" >
+	UPDATE MBR_INFO
+	   SET PNLTY = PNLTY + 1
+	 WHERE EMIL_ADDR IN 
+	 <foreach collection="list"
+				 item="email" 
+			 	 open="(" 
+			 	 separator="," 
+			 	 close=")">
+			#{email}
+		</foreach>
+	</update>
+	<update id="updateMemberIsqt" parameterType="list" >
+	UPDATE MBR_INFO
+	   SET IS_QT = 1,
+	   	   QT_DT = SYSDATE,
+	   	   MBR_PHN_NUM = null,
+	   	   BRTH_DT = null
+	 WHERE EMIL_ADDR IN
+	 <foreach collection="list"
+				 item="email" 
+			 	 open="(" 
+			 	 separator="," 
+			 	 close=")">
+			#{email}
+		</foreach>
+	</update>
 </mapper>

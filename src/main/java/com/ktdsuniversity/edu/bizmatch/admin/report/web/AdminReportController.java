@@ -13,7 +13,7 @@ import com.ktdsuniversity.edu.bizmatch.common.vo.ApiResponse;
 import com.ktdsuniversity.edu.bizmatch.project.review.vo.ReviewVO;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/admin")
 public class AdminReportController {
 	@Autowired
 	private ReportService reportService;

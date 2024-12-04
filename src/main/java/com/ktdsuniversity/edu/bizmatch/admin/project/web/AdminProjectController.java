@@ -3,6 +3,7 @@ package com.ktdsuniversity.edu.bizmatch.admin.project.web;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,7 @@ import com.ktdsuniversity.edu.bizmatch.admin.project.service.AdminProjectService
 import com.ktdsuniversity.edu.bizmatch.common.vo.ApiResponse;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectVO;
 
+
 @RestController
 @RequestMapping("/api/admin")
 public class AdminProjectController {
@@ -24,7 +26,6 @@ public class AdminProjectController {
 	@GetMapping("/read/allproject")
 	public ApiResponse readAllProjectList() {
 		List<ProjectVO> answer = this.adminProjectService.readAllProject();
-		
 		return new ApiResponse(answer);
 	}
 	
