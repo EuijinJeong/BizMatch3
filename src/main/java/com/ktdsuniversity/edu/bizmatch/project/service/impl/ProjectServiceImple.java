@@ -369,8 +369,7 @@ public class ProjectServiceImple implements ProjectService {
 	}
 
 	@Override
-	public List<ApplyProjectVO> readAllApplyMember(String pjId, MemberVO memberVO) {
-		
+	public List<ApplyProjectVO> readAllApplyMember(String pjId, String email) {
 		ProjectVO projectVO = this.projectDao.selectProjectInfo(pjId);
 		
 		// if(!projectVO.getOrdrId().equals(memberVO.getEmilAddr())){
@@ -385,7 +384,8 @@ public class ProjectServiceImple implements ProjectService {
 	}
 
 	@Override
-	public boolean updateApplyMember(SelectApplyMemberVO selectApplyMemberVO, MemberVO memberVO) {
+	public boolean updateApplyMember(SelectApplyMemberVO selectApplyMemberVO, String email) {
+		MemberVO memberVO = memberDao.selectOneMember(email);
 		ProjectVO projectVO = this.projectDao.selectProjectInfo(selectApplyMemberVO.getPjId());
 		
 		if(!projectVO.getOrdrId().equals(memberVO.getEmilAddr())){
@@ -395,7 +395,7 @@ public class ProjectServiceImple implements ProjectService {
 			throw new IllegalArgumentException("지원자 선정을 완료하였습니다.");
 		}
 		
-		return this.projectDao.updateProjectApplyMember(selectApplyMemberVO)>0;
+		return this.projectDao.updateProjectApplyMember(selectApplyMemberVO) > 0;
 	}
 	
 	/**
@@ -443,7 +443,8 @@ public class ProjectServiceImple implements ProjectService {
 	}
 
 	@Override
-	public List<ApplyProjectVO> readAllApply(MemberVO memberVO) {
+	public List<ApplyProjectVO> readAllApply(String email) {
+		MemberVO memberVO = this.memberDao.selectOneMember(email);
 		return this.projectDao.selectAllApply(memberVO);
 	}
 

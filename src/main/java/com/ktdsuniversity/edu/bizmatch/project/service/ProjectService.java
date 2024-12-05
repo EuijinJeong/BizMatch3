@@ -122,10 +122,10 @@ public interface ProjectService {
 	/**
 	 * 지원자 모두를 불러오는 메소드
 	 * @param pjId
-	 * @param memberVO
+	 * @param email
 	 * @return
 	 */
-	public List<ApplyProjectVO> readAllApplyMember(String pjId, MemberVO memberVO);
+	public List<ApplyProjectVO> readAllApplyMember(String pjId, String email);
 	
 	/**
 	 * 
@@ -133,7 +133,7 @@ public interface ProjectService {
 	 * @param memberVO
 	 * @return
 	 */
-	public boolean updateApplyMember(SelectApplyMemberVO selectApplyMemberVO, MemberVO memberVO);
+	public boolean updateApplyMember(SelectApplyMemberVO selectApplyMemberVO, String email);
 	
 	/**
 	 * 특정 프로젝트의 필요한 모든 주요 기술들을 조회하는 메서드.
@@ -159,10 +159,10 @@ public interface ProjectService {
 	
 	/**
 	 * 지원한 지원서 전부 가져오기
-	 * @param memberVO
+	 * @param email
 	 * @return
 	 */
-	public List<ApplyProjectVO> readAllApply(MemberVO memberVO);
+	public List<ApplyProjectVO> readAllApply(String email);
 	
 	/**
 	 * 새로운 프로젝트 스크랩 정보를 추가하는 메서드.

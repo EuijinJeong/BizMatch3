@@ -2,16 +2,15 @@ package com.ktdsuniversity.edu.bizmatch.board.vo;
 
 public class BoardCommentVO {
 	
-	private String cmmntId     ;
-	private String pstId       ;
-	private String prntCmmntId ;
-	private String lstModDt    ;
-	private String cmmntCntnt  ;
-	private int isDlt       ;
-	private String dltDt       ;
-	private String athrId      ;
-	private String mbrNm     ;
-
+	private String cmmntId;
+	private String pstId;
+	private String prntCmmntId;
+	private String lstModDt;
+	private String cmmntCntnt;
+	private int isDlt;
+	private String dltDt;
+	private String athrId;
+	private String mbrNm;
 	private int rNum;
 	private int lv;
 	
