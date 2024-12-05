@@ -80,7 +80,7 @@ public class JsonWebTokenProvider {
 		
 		// 토큰에서 조회된 회원 정보이다.
 		Object jwtUser = claims.get("user");
-		String email = claims.get("email", String.class);
+		String email = claims.get("emilAddr", String.class);
 		
 		ObjectMapper om = new ObjectMapper();
 		String json = om.writeValueAsString(jwtUser);

@@ -34,6 +34,7 @@ public class SecurityUserDetailsService implements UserDetailsService {
 	
 		MemberVO memberVO = this.memberDao.selectOneMember(username);
 		
+		
 		if(memberVO == null) {
 			// UserDetailService에서 예외가 던져지면,
 			// AuthenticationProvider에서 예외를 처리한다.
