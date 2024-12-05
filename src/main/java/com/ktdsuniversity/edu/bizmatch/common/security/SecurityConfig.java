@@ -117,8 +117,10 @@ public class SecurityConfig {
 		http.authorizeHttpRequests(httpRequest ->
 								httpRequest.requestMatchers("/api/**").permitAll() // 비밀번호 찾기 페이지.
 		);
+		http.formLogin(formLogin->formLogin.usernameParameter("emilAddr")
+											.passwordParameter("pwd"));
 		
-		http.csrf(csrf -> csrf.ignoringRequestMatchers("/token", "/api/**"));
+		http.csrf(csrf -> csrf.ignoringRequestMatchers("/member/signin", "/api/**"));
 		return http.build();
 	}
 }
