@@ -1,4 +1,4 @@
-\<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper
 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
@@ -89,7 +89,7 @@
 	</update>
 	
 
-	<select id="selectForPagination" 
+	<!-- <select id="selectForPagination" 
 			parameterType="com.ktdsuniversity.edu.bizmatch.common.vo.PaginationVO"
 			resultType="com.ktdsuniversity.edu.bizmatch.board.vo.BoardVO">
 		  SELECT *
@@ -120,7 +120,7 @@
 						    END, i.LST_MOD_DT DESC) S
 						WHERE ROWNUM <![CDATA[<=]]> (#{currPageNo} + 1)*#{exposureListSize} )
 				  WHERE RNUM <![CDATA[>=]]> #{currPageNo} * #{exposureListSize} + 1
-	</select>
+	</select> -->
 
 	<!--  댓글 셀렉트 -->
 	<select id ="selectBoardComment" 
@@ -146,7 +146,7 @@
 			ORDER SIBLINGS BY LST_MOD_DT DESC 
 	</select>
 	
-	<select id ="selectPaginationComment" 
+	<!-- <select id ="selectPaginationComment" 
 			parameterType="com.ktdsuniversity.edu.bizmatch.board.vo.BoardCommentPaginationVO"
 			resultType ="com.ktdsuniversity.edu.bizmatch.board.vo.BoardCommentVO">
 		
@@ -173,7 +173,7 @@
 					ORDER SIBLINGS BY LST_MOD_DT DESC ) S
 					WHERE ROWNUM <![CDATA[<=]]> (#{currPageNo} + 1)*#{exposureListSize} )
 				  WHERE RNUM <![CDATA[>=]]> #{currPageNo} * #{exposureListSize} + 1
-	</select>
+	</select> -->
 	
 	<!-- 댓글 인서트 --> 
 	<insert id ="insertBoardComment"

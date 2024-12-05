@@ -20,6 +20,7 @@ import com.ktdsuniversity.edu.bizmatch.comment.web.CommentController;
 @Service
 public class BoardServiceImpl implements BoardService {
 	public static final Logger logger = LoggerFactory.getLogger(CommentController.class);
+	
 	@Autowired
 	private BoardDao boardDao;
 	
@@ -32,12 +33,20 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public BoardVO getOneBoard(String id) {
 		BoardVO result = boardDao.selectOneBoard(id);
+		if(result == null) {
+			// TODO 아래 예외 바꿔야함.
+			throw new IllegalArgumentException("서버상의 이유로 해당 게시글의 정보를 불러올 수 없습니다.");
+		}
+		
+		List<BoardCommentVO> commentList = this.boardDao.selectAllBoardComment(id);
+		result.setCommentList(commentList);
+		
 		return result;
 	}
 
 	@Override
 	public boolean createNewPost(BoardWriteVO boardWirteVO) {
-		return boardDao.insertPost(boardWirteVO)>0;
+		return boardDao.insertPost(boardWirteVO) > 0;
 	}
 
 	@Override

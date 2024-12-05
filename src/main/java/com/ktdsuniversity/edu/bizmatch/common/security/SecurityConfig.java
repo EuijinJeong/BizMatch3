@@ -23,6 +23,7 @@ import com.ktdsuniversity.edu.bizmatch.member.dao.MemberDao;
 @Configuration
 @EnableWebSecurity(debug = true)
 public class SecurityConfig {
+	
 	@Autowired
 	private JsonWebTokenAuthenticationFilter jsonWebTokenAuthenticationFilter;
 	
@@ -68,12 +69,12 @@ public class SecurityConfig {
 		return (web) -> web.ignoring().requestMatchers("/WEB-INF/views/**")
 //						.requestMatchers("/member/login")
 //						.requestMatchers("/member/regist/**")
-				.requestMatchers("/error/**").requestMatchers("favicon.ico").requestMatchers("/member/**-delete-me")
-				.requestMatchers("/js/**").requestMatchers("/css/**");
-		
+									.requestMatchers("/error/**")
+									.requestMatchers("favicon.ico")
+									.requestMatchers("/member/**-delete-me")
+									.requestMatchers("/js/**")
+									.requestMatchers("/css/**");
 	}
-	
-	
 	
 	@Bean
 	AuthenticationProvider securityAuthenticationProvider() {
@@ -81,7 +82,6 @@ public class SecurityConfig {
 				this.securityUserDetailsService(),
 				this.securityPasswordEncoder());
 	}
-	
 	
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -103,20 +103,21 @@ public class SecurityConfig {
 		});
 		
 		http.authorizeHttpRequests(httpRequest->
-									httpRequest.requestMatchers("/").permitAll()
+									 httpRequest.requestMatchers("/").permitAll()
 												.requestMatchers("/member/signup/**").permitAll()
 												.requestMatchers("/bizno/api/ask/**").permitAll()
 												.requestMatchers("/member/signin").permitAll()
 												.requestMatchers("/member/findpwd").permitAll()
 												.requestMatchers("/member/resetpwd").permitAll()
+												.requestMatchers("/ws/**").permitAll()
 												.requestMatchers("/token").permitAll());
 		
-	
 		http.addFilterAfter(this.jsonWebTokenAuthenticationFilter, BasicAuthenticationFilter.class);
 		
 		http.authorizeHttpRequests(httpRequest ->
-		httpRequest.requestMatchers("/api/**").permitAll() // 비밀번호 찾기 페이지.
+								httpRequest.requestMatchers("/api/**").permitAll() // 비밀번호 찾기 페이지.
 		);
+		
 		http.csrf(csrf -> csrf.ignoringRequestMatchers("/token", "/api/**"));
 		return http.build();
 	}

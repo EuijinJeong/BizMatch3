@@ -1,5 +1,7 @@
 package com.ktdsuniversity.edu.bizmatch.board.web;
 
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,7 @@ import com.ktdsuniversity.edu.bizmatch.board.vo.BoardCommentPaginationVO;
 import com.ktdsuniversity.edu.bizmatch.board.vo.BoardCommentWriteVO;
 import com.ktdsuniversity.edu.bizmatch.board.vo.BoardModifyCommentVO;
 import com.ktdsuniversity.edu.bizmatch.board.vo.BoardModifyVO;
+import com.ktdsuniversity.edu.bizmatch.board.vo.BoardVO;
 import com.ktdsuniversity.edu.bizmatch.board.vo.BoardWriteVO;
 import com.ktdsuniversity.edu.bizmatch.comment.web.CommentController;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.board.BoardException;
@@ -38,10 +41,9 @@ public class BoardController {
 	 */
 	@GetMapping("/board/list")
 	public ApiResponse viewBoardList(Authentication loginMemberVO) {
+		List<BoardVO> boardList = this.boardService.getBoardList();
 		
-		
-		// TODO 아래 로직 수정해야함 -의진-
-		return new ApiResponse();
+		return new ApiResponse(boardList);
 	}
 	
 	/**
@@ -50,19 +52,13 @@ public class BoardController {
 	 * @return
 	 */
 	@GetMapping("/board/view/{id}")
-	public String viewOneBoard(@PathVariable String id
+	public ApiResponse viewOneBoard(@PathVariable String id
 							, BoardCommentPaginationVO boardCommentPaginationVO
-							, Authentication loginMemberVO) {
+							, Authentication memberVO) {
 		
-//		BoardVO boardVO = boardService.getOneBoard(id);
-//		MemberVO loginInfo = loginMemberVO;
-//		
-//		int size = boardService.getAllBoardComment(id).size();
-//		boardCommentPaginationVO.setPageCount(size);
-//		boardCommentPaginationVO.setSearchIdParam(id);
-//		List<BoardCommentVO> comments = boardService.getPaginationComment(boardCommentPaginationVO, id);
-		
-		return "board/boardview";
+		BoardVO boardVO = boardService.getOneBoard(id);
+
+		return new ApiResponse(boardVO);
 	}
 	
 	/**
