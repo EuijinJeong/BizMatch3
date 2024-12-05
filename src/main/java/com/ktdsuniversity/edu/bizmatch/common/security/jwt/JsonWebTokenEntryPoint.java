@@ -24,6 +24,11 @@ public class JsonWebTokenEntryPoint {
 	@Autowired
 	private MemberDao memberDao;
 	
+	/**
+	 * 로그인 수행 -> jwt 토큰 돌려줌
+	 * @param loginMemberVO
+	 * @return
+	 */
 	@PostMapping("/member/signin")
 	public ApiResponse generateToken(@RequestBody MemberLoginVO loginMemberVO) {
 		
