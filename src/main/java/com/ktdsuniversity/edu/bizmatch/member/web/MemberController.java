@@ -1,6 +1,5 @@
 package com.ktdsuniversity.edu.bizmatch.member.web;
 
-import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -275,9 +274,11 @@ public class MemberController {
 		
 		return new ApiResponse(isAvailableEmail);
 	}
+	
 	@GetMapping("/member/myinfo")
 	public ApiResponse responseMemberInfo(Authentication authentication) {
 		MemberVO memberVO = (MemberVO)authentication.getPrincipal();
+		
 		return new ApiResponse(memberVO);
 	}
 //	/**
