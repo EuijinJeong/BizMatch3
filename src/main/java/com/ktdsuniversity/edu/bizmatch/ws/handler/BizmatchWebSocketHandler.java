@@ -57,7 +57,6 @@ public class BizmatchWebSocketHandler extends TextWebSocketHandler{
 		Map<String, String> payloadMap = gson.fromJson(payload, Map.class);
 		
 		String action = payloadMap.get("action");
-		String email = payloadMap.get("email");
 		String receiveMessage = payloadMap.get("message");
 		String nextUrl = payloadMap.get("url");
 		
@@ -69,7 +68,6 @@ public class BizmatchWebSocketHandler extends TextWebSocketHandler{
 			
 			textMessageMap.put("action", "RECEIVE_PENATLY");
 			textMessageMap.put("message", receiveMessage);
-			textMessageMap.put("url", nextUrl);
 			textMessageMap.put("receivePenatlyEmail", receivePenatlyEmail);
 			
 			sendToOneSession(textMessageMap, receivePenatlyEmail);
@@ -113,6 +111,7 @@ public class BizmatchWebSocketHandler extends TextWebSocketHandler{
 			String currentDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 			
 			if(pjRcutEndDt.equals(currentDate)) {
+				textMessageMap.put("action", "DEADLINE_REQ");
 				textMessageMap.put("projectOrderEmail", projectVO.getOrdrId());
 				textMessageMap.put("url", nextUrl);
 				textMessageMap.put("message", receiveMessage);
@@ -131,6 +130,7 @@ public class BizmatchWebSocketHandler extends TextWebSocketHandler{
 			String currentDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 			
 			if(pjEndDt.equals(currentDate)) {
+				textMessageMap.put("action", "PAYMENT_REQ");
 				textMessageMap.put("projectOrderEmail", projectVO.getOrdrId());
 				textMessageMap.put("url", nextUrl);
 				textMessageMap.put("message", receiveMessage);

@@ -82,7 +82,7 @@ public class SecurityConfig {
 				this.securityPasswordEncoder());
 	}
 	
-	
+
 	@Bean
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.cors(cors -> {
@@ -95,6 +95,7 @@ public class SecurityConfig {
 				// 허용을 할 메서드의 목록
 				corsConfiguration.setAllowedMethods(List.of("POST", "GET", "PUT", "DELETE", "OPTION"));
 				corsConfiguration.setAllowedHeaders(List.of("*"));
+				corsConfiguration.setAllowCredentials(true);
 				
 				return corsConfiguration;
 			};
@@ -109,7 +110,8 @@ public class SecurityConfig {
 												.requestMatchers("/member/signin").permitAll()
 												.requestMatchers("/member/findpwd").permitAll()
 												.requestMatchers("/member/resetpwd").permitAll()
-												.requestMatchers("/token").permitAll());
+												.requestMatchers("/token").permitAll()
+												.requestMatchers("/ws/**").permitAll());
 		
 	
 		http.addFilterAfter(this.jsonWebTokenAuthenticationFilter, BasicAuthenticationFilter.class);

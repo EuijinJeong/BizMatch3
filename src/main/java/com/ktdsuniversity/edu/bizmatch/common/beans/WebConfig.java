@@ -12,6 +12,7 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
@@ -20,6 +21,7 @@ import com.ktdsuniversity.edu.bizmatch.accesslog.dao.AccessLogDao;
 
 @Configuration
 @EnableWebMvc
+@EnableWebSocket
 public class WebConfig implements WebMvcConfigurer, WebSocketConfigurer{
 
 	@Autowired
@@ -93,7 +95,7 @@ public class WebConfig implements WebMvcConfigurer, WebSocketConfigurer{
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
 		registry.addHandler(this.textWebSocketHandler, "/ws")
-				.setAllowedOrigins("http://localhost:8080", "http://localhost:3000") // 모든 도메인(URL)에서 /ws 로 접근할 수 있도록 설정
+				.setAllowedOrigins("http://localhost:3000") // 모든 도메인(URL)에서 /ws 로 접근할 수 있도록 설정
 				.withSockJS(); // /ws URL에 접근할 수 있는 JS라이브러리를 sock.js 로 제한
 	}
 }
