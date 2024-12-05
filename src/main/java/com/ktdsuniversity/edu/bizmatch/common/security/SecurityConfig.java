@@ -69,6 +69,7 @@ public class SecurityConfig {
 		return (web) -> web.ignoring().requestMatchers("/WEB-INF/views/**")
 //						.requestMatchers("/member/login")
 //						.requestMatchers("/member/regist/**")
+									.requestMatchers("/ws/**")
 									.requestMatchers("/error/**")
 									.requestMatchers("favicon.ico")
 									.requestMatchers("/member/**-delete-me")

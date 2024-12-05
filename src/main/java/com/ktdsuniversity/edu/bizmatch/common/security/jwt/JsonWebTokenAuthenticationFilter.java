@@ -45,7 +45,7 @@ public class JsonWebTokenAuthenticationFilter extends OncePerRequestFilter {
 		String url = request.getServletPath();
 		
 //		2. URL이 /api/ 로 시작하는 경우는 API 호출을 한 것.
-		if(url.startsWith("/api")) {
+		if(!url.startsWith("/api/admin")&&url.startsWith("/api") ) {
 			boolean isPermitAllUrl = this.permitAllUrls.contains(url);
 //			3. HttpRequest 에서 header 에 있는 Authorization 에서 값을 읽어온다.==> Json Web Token
 			String jwt = request.getHeader("Authorization");
