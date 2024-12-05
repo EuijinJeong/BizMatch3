@@ -149,7 +149,8 @@
 		, MBR_CTGRY
 		, CMPNY_RP
 		, SALT
-		, CMP_Id )
+		, CMP_Id
+		, SGNUP_DT )
 		VALUES
 		( #{mbrNm}
 		, #{emilAddr}
@@ -159,6 +160,7 @@
 		, #{cmpnyRp}
 		, #{salt}
 		, #{cmpId}
+		, SYSDATE
 		)
 	</insert>
 	
@@ -175,7 +177,8 @@
 		,MBR_CTGRY
 		,SALT
 		,MJR_ID
-		,SMJR_ID)
+		,SMJR_ID
+		,SGNUP_DT )
 		VALUES
 		( #{mbrNm}
 		, #{emilAddr}
@@ -187,6 +190,7 @@
 		, #{salt}
 		, #{mjrId}
 		, #{smjrId}
+		, SYSDATE
 		)
 	</insert>
 
