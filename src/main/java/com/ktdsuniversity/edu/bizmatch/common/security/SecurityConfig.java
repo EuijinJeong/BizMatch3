@@ -110,7 +110,6 @@ public class SecurityConfig {
 												.requestMatchers("/member/signin").permitAll()
 												.requestMatchers("/member/findpwd").permitAll()
 												.requestMatchers("/member/resetpwd").permitAll()
-												.requestMatchers("/token").permitAll()
 												.requestMatchers("/ws/**").permitAll());
 		
 	

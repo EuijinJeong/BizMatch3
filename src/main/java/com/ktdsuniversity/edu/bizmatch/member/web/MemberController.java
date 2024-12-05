@@ -274,18 +274,18 @@ public class MemberController {
 		
 		return new ApiResponse(isAvailableEmail);
 	}
-	/**
-	 * 로그인
-	 * @param memberLoginVO 
-	 * @param session
-	 * @param model
-	 * @return
-	 */
-	@PostMapping("/member/signin")
-	public ApiResponse doSignIn(MemberLoginVO memberLoginVO) {
-		
-		return new ApiResponse();
-	}
+//	/**
+//	 * 로그인
+//	 * @param memberLoginVO 
+//	 * @param session
+//	 * @param model
+//	 * @return
+//	 */
+//	@PostMapping("/member/signin")
+//	public ApiResponse doSignIn(@RequestBody MemberLoginVO memberLoginVO) {
+//		
+//		return new ApiResponse();
+//	}
 	
 //	/**
 //	 * 로그아웃

@@ -24,7 +24,7 @@ public class JsonWebTokenEntryPoint {
 	@Autowired
 	private MemberDao memberDao;
 	
-	@PostMapping("/token")
+	@PostMapping("/member/signin")
 	public ApiResponse generateToken(@RequestBody MemberLoginVO loginMemberVO) {
 		
 		// 아이디 일치하는지 검사.
