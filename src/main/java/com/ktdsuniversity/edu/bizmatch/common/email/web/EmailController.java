@@ -49,13 +49,14 @@ public class EmailController {
 	}
 	
 	/**
-	 * 이메일 번호 같은지 확인하는 컨트롤러.
+	 * 이메일 인증번호 같은지 확인하는 컨트롤러.
 	 * @param emil
 	 * @param authNum
 	 * @return
 	 */
 	@GetMapping("/email/authnum/samecheck")
-	public Map<String, Object> checkAuthNum(@RequestParam String email, @RequestParam String authNum) {
+	public Map<String, Object> checkAuthNum(@RequestParam String email
+										, @RequestParam String authNum) {
 		
 		email = XssUtil.clean(email);
 		authNum = XssUtil.clean(authNum);

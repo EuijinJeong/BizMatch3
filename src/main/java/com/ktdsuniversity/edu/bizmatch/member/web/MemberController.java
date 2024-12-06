@@ -133,7 +133,7 @@ public class MemberController {
 	 * @return
 	 */
 	@PostMapping("/member/signup/company")
-	public ApiResponse signUpCompanyMember(MemberCompanySignUpVO memberCompanySignUpVO) {
+	public ApiResponse signUpCompanyMember(@RequestBody MemberCompanySignUpVO memberCompanySignUpVO) {
 		
 		
 //		 사용자가 입력한 값 유효성 검사.
@@ -175,7 +175,6 @@ public class MemberController {
 		if(memberCompanySignUpVO.getAgreeOne()==null|| memberCompanySignUpVO.getAgreeThree()==null || memberCompanySignUpVO.getAgreeTwo()==null) {
 			throw new SignUpCompanyException("동의 사항에 모두 동의해야합니다.", memberCompanySignUpVO);
 		}
-		logger.debug(memberCompanySignUpVO.toString());
 		
 		boolean isSuccessed = this.memberService.signupCompanyMember(memberCompanySignUpVO);
 		return new ApiResponse(isSuccessed);
@@ -189,8 +188,7 @@ public class MemberController {
 	@GetMapping("/member/signup/cmpnycheck/{cmpnyBrn}")
 	public ApiResponse companyCheck(@PathVariable String cmpnyBrn) {
 		CompanyVO companyVO = this.memberService.readOneCompany(cmpnyBrn);
-		boolean isAlreadyHave = (companyVO != null);
-		return new ApiResponse(isAlreadyHave);
+		return new ApiResponse(companyVO);
 	}
 
 	/**
@@ -201,6 +199,7 @@ public class MemberController {
 	@GetMapping("/bizno/api/ask/{cmpnyBrn}")
 	public Map handleBiznoApi(@PathVariable String cmpnyBrn) {
 		Map<String, Object> request = new HashMap<>();
+		// TODO 사업자 번호 - 이거 뜯을 수 있나?
 		request.put("key", "amVqMDAxMjI4QGdtYWlsLmNvbSAg");
 		request.put("gb", "1");
 		request.put("q", cmpnyBrn);
@@ -212,7 +211,6 @@ public class MemberController {
 				.stream()
 				.map(entry -> entry.getKey() + "=" + entry.getValue().toString())
 				.collect(Collectors.joining("&"));
-		
 		
 		ResponseEntity<Map> response = this.restTemplate.getForEntity("https://bizno.net/api/fapi" + queryParam, Map.class);
 		
@@ -263,7 +261,7 @@ public class MemberController {
 	}
 	
 	/**
-	 * 
+	 * 이메일 중복확인 요청을 받는 컨트롤러.
 	 * @param email
 	 * @return
 	 */
