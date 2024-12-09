@@ -53,8 +53,7 @@ public class BizmatchWebSocketHandler extends TextWebSocketHandler{
 		//message.getPayload() ==> 사용자가 보낸 텍스트 메시지를 꺼낸다.
 				String payload = message.getPayload();
 				
-				System.out.println("123123"+message);
-				
+
 				// payload 에서 action 을 추출
 				// payload 에서 message 을 추출
 				// --> payload 를 Map 으로 변환.
@@ -74,11 +73,13 @@ public class BizmatchWebSocketHandler extends TextWebSocketHandler{
 				
 				if(action.equals("LOGIN")) {
 					String email = payloadMap.get("email");
-					if(unconnectedSessionMap.containsKey(email)) {
+					this.connectedSessionMap.put(email, session);
+					boolean isLogin = unconnectedSessionMap.containsKey(email);
+					if(isLogin) {
 						sendToOneSession(unconnectedSessionMap.get(email), email);
+						unconnectedSessionMap.remove(email);
 					}
 					//세션에 접속 함
-					this.connectedSessionMap.put(email, session);
 				}
 				// 패널티 먹었을 때 알림
 				else if(action.equals("RECEIVE_PENATLY")) {
