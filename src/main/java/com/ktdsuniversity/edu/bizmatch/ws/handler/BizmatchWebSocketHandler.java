@@ -79,7 +79,6 @@ public class BizmatchWebSocketHandler extends TextWebSocketHandler{
 						sendToOneSession(unconnectedSessionMap.get(email), email);
 						unconnectedSessionMap.remove(email);
 					}
-					//세션에 접속 함
 				}
 				// 패널티 먹었을 때 알림
 				else if(action.equals("RECEIVE_PENATLY")) {
