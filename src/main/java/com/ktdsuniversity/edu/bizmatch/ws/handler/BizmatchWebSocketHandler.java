@@ -39,9 +39,12 @@ public class BizmatchWebSocketHandler extends TextWebSocketHandler{
 	 */
 	private Map<String, WebSocketSession> connectedSessionMap;
 	
+	private Map<String, Map<String, String>> unconnectedSessionMap;
+	
 	private Gson gson;
 	
 	public BizmatchWebSocketHandler() {
+		this.unconnectedSessionMap = new HashMap<>();
 		this.connectedSessionMap = new HashMap<>();
 		this.gson = new Gson();
 	}
@@ -56,7 +59,7 @@ public class BizmatchWebSocketHandler extends TextWebSocketHandler{
 				// --> payload 를 Map 으로 변환.
 				//    --> Gson Library 필요
 				Map<String, String> payloadMap = new HashMap<>();
-				try {					
+				try {
 					payloadMap = gson.fromJson(payload, Map.class);
 				}
 				catch(JsonSyntaxException e) {
@@ -70,15 +73,14 @@ public class BizmatchWebSocketHandler extends TextWebSocketHandler{
 				
 				if(action.equals("LOGIN")) {
 					String email = payloadMap.get("email");
+					if(unconnectedSessionMap.containsKey(email)) {
+						sendToOneSession(unconnectedSessionMap.get(email), email);
+					}
 					//세션에 접속 함
 					this.connectedSessionMap.put(email, session);
-					connectedSessionMap.forEach((key, value) -> {
-			            System.out.println("Key: " + key + ", Value: " + value);
-			        });
 				}
 				// 패널티 먹었을 때 알림
 				else if(action.equals("RECEIVE_PENATLY")) {
-					logger.debug("alarm : {}",payload);
 					Map<String, String> textMessageMap = new HashMap<>();
 					String receivePenatlyEmail = payloadMap.get("receivePenatlyEmail");
 					
@@ -166,22 +168,22 @@ public class BizmatchWebSocketHandler extends TextWebSocketHandler{
 	 * @param session
 	 */
 	private void sendToOneSession(Map<String, String> textMessageMap, String receiverEmail) {
-		 connectedSessionMap.forEach((key, value) -> {
-	            System.out.println("Key: " + key + ", Value: " + value);
-	        });
 		if(!this.connectedSessionMap.containsKey(receiverEmail)) {
-			return ;
+			// 세션에 접속한 사람이 없을 경우
+			this.unconnectedSessionMap.put(receiverEmail, textMessageMap);
 		}
-		TextMessage textMessage = new TextMessage(this.gson.toJson(textMessageMap));
-		WebSocketSession session = this.connectedSessionMap.get(receiverEmail);
-		if(session.isOpen()) {
-			try {
-				synchronized (session) {
-					session.sendMessage(textMessage);
+		else {
+			TextMessage textMessage = new TextMessage(this.gson.toJson(textMessageMap));
+			WebSocketSession session = this.connectedSessionMap.get(receiverEmail);
+			if(session.isOpen()) {
+				try {
+					synchronized (session) {
+						session.sendMessage(textMessage);
+					}
+				} catch (IOException e) {
+					logger.error(e.getMessage(), e);
 				}
-			} catch (IOException e) {
-				logger.error(e.getMessage(), e);
-			}
+			}	
 		}
 	}
 	
