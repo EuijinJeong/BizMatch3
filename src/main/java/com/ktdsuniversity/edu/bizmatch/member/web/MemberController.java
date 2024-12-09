@@ -153,8 +153,8 @@ public class MemberController {
 	 * @param cmpnyBrn
 	 * @return
 	 */
-	@GetMapping("/member/signup/cmpnycheck/{cmpnyBrn}")
-	public ApiResponse companyCheck(@PathVariable String cmpnyBrn) {
+	@GetMapping("/member/signup/cmpnycheck")
+	public ApiResponse companyCheck(@RequestParam String cmpnyBrn) {
 		CompanyVO companyVO = this.memberService.readOneCompany(cmpnyBrn);
 		return new ApiResponse(companyVO);
 	}
@@ -164,8 +164,8 @@ public class MemberController {
 	 * @param cmpnyBrn
 	 * @return
 	 */
-	@GetMapping("/bizno/api/ask/{cmpnyBrn}")
-	public Map handleBiznoApi(@PathVariable String cmpnyBrn) {
+	@GetMapping("/bizno/api/ask")
+	public Map handleBiznoApi(@RequestParam String cmpnyBrn) {
 		Map<String, Object> request = new HashMap<>();
 		// TODO 사업자 번호 - 이거 뜯을 수 있나?
 		request.put("key", "amVqMDAxMjI4QGdtYWlsLmNvbSAg");
@@ -670,12 +670,12 @@ public class MemberController {
 		return new ApiResponse(isUpdated);
 	}
 	
-	@GetMapping("/member/company/email")
-	public ApiResponse getCmpIdByEmail(Authentication memberVO) {
-		String email = memberVO.getName();
-		
-		return new ApiResponse();
-	}
+//	@GetMapping("/member/company/
+//	public ApiResponse getCmpIdByEmail(Authentication memberVO) {
+//		String email = memberVO.getName();
+//		
+//		return new ApiResponse();
+//	}
 	
 	@GetMapping("/member/logout")
 	public ApiResponse doLogout(Authentication memberVO) {

@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,8 +30,8 @@ public class EmailController {
 	 * @param email
 	 * @return
 	 */
-	@GetMapping("/email/check/{email}/")
-	public Map<String, Object> doCheckEmail(@PathVariable String email) {
+	@GetMapping("/email/check/")
+	public Map<String, Object> doCheckEmail(@RequestParam String email) {
 		email = XssUtil.clean(email);
 		
 		//인증번호 발급
