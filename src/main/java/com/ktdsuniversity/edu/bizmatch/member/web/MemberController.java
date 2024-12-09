@@ -37,7 +37,6 @@ import com.ktdsuniversity.edu.bizmatch.member.vo.CompanyVO;
 import com.ktdsuniversity.edu.bizmatch.member.vo.MemberCompanyModifyVO;
 import com.ktdsuniversity.edu.bizmatch.member.vo.MemberCompanySignUpVO;
 import com.ktdsuniversity.edu.bizmatch.member.vo.MemberFreelancerModifyVO;
-import com.ktdsuniversity.edu.bizmatch.member.vo.MemberLoginVO;
 import com.ktdsuniversity.edu.bizmatch.member.vo.MemberModifyVO;
 import com.ktdsuniversity.edu.bizmatch.member.vo.MemberMyPageIndsryVO;
 import com.ktdsuniversity.edu.bizmatch.member.vo.MemberPaginationVO;
@@ -233,24 +232,17 @@ public class MemberController {
 		return new ApiResponse(isAvailableEmail);
 	}
 	
+	/**
+	 * 
+	 * @param authentication
+	 * @return
+	 */
 	@GetMapping("/member/myinfo")
 	public ApiResponse responseMemberInfo(Authentication authentication) {
 		MemberVO memberVO = (MemberVO)authentication.getPrincipal();
 		
 		return new ApiResponse(memberVO);
 	}
-//	/**
-//	 * 로그인
-//	 * @param memberLoginVO 
-//	 * @param session
-//	 * @param model
-//	 * @return
-//	 */
-//	@PostMapping("/member/signin")
-//	public ApiResponse doSignIn(@RequestBody MemberLoginVO memberLoginVO) {
-//		
-//		return new ApiResponse();
-//	}
 	
 	/**
 	 * 기업형 마이페이지를 로드하는 컨트롤러.
@@ -259,20 +251,18 @@ public class MemberController {
 	 * @param cmpnyId
 	 * @return
 	 */
-	@GetMapping("/member/mypage/company/{cmpnyId}")
+	@GetMapping("/member/mypage/company/{cmpId}")
 	public ApiResponse loadCompanyMyPage(Authentication loginMemberVO
 								 , @RequestParam(required = false, defaultValue = "late-date") String orderBy
-								 , @PathVariable String cmpnyId) {
+								 , @PathVariable String cmpId) {
 		
-		// 기업 정보 조회
-		CompanyVO companyVO = memberService.selectOneCompanyByEmilAddr(cmpnyId);
+		CompanyVO companyVO = this.memberService.selectOneCompanyByEmilAddr(cmpId);
 		
 		// 보유기술 리스트 조회
 		List<MbrPrmStkVO> mbrPrmStkList = companyVO.getMbrPrmStkVOList();
 		
-		
 		// 주요 산업 조회
-		MemberMyPageIndsryVO mbrIndstrVO = memberService.readMbrIndstr(cmpnyId);
+		MemberMyPageIndsryVO mbrIndstrVO = memberService.readMbrIndstr(companyVO.getCmpnyId());
 		
 		// 리뷰 리스트 조회
 		Map<String, Function<String, List<ReviewVO>>> sortMethodMap = new HashMap<>();
@@ -280,7 +270,7 @@ public class MemberController {
 		sortMethodMap.put("high-rate", memberService::selectCompanyReviewListByScrDesc);
 		sortMethodMap.put("low-rate", memberService::selectCompanyReviewListByScrAsc);
 		
-		List<ReviewVO> reviewList = sortMethodMap.getOrDefault(orderBy, memberService::selectReviewList).apply(cmpnyId);
+		List<ReviewVO> reviewList = sortMethodMap.getOrDefault(orderBy, memberService::selectReviewList).apply(companyVO.getCmpnyId());
 		
 		// 전체 리뷰 평균 별 계산
 		double averageRate = reviewList.stream().mapToDouble(ReviewVO::getScr).average().orElse(0);
@@ -290,6 +280,7 @@ public class MemberController {
 		resultMap.put("industry", mbrIndstrVO);
 		resultMap.put("reviewList", reviewList);
 		resultMap.put("averageRate", averageRate);
+		resultMap.put("companyVO", companyVO);
 		
 		return new ApiResponse(resultMap);
 	}
@@ -333,15 +324,6 @@ public class MemberController {
 				
 		return "member/mypage_freelancer";
 	}
-	
-//	/**
-//	 * 
-//	 * @return
-//	 */
-//	@GetMapping("/member/mypage/myproject")
-//	public String loadMyProjectPage() {
-//		return "member/myproject";
-//	}
 	
 	/**
 	 * 기업 마이페이지 리뷰 더 보기 상세페이지
@@ -578,16 +560,6 @@ public class MemberController {
 		return new ApiResponse();
 	}
 	
-//	
-//	/**
-//	 * 내 정보 수정 페이지 로딩.
-//	 * @return
-//	 */
-//	@GetMapping("/member/mypage/myinfo-edit")
-//	public String viewMyInfoEditPage() {
-//		return "member/myinfo_edit";
-//	}
-	
 	/**
 	 * 내정보 수정을 하는 컨트롤러.
 	 * @param memberModifyVO
@@ -696,5 +668,17 @@ public class MemberController {
 		boolean isUpdated = this.memberService.updateOnePortfolio(memberPortfolioVO);
 		
 		return new ApiResponse(isUpdated);
+	}
+	
+	@GetMapping("/member/company/email")
+	public ApiResponse getCmpIdByEmail(Authentication memberVO) {
+		String email = memberVO.getName();
+		
+		return new ApiResponse();
+	}
+	
+	@GetMapping("/member/logout")
+	public ApiResponse doLogout(Authentication memberVO) {
+		return new ApiResponse();
 	}
 }

@@ -271,6 +271,9 @@ public class MemberDaoImpl extends SqlSessionDaoSupport implements MemberDao {
 	public List<ReviewVO> selectCompanyReviewListByScrAsc(String cmpId) {
 		return this.getSqlSession().selectList(NAMESPACE + ".selectCompanyReviewListByScrAsc", cmpId);
 	}
-	
-	
+
+	@Override
+	public String selectCmpIdByEmail(String email) {
+		return this.getSqlSession().selectOne(NAMESPACE + ".selectCmpIdByEmail", email);
+	}
 }

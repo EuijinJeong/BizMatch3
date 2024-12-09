@@ -20,6 +20,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import com.ktdsuniversity.edu.bizmatch.common.security.jwt.JsonWebTokenAuthenticationFilter;
 import com.ktdsuniversity.edu.bizmatch.member.dao.MemberDao;
 
+import jakarta.servlet.http.HttpSession;
+
 @Configuration
 @EnableWebSecurity(debug = true)
 public class SecurityConfig {
@@ -107,6 +109,7 @@ public class SecurityConfig {
 		
 		http.authorizeHttpRequests(httpRequest->
 									 httpRequest.requestMatchers("/").permitAll()
+									 			.requestMatchers("/kakao/**").permitAll()
 												.requestMatchers("/member/signup/**").permitAll()
 												.requestMatchers("/bizno/api/ask/**").permitAll()
 												.requestMatchers("/member/signin").permitAll()
@@ -123,6 +126,15 @@ public class SecurityConfig {
 											.passwordParameter("pwd"));
 		
 		http.csrf(csrf -> csrf.ignoringRequestMatchers("/member/signin", "/api/**"));
+		
+		http.logout(logout -> logout.logoutUrl("/api/member/logout")
+									.logoutSuccessUrl("/")
+									.addLogoutHandler((request, response, authentication) -> {
+										HttpSession session = request.getSession();
+										session.invalidate();
+									})
+									.logoutSuccessHandler((request, response, authentication)-> 
+										response.sendRedirect("/")));
 		return http.build();
 	}
 }
