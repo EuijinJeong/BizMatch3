@@ -165,31 +165,31 @@ public class MemberCompanySignUpVO {
 	public void setEmilAddrCnfrmNmbr(String emilAddrCnfrmNmbr) {
 		this.emilAddrCnfrmNmbr = emilAddrCnfrmNmbr;
 	}
-	// getters and setters.
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("this.mbrNm"+this.mbrNm+"\n");
-		sb.append("this.emilAddr"+this.emilAddr+"\n");
-		sb.append(this.cmpnyIndstrId.getMjrId() + this.cmpnyIndstrId.getSmjrId() + "\n");
-		sb.append("this.pwd"+this.pwd+"\n");
-		sb.append("this.confirmPwd"+this.confirmPwd+"\n");
-		sb.append("this.emilAddrCnfrmNmbr"+this.emilAddrCnfrmNmbr+"\n");
-		sb.append("this.cmpnyBrn"+this.cmpnyBrn+"\n");
-		sb.append("this.cmpnyEmplyCnt"+this.cmpnyEmplyCnt+"\n");
-		sb.append("this.mbrPhnNum"+this.mbrPhnNum+"\n");
-		sb.append("this.cmpnyNm"+this.cmpnyNm+"\n");
-		sb.append("this.getAddress.getpostcode"+this.getAddress().getPostcode() + " "+this.getAddress().getAddr());
-		sb.append("this.cmpnyPhnNum"+this.cmpnyPhnNum+"\n");
-		sb.append("this.cmpnySiteUrl"+this.cmpnySiteUrl+"\n");
-		sb.append("this.cmpnyBizCtgry"+this.cmpnyBizCtgry+"\n");
-		sb.append("this.cmpnyIndstrId"+this.cmpnyIndstrId+"\n");
-		sb.append("this.mbrCtgry"+this.mbrCtgry+"\n");
-		sb.append("this.agreeOne"+this.agreeOne+"\n");
-		sb.append("this.agreeTwo"+this.agreeTwo+"\n");
-		sb.append("this.agreeThree"+this.agreeThree);
-		return sb.toString();
-	}
+//	// getters and setters.
+//	@Override
+//	public String toString() {
+//		StringBuilder sb = new StringBuilder();
+//		sb.append("this.mbrNm"+this.mbrNm+"\n");
+//		sb.append("this.emilAddr"+this.emilAddr+"\n");
+//		sb.append(this.cmpnyIndstrId.getMjrId() + this.cmpnyIndstrId.getSmjrId() + "\n");
+//		sb.append("this.pwd"+this.pwd+"\n");
+//		sb.append("this.confirmPwd"+this.confirmPwd+"\n");
+//		sb.append("this.emilAddrCnfrmNmbr"+this.emilAddrCnfrmNmbr+"\n");
+//		sb.append("this.cmpnyBrn"+this.cmpnyBrn+"\n");
+//		sb.append("this.cmpnyEmplyCnt"+this.cmpnyEmplyCnt+"\n");
+//		sb.append("this.mbrPhnNum"+this.mbrPhnNum+"\n");
+//		sb.append("this.cmpnyNm"+this.cmpnyNm+"\n");
+//		sb.append("this.getAddress.getpostcode"+this.getAddress().getPostcode() + " "+this.getAddress().getAddr());
+//		sb.append("this.cmpnyPhnNum"+this.cmpnyPhnNum+"\n");
+//		sb.append("this.cmpnySiteUrl"+this.cmpnySiteUrl+"\n");
+//		sb.append("this.cmpnyBizCtgry"+this.cmpnyBizCtgry+"\n");
+//		sb.append("this.cmpnyIndstrId"+this.cmpnyIndstrId+"\n");
+//		sb.append("this.mbrCtgry"+this.mbrCtgry+"\n");
+//		sb.append("this.agreeOne"+this.agreeOne+"\n");
+//		sb.append("this.agreeTwo"+this.agreeTwo+"\n");
+//		sb.append("this.agreeThree"+this.agreeThree);
+//		return sb.toString();
+//	}
 	public String getCmpId() {
 		return cmpId;
 	}

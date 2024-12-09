@@ -20,6 +20,8 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import com.ktdsuniversity.edu.bizmatch.common.security.jwt.JsonWebTokenAuthenticationFilter;
 import com.ktdsuniversity.edu.bizmatch.member.dao.MemberDao;
 
+import jakarta.servlet.http.HttpSession;
+
 @Configuration
 @EnableWebSecurity(debug = true)
 public class SecurityConfig {
@@ -70,10 +72,12 @@ public class SecurityConfig {
 //						.requestMatchers("/member/login")
 //						.requestMatchers("/member/regist/**")
 									.requestMatchers("/ws/**")
+									.requestMatchers("/api/member/signup/email/available/")
 									.requestMatchers("/error/**")
 									.requestMatchers("favicon.ico")
 									.requestMatchers("/member/**-delete-me")
 									.requestMatchers("/js/**")
+									.requestMatchers("/mailhtml/**")
 									.requestMatchers("/css/**");
 	}
 	
@@ -106,22 +110,32 @@ public class SecurityConfig {
 		
 		http.authorizeHttpRequests(httpRequest->
 									 httpRequest.requestMatchers("/").permitAll()
+									 			.requestMatchers("/kakao/**").permitAll()
+									 			.requestMatchers("/api/**").permitAll()
 												.requestMatchers("/member/signup/**").permitAll()
 												.requestMatchers("/bizno/api/ask/**").permitAll()
 												.requestMatchers("/member/signin").permitAll()
 												.requestMatchers("/member/findpwd").permitAll()
 												.requestMatchers("/member/resetpwd").permitAll()
+												.requestMatchers("/api/member/signup/email/available/").permitAll()
 												.requestMatchers("/ws/**").permitAll());
 		
 		http.addFilterAfter(this.jsonWebTokenAuthenticationFilter, BasicAuthenticationFilter.class);
 		
-		http.authorizeHttpRequests(httpRequest ->
-								httpRequest.requestMatchers("/api/**").permitAll() // 비밀번호 찾기 페이지.
-		);
 		http.formLogin(formLogin->formLogin.usernameParameter("emilAddr")
 											.passwordParameter("pwd"));
 		
-		http.csrf(csrf -> csrf.ignoringRequestMatchers("/member/signin", "/api/**"));
+		http.csrf(csrf -> csrf.ignoringRequestMatchers("/member/signin", "/api/**", "/api/member/signup/email/available/"));
+		
+		// 로그아웃.
+		http.logout(logout -> logout.logoutUrl("/api/member/logout")
+									.logoutSuccessUrl("/")
+									.addLogoutHandler((request, response, authentication) -> {
+										HttpSession session = request.getSession();
+										session.invalidate();
+									})
+									.logoutSuccessHandler((request, response, authentication)-> 
+										response.sendRedirect("/")));
 		return http.build();
 	}
 }

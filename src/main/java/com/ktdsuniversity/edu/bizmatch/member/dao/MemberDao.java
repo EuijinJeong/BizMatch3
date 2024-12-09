@@ -365,4 +365,11 @@ public interface MemberDao {
 	 * @return
 	 */
 	public List<ReviewVO> selectCompanyReviewListByScrAsc(String cmpId);
+	
+	/**
+	 * 회원의 아이디를 통해 기업 아이디를 가져오는 쿼리문을 호출하는 메서드.
+	 * @param email
+	 * @return
+	 */
+	public String selectCmpIdByEmail(String email);
 }

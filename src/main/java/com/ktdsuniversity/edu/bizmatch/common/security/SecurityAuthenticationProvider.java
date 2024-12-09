@@ -65,7 +65,6 @@ public class SecurityAuthenticationProvider implements AuthenticationProvider {
 		
 		// 사용자 이메일 정보 가져옴.
 		UserDetails userDetails = this.userDetailsService.loadUserByUsername(requestAuthenticationEmail);
-		System.out.println(userDetails.getUsername());
 		
 		// 데이터베이스에 저장된 암호화된 비밀번호.
 		String storedUserPassword = userDetails.getPassword();

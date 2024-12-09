@@ -857,4 +857,13 @@
 		 WHERE EMIL_ADDR IN (SELECT EMIL_ADDR FROM MBR_INFO WHERE CMP_ID = #{_parameter})
 		 ORDER BY MBR_PRTFL_ID DESC
 	</select>
+	
+	<!-- 이메일을 통해 기업 아이디를 조회하는 쿼리문. -->
+	<select id="selectCmpIdByEmail"
+			parameterType="string"
+			resultType="string">
+		SELECT CMP_ID 
+		  FROM MBR_INFO  
+		 WHERE EMIL_ADDR = #{_parameter}
+	</select>
 </mapper>

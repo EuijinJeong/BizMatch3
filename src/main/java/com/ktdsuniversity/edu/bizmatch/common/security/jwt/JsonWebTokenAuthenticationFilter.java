@@ -37,17 +37,22 @@ public class JsonWebTokenAuthenticationFilter extends OncePerRequestFilter {
 	private JsonWebTokenProvider jsonWebTokenProvider;
 	
 	@Override
-	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-			throws ServletException, IOException {
-//		API 일 때만 동작
-//		1. 사용자가 요청한 URL이 무엇인지 확인.
+	protected void doFilterInternal(HttpServletRequest request
+								, HttpServletResponse response
+								, FilterChain filterChain)
+								throws ServletException, IOException {
+		// API 일 때만 동작
+
+		// 1. 사용자가 요청한 URL이 무엇인지 확인.
 		String url = request.getServletPath();
-		
+
 //		2. URL이 /api/ 로 시작하는 경우는 API 호출을 한 것.
-		if(!url.startsWith("/api/admin")&&url.startsWith("/api") ) {
+		if(!url.startsWith("/api/admin") && url.startsWith("/api")) {
 			boolean isPermitAllUrl = this.permitAllUrls.contains(url);
-//			3. HttpRequest 에서 header 에 있는 Authorization 에서 값을 읽어온다.==> Json Web Token
+			
+			// 3. HttpRequest 에서 header 에 있는 Authorization 에서 값을 읽어온다.==> Json Web Token
 			String jwt = request.getHeader("Authorization");
+			
 			if(!isPermitAllUrl && (jwt==null || jwt.trim().length()==0)) {
 				//토큰을 전달하지 않음
 				// 클라이언트에게 403번 에러를 전송
