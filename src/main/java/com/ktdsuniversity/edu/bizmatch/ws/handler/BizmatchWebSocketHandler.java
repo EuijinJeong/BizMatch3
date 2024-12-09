@@ -72,12 +72,13 @@ public class BizmatchWebSocketHandler extends TextWebSocketHandler{
 				
 				if(action.equals("LOGIN")) {
 					String email = payloadMap.get("email");
-					if(unconnectedSessionMap.containsKey(email)) {
+					this.connectedSessionMap.put(email, session);
+					boolean isLogin = unconnectedSessionMap.containsKey(email);
+					if(isLogin) {
 						sendToOneSession(unconnectedSessionMap.get(email), email);
 						unconnectedSessionMap.remove(email);
 					}
 					//세션에 접속 함
-					this.connectedSessionMap.put(email, session);
 				}
 				// 패널티 먹었을 때 알림
 				else if(action.equals("RECEIVE_PENATLY")) {
