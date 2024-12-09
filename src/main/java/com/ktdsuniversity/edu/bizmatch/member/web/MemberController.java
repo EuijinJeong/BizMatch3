@@ -9,10 +9,12 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -65,15 +67,6 @@ public class MemberController {
 		this.restTemplate = restTemplate;
 	}
 	
-//	/**
-//	 * 비밀번호 재설정 페이지를 로드하는 컨트롤러.
-//	 * @return
-//	 */
-//	@GetMapping("/member/findpwd")
-//	public String loadFindPwdPage() {
-//		return "/member/member_findpwd";
-//	}
-	
 	/**
 	 * 비밀번호 재설정 요청을 처리하는 컨트롤러.
 	 * @param email
@@ -84,11 +77,6 @@ public class MemberController {
 		boolean isSuccess = this.memberService.sendFindPwdEmail(email);
 		return new ApiResponse(isSuccess);
 	}
-	
-//	@GetMapping("/member/resetpwd")
-//	public String loadResetPwdPage() {
-//		return "/member/member_reset_pwd";
-//	}
 	
 	/**
 	 * 비밀번호 재설정 요청을 처리하는 컨트롤러.
@@ -108,33 +96,14 @@ public class MemberController {
 		return new ApiResponse(isSuccess);
 	}
 	
-//	/**
-//	 * 회원가입 유형 선택 페이지를 로드하는 컨트롤러.
-//	 * @return
-//	 */
-//	@GetMapping("/member/select/membertype")
-//	public String loadSelectMemberType() {
-//		return "member/select_member_type";
-//	}
-	
-//	/**
-//	 * 기업형 회원가입 페이지를 로드하는 컨트롤러
-//	 * @return
-//	 */
-//	@GetMapping("/member/signup/company")
-//	public String loadSignUpPageCompany() {
-//		return "member/signup_company";
-//	}
-	
 	/**
 	 * 기업형 회원가입을 처리하는 컨트롤러이다.
 	 * 
 	 * @param memberCompanySignUpVO
 	 * @return
 	 */
-	@PostMapping("/member/signup/company")
-	public ApiResponse signUpCompanyMember(@RequestBody MemberCompanySignUpVO memberCompanySignUpVO) {
-		
+	@PostMapping(value = "/member/signup/company", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ApiResponse signUpCompanyMember(@ModelAttribute MemberCompanySignUpVO memberCompanySignUpVO) {
 		
 //		 사용자가 입력한 값 유효성 검사.
 		if(ParameterCheck.parameterCodeValid(memberCompanySignUpVO.getMbrNm(), 0)) {
@@ -219,22 +188,13 @@ public class MemberController {
 		return response.getBody();
 	}
 	
-//	/**
-//	 * 프리랜서형 회원가입 페이지를 로드하는 컨트롤러.
-//	 * @return
-//	 */
-//	@GetMapping("/member/signup/freelancer")
-//	public String loadSignUpPageFreelancer() {
-//		return "member/signup_freelancer";
-//	}
-	
 	/**
 	 * 프리랜서형 회원가입을 처리하는 컨트롤러.
 	 * @param memberSignUpVO
 	 * @param categoryVO
 	 * @return
 	 */
-	@PostMapping("/member/signup/freelancer")
+	@PostMapping(value = "/member/signup/freelancer", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ApiResponse signUpFreelancer(MemberSignUpVO memberSignUpVO , CategoryVO categoryVO) {
 		if(ParameterCheck.parameterCodeValid(memberSignUpVO.getMbrNm(), 0)) {
 			throw new SignUpFailException("이용자명은 필수 입력사항입니다.", memberSignUpVO);
@@ -285,43 +245,27 @@ public class MemberController {
 		return new ApiResponse();
 	}
 	
-//	/**
-//	 * 로그아웃
-//	 * @param memberVO
-//	 * @param session
-//	 * @return
-//	 */
-//	@GetMapping("/member/logout")
-//	public String doLogout(@SessionAttribute(value = "_LOGIN_USER_", required = false)MemberVO memberVO
-//							, HttpSession session) {
-//		if(memberVO == null) {
-//			return "redirect:/";
-//		}
-//		session.invalidate();
-//		return "redirect:/";
-//	}
-	
 	/**
 	 * 기업형 마이페이지를 로드하는 컨트롤러.
+	 * @param loginMemberVO
+	 * @param orderBy
+	 * @param cmpnyId
 	 * @return
 	 */
 	@GetMapping("/member/mypage/company/{cmpnyId}")
-	public String loadCompanyMyPage(@SessionAttribute(value = "_LOGIN_USER_")MemberVO loginMemberVO, Model model
-								, @RequestParam(required = false, defaultValue = "late-date") String orderBy, @PathVariable String cmpnyId) {
-		
+	public ApiResponse loadCompanyMyPage(Authentication loginMemberVO
+								 , @RequestParam(required = false, defaultValue = "late-date") String orderBy
+								 , @PathVariable String cmpnyId) {
 		
 		// 기업 정보 조회
 		CompanyVO companyVO = memberService.selectOneCompanyByEmilAddr(cmpnyId);
-		model.addAttribute("companyVO", companyVO);
 		
 		// 보유기술 리스트 조회
 		List<MbrPrmStkVO> mbrPrmStkList = companyVO.getMbrPrmStkVOList();
 		
-		model.addAttribute("mbrPrmStkList", mbrPrmStkList);
 		
 		// 주요 산업 조회
 		MemberMyPageIndsryVO mbrIndstrVO = memberService.readMbrIndstr(cmpnyId);
-		model.addAttribute("mbrIndstrVO", mbrIndstrVO);
 		
 		// 리뷰 리스트 조회
 		Map<String, Function<String, List<ReviewVO>>> sortMethodMap = new HashMap<>();
@@ -330,15 +274,17 @@ public class MemberController {
 		sortMethodMap.put("low-rate", memberService::selectCompanyReviewListByScrAsc);
 		
 		List<ReviewVO> reviewList = sortMethodMap.getOrDefault(orderBy, memberService::selectReviewList).apply(cmpnyId);
-		model.addAttribute("reviewList", reviewList);
-		model.addAttribute("orderBy", orderBy);
 		
 		// 전체 리뷰 평균 별 계산
 		double averageRate = reviewList.stream().mapToDouble(ReviewVO::getScr).average().orElse(0);
 		
-		model.addAttribute("averageRate", averageRate);
-	
-		return "member/mypage_company";
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("skillList", mbrPrmStkList);
+		resultMap.put("industry", mbrIndstrVO);
+		resultMap.put("reviewList", reviewList);
+		resultMap.put("averageRate", averageRate);
+		
+		return new ApiResponse(resultMap);
 	}
 	
 	/**

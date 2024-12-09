@@ -26,11 +26,7 @@ public class CompanyVO {
 	private String cmpnyAccuuntNum;
 	private String compnyLkIndstrMjrNm;
 	private String compnyLkIndstrSmjrNm;
-	
 	private List<MbrPrmStkVO> mbrPrmStkVOList;
-	
-	
-	
 	
 	public MemberVO getMemberVO() {
 		return memberVO;

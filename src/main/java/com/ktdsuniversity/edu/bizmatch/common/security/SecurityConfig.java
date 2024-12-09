@@ -73,6 +73,7 @@ public class SecurityConfig {
 									.requestMatchers("favicon.ico")
 									.requestMatchers("/member/**-delete-me")
 									.requestMatchers("/js/**")
+									.requestMatchers("/mailhtml/**")
 									.requestMatchers("/css/**");
 	}
 	
