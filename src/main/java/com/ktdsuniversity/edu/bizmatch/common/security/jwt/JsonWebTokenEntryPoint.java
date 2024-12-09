@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,7 +25,12 @@ public class JsonWebTokenEntryPoint {
 	@Autowired
 	private MemberDao memberDao;
 	
-	@PostMapping("/token")
+	/**
+	 * 로그인 수행 -> jwt 토큰 돌려줌
+	 * @param loginMemberVO
+	 * @return
+	 */
+	@PostMapping("/member/signin")
 	public ApiResponse generateToken(@RequestBody MemberLoginVO loginMemberVO) {
 		
 		// 아이디 일치하는지 검사.
@@ -53,4 +59,5 @@ public class JsonWebTokenEntryPoint {
 		String jwt = this.jsonWebTokenProvider.generateJwt(Duration.ofHours(8), memberVO);
 		return new ApiResponse(jwt);
 	}
+	
 }

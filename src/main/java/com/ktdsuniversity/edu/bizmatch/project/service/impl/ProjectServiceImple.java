@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -287,11 +288,12 @@ public class ProjectServiceImple implements ProjectService {
 		return projectList;
 	}
 
+	@Transactional
 	@Override
 	public ProjectVO readOneProjectInfo(String pjId) {
 		// 해당 프로젝트에 대한 정보를 가져와야함.
 		ProjectVO projectVO = this.projectDao.selectProjectInfo(pjId);
-		
+		this.projectDao.updateProjectViewCnt(pjId);
 		return projectVO;
 	}
 

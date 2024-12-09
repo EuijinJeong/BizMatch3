@@ -232,18 +232,25 @@ public class MemberController {
 		
 		return new ApiResponse(isAvailableEmail);
 	}
-	/**
-	 * 로그인
-	 * @param memberLoginVO 
-	 * @param session
-	 * @param model
-	 * @return
-	 */
-	@PostMapping("/member/signin")
-	public ApiResponse doSignIn(MemberLoginVO memberLoginVO) {
+	
+	@GetMapping("/member/myinfo")
+	public ApiResponse responseMemberInfo(Authentication authentication) {
+		MemberVO memberVO = (MemberVO)authentication.getPrincipal();
 		
-		return new ApiResponse();
+		return new ApiResponse(memberVO);
 	}
+//	/**
+//	 * 로그인
+//	 * @param memberLoginVO 
+//	 * @param session
+//	 * @param model
+//	 * @return
+//	 */
+//	@PostMapping("/member/signin")
+//	public ApiResponse doSignIn(@RequestBody MemberLoginVO memberLoginVO) {
+//		
+//		return new ApiResponse();
+//	}
 	
 	/**
 	 * 기업형 마이페이지를 로드하는 컨트롤러.
