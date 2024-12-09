@@ -503,7 +503,7 @@ public class ProjectController {
 	 * 
 	 * @return
 	 */
-	@GetMapping("/project/skill")
+	@GetMapping("/project/skill") // api/project/skill
 	public ApiResponse showSkils() {
 		List<PrmStkVO> skillist = this.projectService.selectAllProjectSkillList();
 		
