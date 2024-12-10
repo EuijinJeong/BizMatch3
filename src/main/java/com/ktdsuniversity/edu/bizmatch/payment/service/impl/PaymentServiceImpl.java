@@ -27,8 +27,10 @@ import com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO;
 import com.ktdsuniversity.edu.bizmatch.payment.dao.PaymentDao;
 import com.ktdsuniversity.edu.bizmatch.payment.service.PaymentService;
 import com.ktdsuniversity.edu.bizmatch.payment.vo.AccntVO;
+import com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentHistoryVO;
 import com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentRequestVO;
 import com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentReturnVO;
+import com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentSearchVO;
 import com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentUpdateVO;
 import com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentVO;
 import com.ktdsuniversity.edu.bizmatch.project.dao.ProjectDao;
@@ -305,5 +307,11 @@ public class PaymentServiceImpl implements PaymentService {
 		MemberVO memberVO = this.memberDao.selectOneMember(emailAddr);
 		List<PaymentVO> paymentList = this.paymentDao.selectAllPaymentList(memberVO);
 		return paymentList;
+	}
+
+	@Override
+	public List<PaymentHistoryVO> readPaymentDetails(PaymentSearchVO paymentSearchVO) {
+		List<PaymentHistoryVO> paymentHistoryList = this.paymentDao.selectPaymentDetailsList(paymentSearchVO);
+		return paymentHistoryList;
 	}
 }
