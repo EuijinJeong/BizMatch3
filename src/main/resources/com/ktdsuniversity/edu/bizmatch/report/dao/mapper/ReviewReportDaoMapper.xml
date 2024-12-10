@@ -26,7 +26,8 @@
 	</select>
 	
 	<!-- 리뷰 신고 등록 쿼리문 -->
-	<insert id="insertOneReviewReport" parameterType="com.ktdsuniversity.edu.bizmatch.report.vo.WriteReviewReportVO">
+	<insert id="insertOneReviewReport" 
+			parameterType="com.ktdsuniversity.edu.bizmatch.report.vo.WriteReviewReportVO">
 		INSERT INTO RVW_RPRT
 		( RPRT_ID
 		, EMIL_ADDR
@@ -42,10 +43,11 @@
 	</insert>
 	
 	<!-- 리뷰 중복 신고 방지 확인 쿼리문 -->
-	<select id="countReviewReport" parameterType="com.ktdsuniversity.edu.bizmatch.report.vo.ReviewReportVO">
+	<select id="countReviewReport" 
+			parameterType="com.ktdsuniversity.edu.bizmatch.report.vo.ReviewReportVO">
 		SELECT COUNT(1)
-  		  FROM RVW_RPRT
- 		 WHERE EMIL_ADDR = #{emilAddr}
-   		   AND CMMNT_ID = #{cmmntId}
+		  FROM RVW_RPRT
+		 WHERE EMIL_ADDR = #{emilAddr}
+		   AND CMMNT_ID = #{cmmntId}
 	</select>
 </mapper>

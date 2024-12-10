@@ -28,14 +28,15 @@ public class ReviewController {
 	@Autowired
 	private ReviewService reviewService;
 	
-
 	/**
 	 * 리뷰 목록을 조회하는 컨트롤러.
 	 * @param pjId
 	 * @return
 	 */
 	@GetMapping("/project/{pjId}/reviewlist")
-	public ApiResponse selectAllReviews(@PathVariable String pjId) {
+	public ApiResponse selectAllReviews(Authentication memberVO
+										,@PathVariable String pjId) {
+		
 		List<ReviewVO> reviewList = reviewService.selectAllReviews(pjId);
 		
 		return new ApiResponse(reviewList);
@@ -50,8 +51,8 @@ public class ReviewController {
 	 */
 	@PostMapping("/project/{pjId}/review")
 	public ApiResponse doInsertNewReviews(@PathVariable String pjId
-												, @RequestBody WriteReviewVO writeReviewVO
-												, Authentication memberVO) {
+										, @RequestBody WriteReviewVO writeReviewVO
+										, Authentication memberVO) {
 		
 		if(ParameterCheck.parameterCodeValid(writeReviewVO.getRvwCntnt(), 0)) {
 			throw new ReviewFailException("리뷰 내용을 입력해주세요");
