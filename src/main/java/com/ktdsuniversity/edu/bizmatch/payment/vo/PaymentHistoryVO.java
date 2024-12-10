@@ -2,6 +2,8 @@ package com.ktdsuniversity.edu.bizmatch.payment.vo;
 
 public class PaymentHistoryVO {
 	private String pymntId;
+	private String pjTtl;
+	private String obtnId;
 	private String pjId;
 	private int grntAmt;
 	private int cntrctAmt;
@@ -12,6 +14,19 @@ public class PaymentHistoryVO {
 	private String impUid;
 	private int dpstRfndAmnt;
 	private String dpstRfndDt;
+	
+	public String getPjTtl() {
+		return pjTtl;
+	}
+	public void setPjTtl(String pjTtl) {
+		this.pjTtl = pjTtl;
+	}
+	public String getObtnId() {
+		return obtnId;
+	}
+	public void setObtnId(String obtnId) {
+		this.obtnId = obtnId;
+	}
 	public String getPymntId() {
 		return pymntId;
 	}
