@@ -4,9 +4,11 @@ import java.util.List;
 
 import com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO;
 import com.ktdsuniversity.edu.bizmatch.payment.vo.AccntVO;
+import com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentHistoryVO;
 import com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentHstryVO;
 import com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentRequestVO;
 import com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentReturnVO;
+import com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentSearchVO;
 import com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentVO;
 import com.ktdsuniversity.edu.bizmatch.payment.vo.RefundDepositVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.WriteProjectVO;
@@ -96,4 +98,11 @@ public interface PaymentDao {
 	 * @return
 	 */
 	public List<PaymentVO>selectAllPaymentList(MemberVO memberVO);
+	
+	/**
+	 * 결제내역을 가져오는 메소드
+	 * @param paymentSearchVO
+	 * @return
+	 */
+	public List<PaymentHistoryVO> selectPaymentDetailsList(PaymentSearchVO paymentSearchVO);
 }

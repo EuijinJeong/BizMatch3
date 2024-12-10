@@ -36,7 +36,6 @@ public class JsonWebTokenAuthenticationFilter extends OncePerRequestFilter {
 	@Autowired
 	private JsonWebTokenProvider jsonWebTokenProvider;
 	
-	
 	@Override
 	protected void doFilterInternal(HttpServletRequest request
 								, HttpServletResponse response

@@ -171,4 +171,36 @@
 		    ON PJI.ORDR_ID = MI.EMIL_ADDR
 		 WHERE MI.CMP_ID = #{cmpId} 
 	</select>
+	<select id="selectPaymentDetailsList" 
+	parameterType="com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentSearchVO" 
+	resultType="com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentHistoryVO">
+	SELECT PY.PYMNT_ID 
+		 , PY.PJ_ID 
+		 , PY.GRNT_AMT 
+		 , PY.CNTRCT_AMT 
+		 , TO_CHAR(PY.GRNT_PD_DT,'YYYY-MM-DD') GRNT_PD_DT
+		 , TO_CHAR(PY.CNTRCT_PD_DT,'YYYY-MM-DD') CNTRCT_PD_DT
+		 , PY.ACCNT_NM 
+		 , PY.PYMNT_TYP 
+		 , PY.IMP_UID 
+		 , PY.DPST_RFND_AMNT 
+		 , TO_CHAR(PY.DPST_RFND_DT,'YYYY-MM-DD') DPST_RFND_DT
+	  FROM PYMNT_INFO PY
+	  JOIN PJ_INFO PJ
+	    ON PY.PJ_ID = PJ.PJ_ID 
+	 WHERE PJ.ORDR_ID = #{emilAddr}
+	   AND PY.PYMNT_TYP = #{paymentType}
+	   <if test="paymentType==0 and startDate!=null">
+	   		AND PY.GRNT_PD_DT > TO_DATE(#{startDate}, 'YYYY-MM-DD')
+	   </if>
+	   <if test="paymentType==1 and startDate!=null">
+	   		AND PY.CNTRCT_PD_DT > TO_DATE(#{startDate}, 'YYYY-MM-DD')
+	   </if>
+	   <if test="projectTitle!=null">
+	   		AND PJ.PJ_TTL LIKE '%'||#{projectTitle}||'%'
+	   </if>
+	   <if test="companyName!=null">
+	   		AND PJ.OBTN_ID LIKE '%'|| #{companyName} ||'%'
+	   </if>
+	</select>
 </mapper>
