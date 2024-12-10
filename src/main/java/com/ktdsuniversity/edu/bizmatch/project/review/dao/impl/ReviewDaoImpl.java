@@ -45,4 +45,14 @@ public class ReviewDaoImpl extends SqlSessionDaoSupport implements ReviewDao{
 	public int deleteOneReview(DeleteReviewVO deleteReviewVO) {
 		return this.getSqlSession().delete(NAMESPACE + ".deleteOneReview", deleteReviewVO);
 	}
+
+	@Override
+	public List<ReviewVO> selectReviewListSortedByHighRate(String cmpId) {
+		return this.getSqlSession().selectList(NAMESPACE + ".selectCompanyReviewListByScrDesc", cmpId);
+	}
+
+	@Override
+	public List<ReviewVO> selectReviewListSortedByLowRate(String cmpId) {
+		return this.getSqlSession().selectList(NAMESPACE + ".selectCompanyReviewListByScrAsc", cmpId);
+	}
 }

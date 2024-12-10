@@ -44,4 +44,18 @@ public interface ReviewDao {
 	 * @return 삭제된 리뷰 개수
 	 */
 	public int deleteOneReview(DeleteReviewVO deleteReviewVO);
+	
+	/**
+	 * 별점 높은순으로 정렬된 리뷰 리스트를 가져오는 쿼리문을 호출하는 메서드.
+	 * @param cmpId
+	 * @return
+	 */
+	public List<ReviewVO> selectReviewListSortedByHighRate(String cmpId);
+	
+	/**
+	 * 별점 낮은순으로 정렬된 리뷰 리스트를 가져오는 쿼리문을 호출하는 메서드.
+	 * @param cmpId
+	 * @return
+	 */
+	public List<ReviewVO> selectReviewListSortedByLowRate(String cmpId);
 }
