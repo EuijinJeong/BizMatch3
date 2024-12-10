@@ -426,6 +426,7 @@
     		ON mi.EMIL_ADDR = pi.OBTN_ID
  		 WHERE mi.EMIL_ADDR IN (SELECT EMIL_ADDR FROM MBR_INFO WHERE CMP_ID = #{_parameter})
    		   AND pr.IS_DLT = 0
+   		   AND pr.RVW_RPRT_CNT = 0
    		 ORDER BY pr.RVW_DT DESC
  	</select>
  	

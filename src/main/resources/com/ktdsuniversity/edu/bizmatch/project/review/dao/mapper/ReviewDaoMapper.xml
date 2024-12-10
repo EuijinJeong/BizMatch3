@@ -57,7 +57,8 @@
 	</insert>
 	
 	<!-- 리뷰 신고 횟수 수정 퀴리문 -->
-	<update id="updateReviewReportCount" parameterType="string">
+	<update id="updateReviewReportCount" 
+			parameterType="string">
 		UPDATE PJ_RVW
    		   SET RVW_RPRT_CNT = RVW_RPRT_CNT + 1
  		 WHERE RVW_ID = #{_parameter}

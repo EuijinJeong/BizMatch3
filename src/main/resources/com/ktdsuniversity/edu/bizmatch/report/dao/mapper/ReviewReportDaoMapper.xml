@@ -4,7 +4,9 @@
 	"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ktdsuniversity.edu.bizmatch.report.dao.ReviewReportDao">
 	<!-- 특정 리뷰의 신고 List 조회 쿼리문 -->
-	<select id="selectAllReviewReports" parameterType="string" resultType="com.ktdsuniversity.edu.bizmatch.report.vo.ReviewReportVO">
+	<select id="selectAllReviewReports" 
+			parameterType="string" 
+			resultType="com.ktdsuniversity.edu.bizmatch.report.vo.ReviewReportVO">
 		SELECT RPRT_ID
 	 		 , EMIL_ADDR
 	 		 , CMMNT_ID
@@ -15,7 +17,8 @@
 	</select>
 	
 	<!-- 하나의 리뷰 신고 조회 쿼리문 -->
-	<select id="selectOneReviewReport" parameterType="string" resultType="com.ktdsuniversity.edu.bizmatch.report.vo.ReviewReportVO">
+	<select id="selectOneReviewReport" 
+			parameterType="string" resultType="com.ktdsuniversity.edu.bizmatch.report.vo.ReviewReportVO">
 		SELECT RPRT_ID
 	 		 , EMIL_ADDR
 	 		 , CMMNT_ID
