@@ -10,9 +10,11 @@ import org.springframework.stereotype.Repository;
 import com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO;
 import com.ktdsuniversity.edu.bizmatch.payment.dao.PaymentDao;
 import com.ktdsuniversity.edu.bizmatch.payment.vo.AccntVO;
+import com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentHistoryVO;
 import com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentHstryVO;
 import com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentRequestVO;
 import com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentReturnVO;
+import com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentSearchVO;
 import com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentVO;
 import com.ktdsuniversity.edu.bizmatch.payment.vo.RefundDepositVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.WriteProjectVO;
@@ -82,5 +84,10 @@ public class PaymentDaoImpl extends SqlSessionDaoSupport implements PaymentDao{
 	@Override
 	public List<PaymentVO> selectAllPaymentList(MemberVO memberVO) {
 		return this.getSqlSession().selectList(NAMESPACE + ".selectAllPaymentList", memberVO);
+	}
+
+	@Override
+	public List<PaymentHistoryVO> selectPaymentDetailsList(PaymentSearchVO paymentSearchVO) {
+		return this.getSqlSession().selectList(NAMESPACE+".selectPaymentDetailsList", paymentSearchVO);
 	}
 }

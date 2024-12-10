@@ -467,8 +467,14 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public CompanyVO selectOneCompanyByEmilAddr(String cmpnyId) {
-		return this.memberDao.selectOneCompanyByEmilAddr(cmpnyId);
+	public CompanyVO selectOneCompanyByEmilAddr(String cmpId) {
+		
+		CompanyVO companyVO = this.memberDao.selectOneCompanyByEmilAddr(cmpId);
+		if(companyVO == null) {
+			// TODO 아래 예외처리하기.
+			throw new IllegalArgumentException("서버상의 이유로 정보를 조회할 수 없습니다.");
+		}
+		return companyVO;
 	}
 	
 	@Override

@@ -9,12 +9,16 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ktdsuniversity.edu.bizmatch.common.vo.ApiResponse;
 import com.ktdsuniversity.edu.bizmatch.payment.service.PaymentService;
+import com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentHistoryVO;
 import com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentRequestVO;
+import com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentSearchVO;
 import com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentVO;
 import com.ktdsuniversity.edu.bizmatch.project.service.ProjectService;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectVO;
@@ -31,10 +35,6 @@ public class PaymentController {
 	@Autowired
 	private ProjectService projectService;
 	
-	@GetMapping("/bizmatch/payment/ask/downpayment/error/500")
-	public String viewDownPaymentErrorPage() {
-		return "/error/payment_error";
-	}
 	
 	/**
 	 * 계약금 결제 정보를 가져오는 컨트롤러.
@@ -90,33 +90,41 @@ public class PaymentController {
 		return new ApiResponse(isSuccess);
 	}
 	
-//	/**
-//	 * 결제 오류 페이지를 보여주는 컨트롤러.
-//	 * @return
-//	 */
-//	@GetMapping("/bizmatch/payment/ask/deposit/error/500")
-//	public String viewPaymentErrorPage() {
-//		return "/error/payment_error";
-//	}
 	
-	/**
-	 * 사용자가 단숨 변심으로 결제 취소를 하면 그냥 메인페이지 보여줘야함.
-	 * @return 메인페이지 Url
-	 */
-	@GetMapping("/bizmatch/payment/usercancel/")
-	public String viewMainPage() {
-		return "redirect:/";
-	}
-	
-	/**
-	 * 한 회원 또는 회사의 결제 내역을 불러오는 컨트로러.
-	 * @param memberVO
-	 * @return
-	 */
 	@GetMapping("/get/paymentlist")
 	public ApiResponse getPaymentList(Authentication memberVO) {
 		List<PaymentVO> paymentList = this.paymentService.readAllPaymentInfo(memberVO.getName());
 		return new ApiResponse(paymentList);
 	}
+
+	
+	@GetMapping("/payment/details")
+	public ApiResponse getPaymentDetails(Authentication memberVO, PaymentSearchVO paymentSearchVO) {
+		List<PaymentHistoryVO> paymentHistoryList = this.paymentService.readPaymentDetails(paymentSearchVO);
+		return new ApiResponse(paymentHistoryList);
+	}
+	
+	
 	
 }
+//@GetMapping("/bizmatch/payment/ask/downpayment/error/500")
+//public String viewDownPaymentErrorPage() {
+//	return "/error/payment_error";
+//}
+///**
+// * 결제 오류 페이지를 보여주는 컨트롤러.
+// * @return
+// */
+//@GetMapping("/bizmatch/payment/ask/deposit/error/500")
+//public String viewPaymentErrorPage() {
+//	return "/error/payment_error";
+//}
+
+///**
+// * 사용자가 단숨 변심으로 결제 취소를 하면 그냥 메인페이지 보여줘야함.
+// * @return 메인페이지 Url
+// */
+//@GetMapping("/bizmatch/payment/usercancel/")
+//public String viewMainPage() {
+//	return "redirect:/";
+//}

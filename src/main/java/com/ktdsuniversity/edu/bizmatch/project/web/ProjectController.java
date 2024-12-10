@@ -503,7 +503,7 @@ public class ProjectController {
 	 * 
 	 * @return
 	 */
-	@GetMapping("/project/skill")
+	@GetMapping("/project/skill") // api/project/skill
 	public ApiResponse showSkils() {
 		List<PrmStkVO> skillist = this.projectService.selectAllProjectSkillList();
 		
@@ -568,8 +568,8 @@ public class ProjectController {
 	 * @return
 	 */
 	@GetMapping("/project/all/order/applicant")
-	public List<ApplyProjectVO> myProjectApplications(Authentication memberVO) {
-		List<ApplyProjectVO> applyProjectList = this.projectService.readAllApply(memberVO.getName());
+	public List<ApplyProjectVO> myProjectApplications(@RequestParam String email) {
+		List<ApplyProjectVO> applyProjectList = this.projectService.readAllApply(email);
 
 		return applyProjectList;
 	}
@@ -578,8 +578,8 @@ public class ProjectController {
 	 * 내가 지원한 지원서 불러오는 컨트롤러
 	 */
 	@GetMapping("/project/apply/list")
-	public ApiResponse viewApplyList(Authentication memberVO) {
-		List<ApplyProjectVO> applyProjectVOList = this.projectService.readAllApply(memberVO.getName());
+	public ApiResponse viewApplyList(@RequestParam String email) {
+		List<ApplyProjectVO> applyProjectVOList = this.projectService.readAllApply(email);
 		
 		return new ApiResponse(applyProjectVOList);
 	}
@@ -627,24 +627,9 @@ public class ProjectController {
 	 * @return
 	 */
 	@GetMapping("/project/myproject/orderproject")
-	public ApiResponse getMyOrderProjectList(Authentication memberVO) {
-		List<Map<String, Object>> resultList = new ArrayList<>();
-		List<ProjectVO> projectList = this.projectService.readAllMyOrderProjectList(memberVO.getName());
-
-		for (ProjectVO projectVO : projectList) {
-			Map<String, Object> tempMap = new HashMap<>();
-			tempMap.put("pjTtl", projectVO.getPjTtl());
-			tempMap.put("pjStt", projectVO.getPjStt());
-			tempMap.put("rgstrDt", projectVO.getRgstrDt());
-			tempMap.put("smjrNm", projectVO.getProjectIndustryVO().getIndstrInfoVO().getIndstrNm());
-			tempMap.put("pjRcrutEndDt", projectVO.getPjRcrutEndDt());
-			tempMap.put("strtDt", projectVO.getStrtDt());
-			tempMap.put("endDt", projectVO.getEndDt());
-			tempMap.put("pjId", projectVO.getPjId());
-			tempMap.put("cntrctAccnt", projectVO.getCntrctAccnt());
-			tempMap.put("projectSkillList", projectVO.getProjectSkillList());
-			resultList.add(tempMap);
-		}
-		return new ApiResponse(resultList);
+	public ApiResponse getMyOrderProjectList(@RequestParam String email) {
+		List<ProjectVO> projectList = this.projectService.readAllMyOrderProjectList(email);
+		
+		return new ApiResponse(projectList);
 	}
 }

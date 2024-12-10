@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,8 +30,8 @@ public class EmailController {
 	 * @param email
 	 * @return
 	 */
-	@GetMapping("/email/check/{email}/")
-	public Map<String, Object> doCheckEmail(@PathVariable String email) {
+	@GetMapping("/email/check/")
+	public Map<String, Object> doCheckEmail(@RequestParam String email) {
 		email = XssUtil.clean(email);
 		
 		//인증번호 발급
@@ -49,13 +48,14 @@ public class EmailController {
 	}
 	
 	/**
-	 * 이메일 번호 같은지 확인하는 컨트롤러.
+	 * 이메일 인증번호 같은지 확인하는 컨트롤러.
 	 * @param emil
 	 * @param authNum
 	 * @return
 	 */
 	@GetMapping("/email/authnum/samecheck")
-	public Map<String, Object> checkAuthNum(@RequestParam String email, @RequestParam String authNum) {
+	public Map<String, Object> checkAuthNum(@RequestParam String email
+										, @RequestParam String authNum) {
 		
 		email = XssUtil.clean(email);
 		authNum = XssUtil.clean(authNum);

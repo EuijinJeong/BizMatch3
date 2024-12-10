@@ -68,6 +68,7 @@ public class JsonWebTokenProvider {
 							.requireIssuer(this.issuer) // 복호화된 토큰이 이 시스템이 만든것인지 검증한다.
 							.requireSubject("SpringSecurityJwtToken") // 복호화된 토큰의 제목(이름)이 발급된 토큰의 이름과 같은지 검증한다.
 							.build() // 토큰 복호화 진행.
+							// FIXME 아래 jwt 파싱하는데 왜 오류가 날까
 							.parseSignedClaims(jwt) // 클레임을 끄집어낸다.
 							.getPayload();
 

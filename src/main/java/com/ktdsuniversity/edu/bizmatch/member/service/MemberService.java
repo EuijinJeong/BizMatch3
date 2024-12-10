@@ -165,10 +165,10 @@ public interface MemberService {
 
 	/**
 	 * 기업 정보 조회
-	 * @param emilAddr 회원 이메일
+	 * @param email 회원 이메일
 	 * @return
 	 */
-	public CompanyVO selectOneCompanyByEmilAddr(String cmpnyId);
+	public CompanyVO selectOneCompanyByEmilAddr(String email);
 	
 	/**
 	 * 회원 보유 기술 리스트 조회
@@ -344,4 +344,5 @@ public interface MemberService {
 	 * @return
 	 */
 	public List<ReviewVO> selectCompanyReviewListByScrAsc(String cmpId);
+	
 }

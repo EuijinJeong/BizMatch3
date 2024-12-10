@@ -288,13 +288,13 @@ public class GlobalExceptionHandler {
     	return "/error/payment_error";
     }
     
-    @ExceptionHandler(RuntimeException.class)
-    public String handleRuntimeException(RuntimeException re) {
-    	return "/error/runtime_exception";
-    }
-    
-    @ExceptionHandler(IllegalArgumentException.class)
-    public String handleIllegalArgumentException(IllegalArgumentException iae) {
-    	return "/error/runtime_exception";
-    }
+//    @ExceptionHandler(RuntimeException.class)
+//    public String handleRuntimeException(RuntimeException re) {
+//    	return "/error/runtime_exception";
+//    }
+//    
+//    @ExceptionHandler(IllegalArgumentException.class)
+//    public String handleIllegalArgumentException(IllegalArgumentException iae) {
+//    	return "/error/runtime_exception";
+//    }
 }
