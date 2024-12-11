@@ -286,20 +286,22 @@ public class MemberController {
 	}
 	
 	/**
-	 * 프리랜서 마이페이지 로드하는 컨트롤러.
+	 * 프리랜서 마이페이지를 로드하는 컨트롤러.
+	 * @param loginMemberVO
+	 * @param email
+	 * @param orderBy
 	 * @return
 	 */
 	@GetMapping("/member/mypage/freelancer/{email}/")
-	public String loadFreelancerMyPage(@SessionAttribute(value = "_LOGIN_USER_", required = false)MemberVO loginMemberVO
-			, @PathVariable String email, Model model
-			, @RequestParam(required = false, defaultValue = "late-date") String orderBy) {
+	public ApiResponse loadFreelancerMyPage(Authentication loginMemberVO
+									, @PathVariable String email
+									, @RequestParam(required = false
+												, defaultValue = "late-date") String orderBy) {
 		// 보유기술 리스트 조회
 		List<MbrPrmStkVO> mbrPrmStkList = memberService.selectMbrPrmStkList(email);
-		model.addAttribute("mbrPrmStkList", mbrPrmStkList);
 		
 		// 관심 산업 조회
 		MemberMyPageIndsryVO mbrIndstrVO = memberService.readMbrIndstr(email);
-		model.addAttribute("mbrIndstrVO", mbrIndstrVO);
 		
 		// 리뷰 리스트 조회
 		Map<String, Function<String, List<ReviewVO>>> sortMethodMap = new HashMap<>();
@@ -308,21 +310,23 @@ public class MemberController {
 		sortMethodMap.put("low-rate", memberService::selectReviewListBySrcAsc);
 		
 		List<ReviewVO> reviewList = sortMethodMap.getOrDefault(orderBy, memberService::selectReviewList).apply(email);
-		model.addAttribute("reviewList", reviewList);
-		model.addAttribute("orderBy", orderBy);
 		
 		// 전체 리뷰 평균 별 계산
 		double averageRate = reviewList.stream().mapToDouble(ReviewVO::getScr).average().orElse(0);
-		model.addAttribute("averageRate", averageRate);
 		
 		// 소속 산업군명 조회
 		MemberMyPageIndsryVO memberMyPageIndsryVO = memberService.selectIndstrNmByEmilAddr(email);
-		model.addAttribute("memberMyPageIndsryVO", memberMyPageIndsryVO);
 		
 		MemberVO memberVO = memberService.selectOneMemberVO(email);
-		model.addAttribute("memberVO", memberVO);
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("mbrPrmStkList", mbrPrmStkList);
+		resultMap.put("reviewList", reviewList);
+		resultMap.put("averageRate", averageRate);
+		resultMap.put("memberMyPageIndsryVO", memberMyPageIndsryVO);
+		resultMap.put("mbrIndstrVO", mbrIndstrVO);
+		resultMap.put("memberVO", memberVO);
 				
-		return "member/mypage_freelancer";
+		return new ApiResponse(resultMap);
 	}
 	
 	/**
