@@ -5,7 +5,7 @@
 <mapper namespace="com.ktdsuniversity.edu.bizmatch.board.dao.BoardDao">
 
 	<!-- 게시글 목록 조회 쿼리 -->
-<select id="selectForPagination" resultType="com.ktdsuniversity.edu.bizmatch.board.vo.BoardVO">
+<select id="selectBoardList" resultType="com.ktdsuniversity.edu.bizmatch.board.vo.BoardVO">
     SELECT 
         i.PST_ID,
         i.ATHR_ID,
@@ -22,7 +22,6 @@
     JOIN MBR_INFO m 
         ON i.ATHR_ID = m.EMIL_ADDR
     WHERE i.IS_DLT = 0 
-
     ORDER BY 
         CASE 
             WHEN i.PST_CTGRY = 0 THEN 1
