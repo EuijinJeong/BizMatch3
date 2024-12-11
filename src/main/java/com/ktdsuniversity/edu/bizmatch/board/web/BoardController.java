@@ -41,7 +41,7 @@ public class BoardController {
 	 * @return
 	 */
 	@GetMapping("/board")
-	public ApiResponse viewBoardList(Authentication loginMemberVO) {
+	public ApiResponse viewBoardList() {
 		List<BoardVO> boardList = this.boardService.getBoardList();
 		
 		return new ApiResponse(boardList);
@@ -49,12 +49,11 @@ public class BoardController {
 	
 	/**
 	 * 게시글 조회 페이지
-	 * 
+	 * @param id ==> 게시글 아이디
 	 * @return
 	 */
 	@GetMapping("/board/view/{id}")
-	public ApiResponse viewOneBoard(@PathVariable String id
-							, Authentication memberVO) {
+	public ApiResponse viewOneBoard(@PathVariable String id) {
 		
 		BoardVO boardVO = boardService.getOneBoard(id);
 
@@ -145,8 +144,7 @@ public class BoardController {
 	 * @return
 	 */
 	@GetMapping("/board/comment/view/{boardId}")
-	public ApiResponse doModifyComment(@PathVariable String boardId 
-									, Authentication memberVO) {
+	public ApiResponse doModifyComment(@PathVariable String boardId ) {
 		List<BoardCommentVO> result  = boardService.getAllBoardComment(boardId);
 		
 		return new ApiResponse(result);

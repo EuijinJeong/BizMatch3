@@ -118,7 +118,10 @@ public class SecurityConfig {
 												.requestMatchers("/member/findpwd").permitAll()
 												.requestMatchers("/member/resetpwd").permitAll()
 												.requestMatchers("/api/member/signup/email/available/").permitAll()
-												.requestMatchers("/ws/**").permitAll());
+												.requestMatchers("/ws/**").permitAll()
+												.requestMatchers("/api/board").permitAll()
+												.requestMatchers("/api//board/view/**").permitAll()
+												.requestMatchers("/api//board/comment/view/**").permitAll());
 		
 		http.addFilterAfter(this.jsonWebTokenAuthenticationFilter, BasicAuthenticationFilter.class);
 		
