@@ -157,7 +157,7 @@
 		  	   FROM IB_CNT i
 		  	  INNER JOIN MBR_INFO m
 		  	     ON i.ATHR_ID = m.EMIL_ADDR
-		 	  WHERE PST_ID  = #{searchIdParam}
+		 	  WHERE PST_ID  = #{_parameter}
 		   	  START WITH PRNT_CMMNT_ID IS NULL
 		   	    AND IS_DLT = '0'
 		   	CONNECT BY PRIOR CMMNT_ID = PRNT_CMMNT_ID
