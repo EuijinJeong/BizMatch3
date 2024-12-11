@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ktdsuniversity.edu.bizmatch.board.service.BoardService;
-import com.ktdsuniversity.edu.bizmatch.board.vo.BoardCommentPaginationVO;
+
 import com.ktdsuniversity.edu.bizmatch.board.vo.BoardCommentVO;
 import com.ktdsuniversity.edu.bizmatch.board.vo.BoardCommentWriteVO;
 import com.ktdsuniversity.edu.bizmatch.board.vo.BoardModifyCommentVO;
@@ -40,7 +40,7 @@ public class BoardController {
 	 * 게시글 목록 페이지
 	 * @return
 	 */
-	@GetMapping("/board/list")
+	@GetMapping("/board")
 	public ApiResponse viewBoardList(Authentication loginMemberVO) {
 		List<BoardVO> boardList = this.boardService.getBoardList();
 		
