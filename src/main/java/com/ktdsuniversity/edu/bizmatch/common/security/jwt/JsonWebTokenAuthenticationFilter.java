@@ -12,6 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.google.gson.Gson;
@@ -36,6 +37,8 @@ public class JsonWebTokenAuthenticationFilter extends OncePerRequestFilter {
 	@Autowired
 	private JsonWebTokenProvider jsonWebTokenProvider;
 	
+	private final AntPathMatcher pathMatcher = new AntPathMatcher();
+	
 	@Override
 	protected void doFilterInternal(HttpServletRequest request
 								, HttpServletResponse response
@@ -48,7 +51,7 @@ public class JsonWebTokenAuthenticationFilter extends OncePerRequestFilter {
 
 //		2. URL이 /api/ 로 시작하는 경우는 API 호출을 한 것.
 		if(!url.startsWith("/api/admin") && url.startsWith("/api")) {
-			boolean isPermitAllUrl = this.permitAllUrls.contains(url);
+			boolean isPermitAllUrl = permitAllUrls.stream().anyMatch(pattern -> pathMatcher.match(pattern, url));
 			
 			// 3. HttpRequest 에서 header 에 있는 Authorization 에서 값을 읽어온다.==> Json Web Token
 			String jwt = request.getHeader("Authorization");
