@@ -140,11 +140,8 @@ public class ProjectController {
 	 */
 	@GetMapping("/project/find")
 	public ApiResponse getProjectList(Authentication loginMemberVO) {
-		
 		MemberVO memberVO = (MemberVO)loginMemberVO.getPrincipal();
-
 		List<ProjectVO> projectList = this.projectService.readAllProjectList(memberVO);
-
 		return new ApiResponse(projectList);
 		
 	}
