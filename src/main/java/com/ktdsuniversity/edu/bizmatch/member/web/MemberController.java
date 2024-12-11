@@ -26,7 +26,6 @@ import org.springframework.web.client.RestTemplate;
 
 import com.ktdsuniversity.edu.bizmatch.common.category.vo.CategoryVO;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.member.ResetPassword;
-import com.ktdsuniversity.edu.bizmatch.common.exceptions.member.SessionNotFoundException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.member.SignUpCompanyException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.member.SignUpFailException;
 import com.ktdsuniversity.edu.bizmatch.common.skills.vo.MbrPrmStkVO;
@@ -418,37 +417,26 @@ public class MemberController {
 	 * @return
 	 */
 	@GetMapping("/member/mypage/company/edit/{cmpnyId}")
-	public String viewCompanyMyPageEdit(Model model 
-										,@PathVariable String cmpnyId
-										, @SessionAttribute(value = "_LOGIN_USER_", required = false)MemberVO memberVO) {
-		
-		if(!memberVO.getCmpId().equals(cmpnyId) || memberVO.getCmpId()==null ) {
-			throw new SessionNotFoundException("회사정보가 없습니다");
-		}
+	public ApiResponse viewCompanyMyPageEdit(Authentication memberVO 
+										,@PathVariable String cmpnyId) {
 		
 		CompanyVO companyVO =  this.memberService.selectOneCompanyByEmilAddr(cmpnyId);
-		model.addAttribute("companyVO",companyVO);
 		
 		// 보유기술 리스트 조회
 		List<MbrPrmStkVO> mbrPrmStkList = memberService.selectMbrPrmStkCmpnyList(cmpnyId);
-		model.addAttribute("mbrPrmStkList", mbrPrmStkList);
 		
-		return "member/mypagecompanyedit";
+		return new ApiResponse();
 	}
 	
 	/**
-	 * 
+	 * 기업 마이페이지 내용 수정을 하는 컨트롤러.
 	 * @param memberCompanyModifyVO
 	 * @param memberVO
 	 * @return
 	 */
 	@PostMapping("/member/mypage/company/edit")
 	public Map<String, Object> doCompanyMyPageEdit(@RequestBody MemberCompanyModifyVO memberCompanyModifyVO 
-									, @SessionAttribute(value = "_LOGIN_USER_" , required = false)MemberVO memberVO) {
-		
-		if (memberVO == null) {
-			return Map.of("response", false, "message", "로그인 세션이 만료되었거나 유효하지 않습니다.");
-		}
+												, Authentication memberVO) {
 		
 		if (memberCompanyModifyVO.getCmpnyNm() == null || memberCompanyModifyVO.getCmpnyAddr() == null || memberCompanyModifyVO.getCmpnyAccuntNum() == null) {
 			return Map.of("response",
@@ -460,10 +448,11 @@ public class MemberController {
 			);
 		}
 		
-		boolean isSuccess = this.memberService.updateCompanyMemberMyPage(memberCompanyModifyVO, memberVO);
+		MemberVO member = (MemberVO) memberVO.getPrincipal();
+		boolean isSuccess = this.memberService.updateCompanyMemberMyPage(memberCompanyModifyVO, member);
 		
 		if (isSuccess && memberCompanyModifyVO.getMbrPrmStkList() != null) {
-			boolean skillsUpdated = memberService.updateMbrSkills(memberCompanyModifyVO.getMbrPrmStkList(), memberVO.getEmilAddr());
+			boolean skillsUpdated = memberService.updateMbrSkills(memberCompanyModifyVO.getMbrPrmStkList(), member.getEmilAddr());
 			if (!skillsUpdated) {
 				return Map.of("response", false, "message", "보유 기술 업데이트에 실패했습니다.");
 			}

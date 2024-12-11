@@ -5,12 +5,16 @@
 <mapper namespace="com.ktdsuniversity.edu.bizmatch.project.review.dao.ReviewDao">
 
 	<!-- 마이페이지 리뷰 리스트 조회 쿼리문 -->
- 	<resultMap type="com.ktdsuniversity.edu.bizmatch.project.review.vo.ReviewVO" id="reviewVOMap" autoMapping="true">
+ 	<resultMap type="com.ktdsuniversity.edu.bizmatch.project.review.vo.ReviewVO" 
+ 			   id="reviewVOMap" 
+ 			   autoMapping="true">
  		<id column="RVW_ID" property="rvwId" />
  	</resultMap>
 
 	<!-- 특정 프로젝트 모든 리뷰 조회 쿼리문 -->
-	<select id="selectAllReviews" parameterType="string" resultType="com.ktdsuniversity.edu.bizmatch.project.review.vo.ReviewVO">
+	<select id="selectAllReviews" 
+			parameterType="string" 
+			resultType="com.ktdsuniversity.edu.bizmatch.project.review.vo.ReviewVO">
 		SELECT RVW_ID
 	 		 , RVW_CNTNT
 	 		 , RVW_DT
@@ -26,7 +30,9 @@
 	</select>
 	
 	<!-- 특정 하나의 리뷰 조회 쿼리문 -->
-	<select id="selectOneReview" parameterType="string" resultType="com.ktdsuniversity.edu.bizmatch.project.review.vo.ReviewVO">
+	<select id="selectOneReview" 
+			parameterType="string" 
+			resultType="com.ktdsuniversity.edu.bizmatch.project.review.vo.ReviewVO">
 		SELECT RVW_ID
 	 		 , RVW_CNTNT
 	 		 , RVW_DT
@@ -42,7 +48,8 @@
 	</select>
 	
 	<!-- 새 리뷰 등록 쿼리문 -->
-	<insert id="insertOneReview" parameterType="com.ktdsuniversity.edu.bizmatch.project.review.vo.WriteReviewVO">
+	<insert id="insertOneReview" 
+			parameterType="com.ktdsuniversity.edu.bizmatch.project.review.vo.WriteReviewVO">
 		INSERT INTO PJ_RVW
 		( RVW_ID
 		, RVW_CNTNT
@@ -70,7 +77,8 @@
 	</update>
 	
 	<!-- 리뷰 삭제 쿼리문 -->
-	<delete id="deleteOneReview" parameterType="com.ktdsuniversity.edu.bizmatch.project.review.vo.DeleteReviewVO">
+	<delete id="deleteOneReview" 
+			parameterType="com.ktdsuniversity.edu.bizmatch.project.review.vo.DeleteReviewVO">
 		UPDATE PJ_RVW
    		   SET IS_DLT = 1
    		 	 , DLT_DT = SYSDATE
