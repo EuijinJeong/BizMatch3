@@ -81,7 +81,6 @@ public interface ProjectService {
 	public ProjectVO readOneProjectInfo(String pjId);
 	
 	/**
-<<<<<<< HEAD
 	 * 이하 댓글 관련 Service 메서드
 	 * @param id
 	 * @return
@@ -143,13 +142,6 @@ public interface ProjectService {
 	public List<ProjectSkillVO> readAllProjectSkill(String pjId);
 
 	/**
-	 * 하나의 기업이 발주했던 모든 프로젝트 검색
-	 * @param cmpId : 회사 아이디.
-	 * @return
-	 */
-	public List<ProjectVO> readAllProjectCompanyOrder(MemberVO memberVO);
-
-	/**
 	 * 회원이 수행했던 모든 프로젝트 검색
 	 * 기업이랑 회원이랑 상관 없음 Mapper 에다가 기업이랑 회원 if문으로 제어해둠
 	 * @param memberVO
@@ -193,10 +185,10 @@ public interface ProjectService {
 	
 	/**
 	 * 기업회원이 발주한 모든 프로젝트의 목록을 불러오는 메소드이다. -의진-
-	 * @param cmpId
+	 * @param email
 	 * @return
 	 */
-	public List<ProjectVO> readAllMyOrderProjectList(String cmpId);
+	public List<ProjectVO> readAllMyOrderProjectList(String email);
 	
 	/**
 	 * 작성된 지원서를 조회하는 메서드 -동원-

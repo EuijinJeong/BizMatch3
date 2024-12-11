@@ -438,13 +438,6 @@ public class ProjectServiceImple implements ProjectService {
 	}
 
 	@Override
-	public List<ProjectVO> readAllProjectCompanyOrder(MemberVO memberVO) {
-		// 기업이 발주한 프로젝트 리스트를 조회하는 메서드를 호출한다.
-		List<ProjectVO> projectList = this.projectDao.selectAllProjectCompanyOrder(memberVO.getEmilAddr());
-		return projectList;
-	}
-
-	@Override
 	public List<ApplyProjectVO> readAllApply(String email) {
 		MemberVO memberVO = this.memberDao.selectOneMember(email);
 		return this.projectDao.selectAllApply(memberVO);

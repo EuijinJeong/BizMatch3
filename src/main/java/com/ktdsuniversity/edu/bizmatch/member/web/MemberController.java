@@ -551,13 +551,25 @@ public class MemberController {
 //	}
 //	
 	/**
+	 * 회사
 	 * 특정 회원의 포트폴리오 목록 리스트 불러오는 메서드.
 	 * @param loginMemberVO
 	 * @return
 	 */
-	@GetMapping("/member/mypage/company/portfolio/content/{parameter}")
-	public ApiResponse viewPortfolioListPage(@PathVariable String parameter) {
-		return new ApiResponse();
+	@GetMapping("/member/mypage/company/portfolio")
+	public ApiResponse viewCompanyPortfolioListPage(@RequestParam String cmpId) {
+		return new ApiResponse(this.memberService.selectAllCmpnyPortfolios(cmpId));
+	}
+	
+	/**
+	 * 프리랜서
+	 * 특정 회원의 포트폴리오 목록 리스트 불러오는 메서드.
+	 * @param loginMemberVO
+	 * @return
+	 */
+	@GetMapping("/member/mypage/portfolio")
+	public ApiResponse viewMemberPortfolioListPage(@RequestParam String emilAddr) {
+		return new ApiResponse(this.memberService.selectAllPortfolios(emilAddr));
 	}
 	
 	/**
