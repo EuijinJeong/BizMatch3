@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -159,8 +160,8 @@ public class ProjectController {
 	 * @throws ParseException
 	 */
 	@PostMapping("/project/write")
-	public ApiResponse doCreateProject(WriteProjectVO writeProjectVO, Model model,
-			@RequestParam("prmStkId") List<String> prmStkIdList,
+	public ApiResponse doCreateProject(WriteProjectVO writeProjectVO
+			,
 			Authentication memberVO) throws ParseException {
 
 		// 유효성 검사들.
@@ -219,10 +220,10 @@ public class ProjectController {
 		MemberVO loginMemberVO = (MemberVO)memberVO.getPrincipal();
 		writeProjectVO.setOrdrId(loginMemberVO.getEmilAddr());
 
-		// 이제 수정된 호출
-		List<String> skillList = new ArrayList<>(prmStkIdList);
+//		// 이제 수정된 호출
+//		List<String> skillList = new ArrayList<>(prmStkIdList);
 
-		boolean isSuccessed = this.projectService.createNewProject(writeProjectVO, skillList);
+		boolean isSuccessed = this.projectService.createNewProject(writeProjectVO);
 
 		return new ApiResponse(isSuccessed);
 	}

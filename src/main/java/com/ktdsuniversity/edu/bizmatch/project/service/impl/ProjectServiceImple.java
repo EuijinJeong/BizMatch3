@@ -68,7 +68,7 @@ public class ProjectServiceImple implements ProjectService {
 	private FileHandler fileHandler;
 
 	@Override
-	public boolean createNewProject(WriteProjectVO writeProjectVO, List<String> skillList) throws ParseException {
+	public boolean createNewProject(WriteProjectVO writeProjectVO) throws ParseException {
 
 		// 날짜 정보 설정하기.
 		ProjectDateVO projectDateVO = new ProjectDateVO();
@@ -131,16 +131,16 @@ public class ProjectServiceImple implements ProjectService {
 			totalInsertedFiles++;
 		}
 
-		ProjectSkillVO projectSkillVO = new ProjectSkillVO();
-		// 프로젝트 스킬정보를 데이터베이스에 저장한다.
-		for (String id : skillList) {
-			projectSkillVO.setPjId(pjId);
-			projectSkillVO.setPrmStkId(id);
-			int insertedCnt = this.projectDao.insertProjectSkills(projectSkillVO);
-			if (insertedCnt == 0) {
-				throw new IllegalArgumentException("프로젝트 주요 기술들을 서버에 저장하는 도중 오류가 발생했습니다.");
-			}
-		}
+//		ProjectSkillVO projectSkillVO = new ProjectSkillVO();
+//		// 프로젝트 스킬정보를 데이터베이스에 저장한다.
+//		for (String id : skillList) {
+//			projectSkillVO.setPjId(pjId);
+//			projectSkillVO.setPrmStkId(id);
+//			int insertedCnt = this.projectDao.insertProjectSkills(projectSkillVO);
+//			if (insertedCnt == 0) {
+//				throw new IllegalArgumentException("프로젝트 주요 기술들을 서버에 저장하는 도중 오류가 발생했습니다.");
+//			}
+//		}
 		
 		// 프로젝트 산업군 집합 테이블에 입력 받은 값을 넣는 추가 작업 
 		
