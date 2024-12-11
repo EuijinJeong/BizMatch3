@@ -1043,5 +1043,23 @@
     WHERE PJ_ID = #{pjId}
    
    </update>
+  
+   <select id="selectOneApplyInfo" parameterType="string" resultMap="applyProjectVOMap">
+   	SELECT PY.PJ_APPLY_ID
+		 , PY.EMIL_ADDR
+		 , PY.PJ_ID
+		 , TO_CHAR(PY.PJ_APPLY_RGSTR_DT, 'YYYY-MM-DD') PJ_APPLY_RGSTR_DT
+		 , PY.PJ_APPLY_TTL
+		 , PY.PJ_APPLY_DESC
+		 , TO_CHAR(PY.PJ_APPLY_MDFY_DT,'YYYY-MM-DD') PJ_APPLY_MDFY_DT
+		 , PT.PJ_APPLY_ATT_ID
+		 , PT.PJ_APPLY_ID
+		 , PT.PJ_APPLY_ATT_URL
+		 , PT.PJ_APPLY_ATT_URL_NONREAD
+	  FROM PJ_APPLY PY
+	  JOIN PJ_APPLY_ATT PT
+	    ON PT.PJ_APPLY_ID = PY.PJ_APPLY_ID
+	 WHERE PY.PJ_APPLY_ID = #{_parameter}
+   </select>
    
 </mapper>

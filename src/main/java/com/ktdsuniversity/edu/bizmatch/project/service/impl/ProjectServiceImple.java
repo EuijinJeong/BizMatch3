@@ -516,4 +516,11 @@ public class ProjectServiceImple implements ProjectService {
 		int updateCount = this.projectDao.updateProject(projectVO);
 		return updateCount > 0;
 	}
+
+
+
+	@Override
+	public ApplyProjectVO selectOneApplyInfo(String pjApplyId) {
+		return this.projectDao.selectOneApplyInfo(pjApplyId);
+	}
 }

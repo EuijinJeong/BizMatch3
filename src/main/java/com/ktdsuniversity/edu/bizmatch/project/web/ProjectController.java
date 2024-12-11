@@ -630,4 +630,14 @@ public class ProjectController {
 		
 		return new ApiResponse(projectList);
 	}
+	
+	/**
+	 * 지원서 하나 가져오는 컨트롤러
+	 * @param pjApplyId 지원서 아이디
+	 */
+	@GetMapping("/project/apply/script")
+	public ApiResponse getApplyScripty(@RequestParam String pjApplyId) {
+		ApplyProjectVO applyProjectVO = this.projectService.selectOneApplyInfo(pjApplyId);
+		return new ApiResponse(applyProjectVO);
+	}
 }

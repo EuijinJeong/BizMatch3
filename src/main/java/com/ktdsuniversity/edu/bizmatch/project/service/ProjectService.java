@@ -205,4 +205,10 @@ public interface ProjectService {
 	public ApplyProjectVO selectOneApplyViewInfo(SearchApplyVO searchApplyVO);
 	
 	public boolean updateProject(ProjectVO projectVO);
+	/**
+	 * 지원서 아이디 이용해서 지원서 정보 다 가져오는 메소드 
+	 * @param pjApplyId
+	 * @return
+	 */
+	public ApplyProjectVO selectOneApplyInfo(String pjApplyId);
 }
