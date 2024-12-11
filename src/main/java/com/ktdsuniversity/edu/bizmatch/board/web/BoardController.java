@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ktdsuniversity.edu.bizmatch.board.service.BoardService;
-import com.ktdsuniversity.edu.bizmatch.board.vo.BoardCommentPaginationVO;
+
+import com.ktdsuniversity.edu.bizmatch.board.vo.BoardCommentVO;
 import com.ktdsuniversity.edu.bizmatch.board.vo.BoardCommentWriteVO;
 import com.ktdsuniversity.edu.bizmatch.board.vo.BoardModifyCommentVO;
 import com.ktdsuniversity.edu.bizmatch.board.vo.BoardModifyVO;
@@ -39,7 +40,7 @@ public class BoardController {
 	 * 게시글 목록 페이지
 	 * @return
 	 */
-	@GetMapping("/board/list")
+	@GetMapping("/board")
 	public ApiResponse viewBoardList(Authentication loginMemberVO) {
 		List<BoardVO> boardList = this.boardService.getBoardList();
 		
@@ -53,7 +54,6 @@ public class BoardController {
 	 */
 	@GetMapping("/board/view/{id}")
 	public ApiResponse viewOneBoard(@PathVariable String id
-							, BoardCommentPaginationVO boardCommentPaginationVO
 							, Authentication memberVO) {
 		
 		BoardVO boardVO = boardService.getOneBoard(id);
@@ -61,20 +61,6 @@ public class BoardController {
 		return new ApiResponse(boardVO);
 	}
 	
-	/**
-	 * 새로운 댓글을 추가하는 메서드.
-	 * @param boardCommentWriteVO
-	 * @param loginMemberVO
-	 * @return
-	 */
-	@PostMapping("/board/view")
-	public ApiResponse doCreateNewComment(@RequestBody BoardCommentWriteVO boardCommentWriteVO 
-										, Authentication loginMemberVO) {
-		boardCommentWriteVO.setAthrId(loginMemberVO.getName());
-		boolean result = boardService.createBoardComment(boardCommentWriteVO);
-		
-		return new ApiResponse(result);
-	}
 	
 //	/**
 //	 * 게시글 작성페이지
@@ -148,6 +134,39 @@ public class BoardController {
 		
 		return new ApiResponse(result);
 	}
+	
+	
+	
+	
+	/**
+	 * 게시글의 댓글을 불러오는 컨트롤러.
+	 * @param BoardCommentVO
+	 * @param memberVO
+	 * @return
+	 */
+	@GetMapping("/board/comment/view/{boardId}")
+	public ApiResponse doModifyComment(@PathVariable String boardId 
+									, Authentication memberVO) {
+		List<BoardCommentVO> result  = boardService.getAllBoardComment(boardId);
+		
+		return new ApiResponse(result);
+	}
+	
+	/**
+	 * 새로운 댓글을 추가하는 메서드.
+	 * @param boardCommentWriteVO
+	 * @param loginMemberVO
+	 * @return
+	 */
+	@PostMapping("/board/view")
+	public ApiResponse doCreateNewComment(@RequestBody BoardCommentWriteVO boardCommentWriteVO 
+										, Authentication loginMemberVO) {
+		boardCommentWriteVO.setAthrId(loginMemberVO.getName());
+		boolean result = boardService.createBoardComment(boardCommentWriteVO);
+		
+		return new ApiResponse(result);
+	}
+	
 	
 	/**
 	 * 특정 댓글을 수정하는 요청을 하는 컨트롤러.
