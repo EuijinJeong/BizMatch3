@@ -513,19 +513,21 @@ public class MemberController {
 //	public String loadWriteNewPortfolioPage() {
 //		return "/portfolio/portfolio_write";
 //	}
-	
 	/**
 	 * 새로운 포트폴리오를 등록하는 요청을 보내는 컨트롤러이다.
 	 * @param memberPortfolioVO : 사용자가 입력한 포트폴리오 정보.
 	 * @return
 	 */
 	@PostMapping("/member/newportfolio")
-	public ApiResponse requestNewPortfolio(Authentication memberVO
-									, MemberPortfolioVO memberPortfolioVO) {
-		// 서비스에 새로운 포트폴리오 등록 요청을 보낸다.
-		memberPortfolioVO.setEmilAddr(memberVO.getName());
-		boolean isCreated = this.memberService.createNewPortfolio(memberPortfolioVO);
+	public ApiResponse requestNewPortfolio(Authentication memberVO, MemberPortfolioVO memberPortfolioVO) {
+
+		// 로그인한 회원 정보 가져오기
+		MemberVO loginMemberVO = (MemberVO) memberVO.getPrincipal();
+		memberPortfolioVO.setEmilAddr(loginMemberVO.getEmilAddr());
 		
+		// 서비스 호출하여 포트폴리오 등록 처리
+		boolean isCreated = this.memberService.createNewPortfolio(memberPortfolioVO);
+
 		return new ApiResponse(isCreated);
 	}
 	
