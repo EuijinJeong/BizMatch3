@@ -78,10 +78,9 @@ public class BoardController {
 	 * @return
 	 */
 	@PostMapping("/board/write")
-	public ApiResponse doCreateNewBoard(BoardWriteVO boardWirteVO 
-										, Authentication loginMemberVO) {
+	public ApiResponse doCreateNewBoard(@RequestBody BoardWriteVO boardWirteVO , Authentication memberVO) {
 		
-		boardWirteVO.setAthrId(loginMemberVO.getName());
+		
 		if(ParameterCheck.parameterCodeValid(boardWirteVO.getPstNm(), 0)) {
 			throw new BoardException("제목은 필수 입력입니다.", boardWirteVO);
 		}
@@ -156,10 +155,10 @@ public class BoardController {
 	 * @param loginMemberVO
 	 * @return
 	 */
-	@PostMapping("/board/view")
+	@PostMapping("/board/comment/write")
 	public ApiResponse doCreateNewComment(@RequestBody BoardCommentWriteVO boardCommentWriteVO 
 										, Authentication loginMemberVO) {
-		boardCommentWriteVO.setAthrId(loginMemberVO.getName());
+		
 		boolean result = boardService.createBoardComment(boardCommentWriteVO);
 		
 		return new ApiResponse(result);
