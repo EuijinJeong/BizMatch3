@@ -730,7 +730,8 @@
      		ON ID.INDSTR_ID = A.UPPR_INDSTR_ID
  	</select>
  	
- 	<update id="updateMemberCompanyMyPage" parameterType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberCompanyModifyVO">
+ 	<update id="updateMemberCompanyMyPage" 
+ 			parameterType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberCompanyModifyVO">
  	UPDATE CMPNY_INFO 
 	   SET CMPNY_NM = #{cmpnyNm}
 	     , CMPNY_SITE_URL = #{cmpnySiteUrl}
@@ -822,10 +823,10 @@
  	<!-- 특정 회사 관심산업군 변경 쿼리문 -->
  	<update id="updateCmpnyLkIndstr" 
  			parameterType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberCompanyModifyVO">
- 		UPDATE MBR_LK_INDSTR
-   		   SET MJR_ID = #{cmpnyBizCtgryId}
-   	 		 , SMJR_ID = #{cmpnyIndstrId}
-  		 WHERE EMIL_ADDR = #{emilAddr}
+ 		UPDATE CMPNY_INFO
+   		   SET MJR_ID = #{mjrId}
+   	 		 , SMJR_ID = #{smjrId}
+  		 WHERE CMPNY_ID = #{cmpnyId}
  	</update>
  	
  	<!--  페이지네이션을 위한 포트폴리오 Select 문-->

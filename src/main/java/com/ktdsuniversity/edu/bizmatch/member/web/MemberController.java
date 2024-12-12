@@ -451,12 +451,12 @@ public class MemberController {
 		MemberVO member = (MemberVO) memberVO.getPrincipal();
 		boolean isSuccess = this.memberService.updateCompanyMemberMyPage(memberCompanyModifyVO, member);
 		
-		if (isSuccess && memberCompanyModifyVO.getMbrPrmStkList() != null) {
-			boolean skillsUpdated = memberService.updateMbrSkills(memberCompanyModifyVO.getMbrPrmStkList(), member.getEmilAddr());
-			if (!skillsUpdated) {
-				return Map.of("response", false, "message", "보유 기술 업데이트에 실패했습니다.");
-			}
-		}
+//		if (isSuccess && memberCompanyModifyVO.getMbrPrmStkList() != null) {
+//			boolean skillsUpdated = memberService.updateMbrSkills(memberCompanyModifyVO.getMbrPrmStkList(), member.getEmilAddr());
+//			if (!skillsUpdated) {
+//				return Map.of("response", false, "message", "보유 기술 업데이트에 실패했습니다.");
+//			}
+//		}
 		
 		return Map.of("response", isSuccess, "data", memberCompanyModifyVO);
 	}
