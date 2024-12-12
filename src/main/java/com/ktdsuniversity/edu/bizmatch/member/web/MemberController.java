@@ -252,8 +252,9 @@ public class MemberController {
 	 */
 	@GetMapping("/member/mypage/company/{cmpId}")
 	public ApiResponse loadCompanyMyPage(Authentication loginMemberVO
-								 , @RequestParam(required = false, defaultValue = "late-date") String orderBy
-								 , @PathVariable String cmpId) {
+										, @RequestParam(required = false
+										, defaultValue = "late-date") String orderBy
+										, @PathVariable String cmpId) {
 		
 		CompanyVO companyVO = this.memberService.selectOneCompanyByEmilAddr(cmpId);
 		
@@ -438,6 +439,7 @@ public class MemberController {
 	public Map<String, Object> doCompanyMyPageEdit(@RequestBody MemberCompanyModifyVO memberCompanyModifyVO 
 												, Authentication memberVO) {
 		
+		System.out.println(memberCompanyModifyVO);
 		if (memberCompanyModifyVO.getCmpnyNm() == null || memberCompanyModifyVO.getCmpnyAddr() == null || memberCompanyModifyVO.getCmpnyAccuntNum() == null) {
 			return Map.of("response",
 					false,
@@ -451,12 +453,12 @@ public class MemberController {
 		MemberVO member = (MemberVO) memberVO.getPrincipal();
 		boolean isSuccess = this.memberService.updateCompanyMemberMyPage(memberCompanyModifyVO, member);
 		
-		if (isSuccess && memberCompanyModifyVO.getMbrPrmStkList() != null) {
-			boolean skillsUpdated = memberService.updateMbrSkills(memberCompanyModifyVO.getMbrPrmStkList(), member.getEmilAddr());
-			if (!skillsUpdated) {
-				return Map.of("response", false, "message", "보유 기술 업데이트에 실패했습니다.");
-			}
-		}
+//		if (isSuccess && memberCompanyModifyVO.getMbrPrmStkList() != null) {
+//			boolean skillsUpdated = memberService.updateMbrSkills(memberCompanyModifyVO.getMbrPrmStkList(), member.getEmilAddr());
+//			if (!skillsUpdated) {
+//				return Map.of("response", false, "message", "보유 기술 업데이트에 실패했습니다.");
+//			}
+//		}
 		
 		return Map.of("response", isSuccess, "data", memberCompanyModifyVO);
 	}
@@ -534,17 +536,7 @@ public class MemberController {
 //										Authentication loginMemberVO) {
 //		return "portfolio/portfoliolist";
 //	}
-	
-//	/**
-//	 * 기업 회원의 포트폴리오 목록 리스트 페이지로딩.
-//	 * @return
-//	 */	
-//	@GetMapping("/member/mypage/company/portfolio/{cmpnyId}")
-//	public String loadPortfolioListPageCmp(@PathVariable String cmpnyId
-//										, Authentication loginMemberVO) {
-//		return "portfolio/portfoliolist";
-//	}
-//	
+
 	/**
 	 * 회사
 	 * 특정 회원의 포트폴리오 목록 리스트 불러오는 메서드.
