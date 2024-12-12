@@ -179,7 +179,7 @@ public class ProjectController {
 		}
 
 		// 프로젝트 입찰가격
-		if (writeProjectVO.getCntrctAccnt() < 1000000) {
+		if (writeProjectVO.getCntrctAccnt() < 0) {
 			throw new ProjectWriteFailException("프로젝트 입찰가격은 1,000,000원 이상입니다.", writeProjectVO);
 		}
 
