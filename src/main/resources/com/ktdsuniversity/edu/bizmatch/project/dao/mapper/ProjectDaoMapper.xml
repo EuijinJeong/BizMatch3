@@ -311,12 +311,9 @@
 			, PI.PJ_INDSTR_ID
 			, PI.MJR_ID
 			, PI.SMJR_ID
-			, PPS.PJ_PRM_STK_ID 
 			, II.INDSTR_ID
 			, II.INDSTR_NM
 			, II.UPPR_INDSTR_ID
-			, PRM.PRM_STK_ID
-			, PRM.PRM_STK
 			, PY.PYMNT_ID 
 			, PY.GRNT_AMT 
 			, PY.CNTRCT_AMT 
@@ -328,17 +325,14 @@
 			, PY.DPST_RFND_AMNT 
 			, PY.DPST_RFND_DT 
 			  FROM PJ_INFO P
-			  JOIN PJ_INDSTR PI
+			 LEFT JOIN PJ_INDSTR PI
 			    ON P.PJ_ID = PI.PJ_ID 
-			  JOIN INDSTR_INFO II
+			 LEFT JOIN INDSTR_INFO II
 			    ON II.INDSTR_ID = PI.SMJR_ID
-			  JOIN PJ_PRM_STK PPS
-			    ON PPS.PJ_ID = P.PJ_ID 
-			  JOIN PRM_STK PRM
-			    ON PRM.PRM_STK_ID = PPS.PRM_STK_ID
-			  JOIN PYMNT_INFO PY
+			 LEFT JOIN PYMNT_INFO PY
 			    ON PY.PJ_ID = P.PJ_ID 
 		 WHERE P.PJ_ID = #{_parameter}
+		 <!--TODO LEFT JOIN -> JOIN  -->
 	</select>
 
 	<select id="selectForPagination"

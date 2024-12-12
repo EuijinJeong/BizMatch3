@@ -107,6 +107,7 @@ public class ProjectController {
 		List<ProjectCommentVO> commentList = this.projectService.getPaginationComment(projectCommentPaginationVO, pjId);
 
 		ProjectVO projectVO = this.projectService.readOneProjectInfo(pjId);
+		System.out.println(projectVO);
 		return new ApiResponse(projectVO);
 	}
 
