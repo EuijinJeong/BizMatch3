@@ -823,10 +823,10 @@
  	<!-- 특정 회사 관심산업군 변경 쿼리문 -->
  	<update id="updateCmpnyLkIndstr" 
  			parameterType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberCompanyModifyVO">
- 		UPDATE CMPNY_INFO
+ 		UPDATE MBR_LK_INDSTR
    		   SET MJR_ID = #{mjrId}
    	 		 , SMJR_ID = #{smjrId}
-  		 WHERE CMPNY_ID = #{cmpnyId}
+  		 WHERE EMIL_ADDR = #{emilAddr}
  	</update>
  	
  	<!--  페이지네이션을 위한 포트폴리오 Select 문-->

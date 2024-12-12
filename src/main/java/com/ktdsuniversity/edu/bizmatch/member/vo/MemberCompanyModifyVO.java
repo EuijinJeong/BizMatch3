@@ -9,6 +9,7 @@ public class MemberCompanyModifyVO {
 	private String cmpnyAccuntNum; // 기업 계좌번호. 
 	private String mjrId; // 관심 산업군 대분류 아이디.
 	private String smjrId; // 관심 산업군 중분류 아이디.
+	private String emilAddr; // 회원의 이메일 주소.
 //	private List<MbrPrmStkVO> mbrPrmStkList; // 회사 주요 스킬 리스트.
 
 	public String getCmpnyIntr() {
@@ -81,6 +82,14 @@ public class MemberCompanyModifyVO {
 
 	public void setSmjrId(String smjrId) {
 		this.smjrId = smjrId;
+	}
+
+	public String getEmilAddr() {
+		return emilAddr;
+	}
+
+	public void setEmilAddr(String emilAddr) {
+		this.emilAddr = emilAddr;
 	}
 
 }

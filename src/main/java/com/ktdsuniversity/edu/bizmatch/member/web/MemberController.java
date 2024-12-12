@@ -438,6 +438,7 @@ public class MemberController {
 	public Map<String, Object> doCompanyMyPageEdit(@RequestBody MemberCompanyModifyVO memberCompanyModifyVO 
 												, Authentication memberVO) {
 		
+		System.out.println(memberCompanyModifyVO);
 		if (memberCompanyModifyVO.getCmpnyNm() == null || memberCompanyModifyVO.getCmpnyAddr() == null || memberCompanyModifyVO.getCmpnyAccuntNum() == null) {
 			return Map.of("response",
 					false,
