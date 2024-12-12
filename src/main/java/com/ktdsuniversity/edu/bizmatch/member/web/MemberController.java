@@ -252,8 +252,9 @@ public class MemberController {
 	 */
 	@GetMapping("/member/mypage/company/{cmpId}")
 	public ApiResponse loadCompanyMyPage(Authentication loginMemberVO
-								 , @RequestParam(required = false, defaultValue = "late-date") String orderBy
-								 , @PathVariable String cmpId) {
+										, @RequestParam(required = false
+										, defaultValue = "late-date") String orderBy
+										, @PathVariable String cmpId) {
 		
 		CompanyVO companyVO = this.memberService.selectOneCompanyByEmilAddr(cmpId);
 		
@@ -535,17 +536,7 @@ public class MemberController {
 //										Authentication loginMemberVO) {
 //		return "portfolio/portfoliolist";
 //	}
-	
-//	/**
-//	 * 기업 회원의 포트폴리오 목록 리스트 페이지로딩.
-//	 * @return
-//	 */	
-//	@GetMapping("/member/mypage/company/portfolio/{cmpnyId}")
-//	public String loadPortfolioListPageCmp(@PathVariable String cmpnyId
-//										, Authentication loginMemberVO) {
-//		return "portfolio/portfoliolist";
-//	}
-//	
+
 	/**
 	 * 회사
 	 * 특정 회원의 포트폴리오 목록 리스트 불러오는 메서드.
