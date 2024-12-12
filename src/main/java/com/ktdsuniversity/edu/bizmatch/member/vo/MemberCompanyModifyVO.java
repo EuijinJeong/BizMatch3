@@ -1,21 +1,16 @@
 package com.ktdsuniversity.edu.bizmatch.member.vo;
 
-import java.util.List;
-
-import com.ktdsuniversity.edu.bizmatch.common.skills.vo.MbrPrmStkVO;
-
 public class MemberCompanyModifyVO {
-	private String cmpnyId;
-	private String cmpnyNm;
-	private String cmpnySiteUrl;
-	private String cmpnyAddr;
-	private String cmpnyIntr;
-	private String cmpnyAccuntNum;
-	private String cmpnyBizCtgryId;
-	private String cmpnyIndstrId;
-	private String emilAddr;
-
-	private List<MbrPrmStkVO> mbrPrmStkList;
+	private String cmpnyId; // 회사 아이디.
+	private String cmpnyNm; // 회사 이름.
+	private String cmpnySiteUrl; // 회사 사이트 주소.
+	private String cmpnyAddr; // 회사 건물 주소.
+	private String cmpnyIntr; // 기업 마이페이지 소개글.
+	private String cmpnyAccuntNum; // 기업 계좌번호. 
+	private String mjrId; // 관심 산업군 대분류 아이디.
+	private String smjrId; // 관심 산업군 중분류 아이디.
+	private String emilAddr; // 회원의 이메일 주소.
+//	private List<MbrPrmStkVO> mbrPrmStkList; // 회사 주요 스킬 리스트.
 
 	public String getCmpnyIntr() {
 		return cmpnyIntr;
@@ -64,29 +59,29 @@ public class MemberCompanyModifyVO {
 	public void setCmpnyAddr(String cmpnyAddr) {
 		this.cmpnyAddr = cmpnyAddr;
 	}
+//
+//	public List<MbrPrmStkVO> getMbrPrmStkList() {
+//		return mbrPrmStkList;
+//	}
+//
+//	public void setMbrPrmStkList(List<MbrPrmStkVO> mbrPrmStkList) {
+//		this.mbrPrmStkList = mbrPrmStkList;
+//	}
 
-	public List<MbrPrmStkVO> getMbrPrmStkList() {
-		return mbrPrmStkList;
+	public String getMjrId() {
+		return mjrId;
 	}
 
-	public void setMbrPrmStkList(List<MbrPrmStkVO> mbrPrmStkList) {
-		this.mbrPrmStkList = mbrPrmStkList;
+	public void setMjrId(String mjrId) {
+		this.mjrId = mjrId;
 	}
 
-	public String getCmpnyBizCtgryId() {
-		return cmpnyBizCtgryId;
+	public String getSmjrId() {
+		return smjrId;
 	}
 
-	public void setCmpnyBizCtgryId(String cmpnyBizCtgryId) {
-		this.cmpnyBizCtgryId = cmpnyBizCtgryId;
-	}
-
-	public String getCmpnyIndstrId() {
-		return cmpnyIndstrId;
-	}
-
-	public void setCmpnyIndstrId(String cmpnyIndstrId) {
-		this.cmpnyIndstrId = cmpnyIndstrId;
+	public void setSmjrId(String smjrId) {
+		this.smjrId = smjrId;
 	}
 
 	public String getEmilAddr() {
