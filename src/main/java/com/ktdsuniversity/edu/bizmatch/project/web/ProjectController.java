@@ -112,7 +112,7 @@ public class ProjectController {
 	}
 
 	/**
-	 * 프로젝트 문의 페이지.
+	 * 프로젝트 문의 페이지. temp
 	 * 
 	 * @return
 	 */
