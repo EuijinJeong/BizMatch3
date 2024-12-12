@@ -4,8 +4,17 @@
 	"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ktdsuniversity.edu.bizmatch.project.review.dao.ReviewDao">
 
+	<!-- 마이페이지 리뷰 리스트 조회 쿼리문 -->
+ 	<resultMap type="com.ktdsuniversity.edu.bizmatch.project.review.vo.ReviewVO" 
+ 			   id="reviewVOMap" 
+ 			   autoMapping="true">
+ 		<id column="RVW_ID" property="rvwId" />
+ 	</resultMap>
+
 	<!-- 특정 프로젝트 모든 리뷰 조회 쿼리문 -->
-	<select id="selectAllReviews" parameterType="string" resultType="com.ktdsuniversity.edu.bizmatch.project.review.vo.ReviewVO">
+	<select id="selectAllReviews" 
+			parameterType="string" 
+			resultType="com.ktdsuniversity.edu.bizmatch.project.review.vo.ReviewVO">
 		SELECT RVW_ID
 	 		 , RVW_CNTNT
 	 		 , RVW_DT
@@ -21,7 +30,9 @@
 	</select>
 	
 	<!-- 특정 하나의 리뷰 조회 쿼리문 -->
-	<select id="selectOneReview" parameterType="string" resultType="com.ktdsuniversity.edu.bizmatch.project.review.vo.ReviewVO">
+	<select id="selectOneReview" 
+			parameterType="string" 
+			resultType="com.ktdsuniversity.edu.bizmatch.project.review.vo.ReviewVO">
 		SELECT RVW_ID
 	 		 , RVW_CNTNT
 	 		 , RVW_DT
@@ -37,7 +48,8 @@
 	</select>
 	
 	<!-- 새 리뷰 등록 쿼리문 -->
-	<insert id="insertOneReview" parameterType="com.ktdsuniversity.edu.bizmatch.project.review.vo.WriteReviewVO">
+	<insert id="insertOneReview" 
+			parameterType="com.ktdsuniversity.edu.bizmatch.project.review.vo.WriteReviewVO">
 		INSERT INTO PJ_RVW
 		( RVW_ID
 		, RVW_CNTNT
@@ -57,17 +69,65 @@
 	</insert>
 	
 	<!-- 리뷰 신고 횟수 수정 퀴리문 -->
-	<update id="updateReviewReportCount" parameterType="string">
+	<update id="updateReviewReportCount"
+			 parameterType="string">
 		UPDATE PJ_RVW
    		   SET RVW_RPRT_CNT = RVW_RPRT_CNT + 1
  		 WHERE RVW_ID = #{_parameter}
 	</update>
 	
 	<!-- 리뷰 삭제 쿼리문 -->
-	<delete id="deleteOneReview" parameterType="com.ktdsuniversity.edu.bizmatch.project.review.vo.DeleteReviewVO">
+	<delete id="deleteOneReview" 
+			parameterType="com.ktdsuniversity.edu.bizmatch.project.review.vo.DeleteReviewVO">
 		UPDATE PJ_RVW
    		   SET IS_DLT = 1
    		 	 , DLT_DT = SYSDATE
  		 WHERE RVW_ID = #{rvwId}
 	</delete>
+	
+	<!-- 기업 별점 높은순 리뷰 리스트 조회 -->
+ 	<select id="selectCompanyReviewListByScrDesc" 
+ 			parameterType="string" 
+ 			resultMap="reviewVOMap">
+ 		SELECT pi.PJ_ID
+	 		 , pr.RVW_ID
+	 		 , pr.RVW_CNTNT
+	 		 , pr.RVW_DT
+	 		 , pr.SCR
+	 		 , pr.IS_DLT
+	 		 , pr.EMIL_ADDR
+  		  FROM PJ_RVW pr 
+ 	INNER JOIN PJ_INFO pi
+    		ON pr.EMIL_ADDR = pi.ORDR_ID
+    		AND pi.PJ_ID = pr.PJ_ID
+ 	INNER JOIN MBR_INFO mi 
+    		ON mi.EMIL_ADDR = pi.OBTN_ID
+ 		 WHERE mi.EMIL_ADDR IN (SELECT EMIL_ADDR FROM MBR_INFO WHERE CMP_ID = #{_parameter})
+   		   AND pr.IS_DLT = 0
+   		 ORDER BY pr.SCR DESC 
+	   		 , pr.RVW_DT DESC
+ 	</select>
+ 	
+ 	<!-- 기업 별점 낮은순 리뷰 리스트 조회 -->
+ 	<select id="selectCompanyReviewListByScrAsc" 
+ 			parameterType="string" 
+ 			resultMap="reviewVOMap">
+ 		SELECT pi.PJ_ID
+	 		 , pr.RVW_ID
+	 		 , pr.RVW_CNTNT
+	 		 , pr.RVW_DT
+	 		 , pr.SCR
+	 		 , pr.IS_DLT
+	 		 , pr.EMIL_ADDR
+  		  FROM PJ_RVW pr 
+ 	INNER JOIN PJ_INFO pi
+    		ON pr.EMIL_ADDR = pi.ORDR_ID
+    		AND pi.PJ_ID = pr.PJ_ID
+ 	INNER JOIN MBR_INFO mi 
+    		ON mi.EMIL_ADDR = pi.OBTN_ID
+ 		 WHERE mi.EMIL_ADDR IN (SELECT EMIL_ADDR FROM MBR_INFO WHERE CMP_ID = #{_parameter})
+   		   AND pr.IS_DLT = 0
+   		 ORDER BY pr.SCR ASC 
+	   		 , pr.RVW_DT DESC
+ 	</select>
 </mapper>

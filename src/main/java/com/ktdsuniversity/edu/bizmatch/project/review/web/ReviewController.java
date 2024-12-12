@@ -10,17 +10,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.comment.ReviewFailException;
 import com.ktdsuniversity.edu.bizmatch.common.utils.ParameterCheck;
 import com.ktdsuniversity.edu.bizmatch.common.vo.ApiResponse;
+import com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO;
 import com.ktdsuniversity.edu.bizmatch.project.review.service.ReviewService;
 import com.ktdsuniversity.edu.bizmatch.project.review.vo.DeleteReviewVO;
 import com.ktdsuniversity.edu.bizmatch.project.review.vo.ReviewVO;
 import com.ktdsuniversity.edu.bizmatch.project.review.vo.WriteReviewVO;
 
 @RestController
+@RequestMapping("/api")
 public class ReviewController {
 
 	public static final Logger logger = LoggerFactory.getLogger(ReviewController.class);
@@ -37,8 +40,43 @@ public class ReviewController {
 	public ApiResponse selectAllReviews(Authentication memberVO
 										,@PathVariable String pjId) {
 		
-		List<ReviewVO> reviewList = reviewService.selectAllReviews(pjId);
-		
+		List<ReviewVO> reviewList = reviewService.selectAllReviews(pjId);	
+		return new ApiResponse(reviewList);
+	}
+	
+	/**
+	 * 리뷰 리스트 최신순으로 불러오는 컨트롤러.
+	 * @param memberVO
+	 * @return
+	 */
+	@GetMapping("/myreview/latedate")
+	public ApiResponse getAllReviewSortedLateDate(Authentication memberVO) {
+		MemberVO member = (MemberVO) memberVO.getPrincipal();
+		List<ReviewVO> reviewList = this.reviewService.readReviewListSortLowRate(member.getCmpId());
+		return new ApiResponse(reviewList);
+	}
+	
+	/**
+	 * 리뷰 리스트 별점 높은순 으로 불러오는 컨트롤러.
+	 * @param memberVO
+	 * @return
+	 */
+	@GetMapping("/myreview/highrate")
+	public ApiResponse getAllReviewSortedHighRate(Authentication memberVO) {
+		MemberVO member = (MemberVO) memberVO.getPrincipal();
+		List<ReviewVO> reviewList = this.reviewService.readReviewListSortedHighRate(member.getCmpId());
+		return new ApiResponse(reviewList);
+	}
+	
+	/**
+	 * 리뷰 리스트 별점 낮은순 으로 불러오는 컨트롤러.
+	 * @param memberVO
+	 * @return
+	 */
+	@GetMapping("/myreview/lowrate")
+	public ApiResponse getAllReviewSortedLowRate(Authentication memberVO) {
+		MemberVO member = (MemberVO) memberVO.getPrincipal();
+		List<ReviewVO> reviewList = this.reviewService.readReviewListSortLowRate(member.getCmpId());
 		return new ApiResponse(reviewList);
 	}
 	
@@ -117,10 +155,5 @@ public class ReviewController {
 		boolean isSuccess = reviewService.deleteOneReview(deleteReviewVO);
 		
 		return new ApiResponse(isSuccess);
-	}
-	
-	@GetMapping("/review/reviewpage")
-	public String loadReviewPage() {
-		return "common/review";
 	}
 }

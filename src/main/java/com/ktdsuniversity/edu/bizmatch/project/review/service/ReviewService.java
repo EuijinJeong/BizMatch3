@@ -5,7 +5,6 @@ import java.util.List;
 import com.ktdsuniversity.edu.bizmatch.project.review.vo.DeleteReviewVO;
 import com.ktdsuniversity.edu.bizmatch.project.review.vo.ReviewVO;
 import com.ktdsuniversity.edu.bizmatch.project.review.vo.WriteReviewVO;
-import com.ktdsuniversity.edu.bizmatch.report.vo.ReviewReportVO;
 
 public interface ReviewService {
 
@@ -43,4 +42,18 @@ public interface ReviewService {
 	 * @return 성공하면 true, 실패하면 false 반환
 	 */
 	public boolean deleteOneReview(DeleteReviewVO deleteReviewVO);
+	
+	/**
+	 * 리뷰 리스트 별점 높은순으로 불러오는 메서드.
+	 * @param cmpId
+	 * @return
+	 */
+	public List<ReviewVO> readReviewListSortedHighRate(String cmpId);
+	
+	/**
+	 * 리뷰 리스트 별점 낮은순으로 불러오는 메서드.
+	 * @param cmpId
+	 * @return
+	 */
+	public List<ReviewVO> readReviewListSortLowRate(String cmpId);
 }

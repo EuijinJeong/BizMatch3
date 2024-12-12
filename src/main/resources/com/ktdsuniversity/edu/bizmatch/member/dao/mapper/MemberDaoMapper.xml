@@ -310,8 +310,6 @@
  		 WHERE MBR_PRTFL_ID = #{_parameter}
 	</delete>
 	
-	
-
 	<!-- 멤버 탈퇴 업데이트 쿼리문. -->
 	<select id="updateMemberDeactivate" parameterType="string">
 	UPDATE MBR_INFO 
@@ -426,11 +424,14 @@
     		ON mi.EMIL_ADDR = pi.OBTN_ID
  		 WHERE mi.EMIL_ADDR IN (SELECT EMIL_ADDR FROM MBR_INFO WHERE CMP_ID = #{_parameter})
    		   AND pr.IS_DLT = 0
+   		   AND pr.RVW_RPRT_CNT = 0
    		 ORDER BY pr.RVW_DT DESC
  	</select>
  	
  	<!-- 최신순 리뷰 리스트 조회 -->
- 	<select id="selectReviewList" parameterType="string" resultMap="reviewVOMap">
+ 	<select id="selectReviewList" 
+ 			parameterType="string" 
+ 			resultMap="reviewVOMap">
  		SELECT pi.PJ_ID 
 	 		 , pr.RVW_ID
 	 		 , pr.RVW_CNTNT
@@ -477,7 +478,6 @@
 		  WHERE RNUM <![CDATA[>=]]> #{currPageNo} * #{exposureListSize} + 1
  	</select>
  	
- 	
  	<!-- 최신순 pagination list 조회 쿼리문-->
  	<select id="selectPagination" 
  			parameterType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberPaginationVO" 
@@ -507,7 +507,9 @@
  	</select>
  	
  	<!-- 기업 별점 높은순 리뷰 리스트 조회 -->
- 	<select id="selectCompanyReviewListByScrDesc" parameterType="string" resultMap="reviewVOMap">
+ 	<select id="selectCompanyReviewListByScrDesc" 
+ 			parameterType="string" 
+ 			resultMap="reviewVOMap">
  		SELECT pi.PJ_ID
 	 		 , pr.RVW_ID
 	 		 , pr.RVW_CNTNT
@@ -528,7 +530,9 @@
  	</select>
  	
  	<!-- 별점 높은순 리뷰 리스트 조회 -->
- 	<select id="selectReviewListByScrDesc" parameterType="string" resultMap="reviewVOMap">
+ 	<select id="selectReviewListByScrDesc" 
+ 			parameterType="string" 
+ 			resultMap="reviewVOMap">
  		SELECT pi.PJ_ID
 	 		 , pr.RVW_ID
 	 		 , pr.RVW_CNTNT
@@ -577,7 +581,6 @@
 		  WHERE RNUM <![CDATA[>=]]> #{currPageNo} * #{exposureListSize} + 1
  	</select>
  	
- 	
  	<!-- 별점 높은순 pagination list 조회 쿼리문-->
  	<select id="selectPaginationByScrDesc" 
  			parameterType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberPaginationVO" 
@@ -608,7 +611,9 @@
  	</select>
  	
  	<!-- 기업 별점 낮은순 리뷰 리스트 조회 -->
- 	<select id="selectCompanyReviewListByScrAsc" parameterType="string" resultMap="reviewVOMap">
+ 	<select id="selectCompanyReviewListByScrAsc" 
+ 			parameterType="string" 
+ 			resultMap="reviewVOMap">
  		SELECT pi.PJ_ID
 	 		 , pr.RVW_ID
 	 		 , pr.RVW_CNTNT

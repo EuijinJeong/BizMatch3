@@ -26,7 +26,6 @@ import org.springframework.web.client.RestTemplate;
 
 import com.ktdsuniversity.edu.bizmatch.common.category.vo.CategoryVO;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.member.ResetPassword;
-import com.ktdsuniversity.edu.bizmatch.common.exceptions.member.SessionNotFoundException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.member.SignUpCompanyException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.member.SignUpFailException;
 import com.ktdsuniversity.edu.bizmatch.common.skills.vo.MbrPrmStkVO;
@@ -286,20 +285,22 @@ public class MemberController {
 	}
 	
 	/**
-	 * 프리랜서 마이페이지 로드하는 컨트롤러.
+	 * 프리랜서 마이페이지를 로드하는 컨트롤러.
+	 * @param loginMemberVO
+	 * @param email
+	 * @param orderBy
 	 * @return
 	 */
 	@GetMapping("/member/mypage/freelancer/{email}/")
-	public String loadFreelancerMyPage(@SessionAttribute(value = "_LOGIN_USER_", required = false)MemberVO loginMemberVO
-			, @PathVariable String email, Model model
-			, @RequestParam(required = false, defaultValue = "late-date") String orderBy) {
+	public ApiResponse loadFreelancerMyPage(Authentication loginMemberVO
+									, @PathVariable String email
+									, @RequestParam(required = false
+												, defaultValue = "late-date") String orderBy) {
 		// 보유기술 리스트 조회
 		List<MbrPrmStkVO> mbrPrmStkList = memberService.selectMbrPrmStkList(email);
-		model.addAttribute("mbrPrmStkList", mbrPrmStkList);
 		
 		// 관심 산업 조회
 		MemberMyPageIndsryVO mbrIndstrVO = memberService.readMbrIndstr(email);
-		model.addAttribute("mbrIndstrVO", mbrIndstrVO);
 		
 		// 리뷰 리스트 조회
 		Map<String, Function<String, List<ReviewVO>>> sortMethodMap = new HashMap<>();
@@ -308,21 +309,23 @@ public class MemberController {
 		sortMethodMap.put("low-rate", memberService::selectReviewListBySrcAsc);
 		
 		List<ReviewVO> reviewList = sortMethodMap.getOrDefault(orderBy, memberService::selectReviewList).apply(email);
-		model.addAttribute("reviewList", reviewList);
-		model.addAttribute("orderBy", orderBy);
 		
 		// 전체 리뷰 평균 별 계산
 		double averageRate = reviewList.stream().mapToDouble(ReviewVO::getScr).average().orElse(0);
-		model.addAttribute("averageRate", averageRate);
 		
 		// 소속 산업군명 조회
 		MemberMyPageIndsryVO memberMyPageIndsryVO = memberService.selectIndstrNmByEmilAddr(email);
-		model.addAttribute("memberMyPageIndsryVO", memberMyPageIndsryVO);
 		
 		MemberVO memberVO = memberService.selectOneMemberVO(email);
-		model.addAttribute("memberVO", memberVO);
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("mbrPrmStkList", mbrPrmStkList);
+		resultMap.put("reviewList", reviewList);
+		resultMap.put("averageRate", averageRate);
+		resultMap.put("memberMyPageIndsryVO", memberMyPageIndsryVO);
+		resultMap.put("mbrIndstrVO", mbrIndstrVO);
+		resultMap.put("memberVO", memberVO);
 				
-		return "member/mypage_freelancer";
+		return new ApiResponse(resultMap);
 	}
 	
 	/**
@@ -414,37 +417,26 @@ public class MemberController {
 	 * @return
 	 */
 	@GetMapping("/member/mypage/company/edit/{cmpnyId}")
-	public String viewCompanyMyPageEdit(Model model 
-										,@PathVariable String cmpnyId
-										, @SessionAttribute(value = "_LOGIN_USER_", required = false)MemberVO memberVO) {
-		
-		if(!memberVO.getCmpId().equals(cmpnyId) || memberVO.getCmpId()==null ) {
-			throw new SessionNotFoundException("회사정보가 없습니다");
-		}
+	public ApiResponse viewCompanyMyPageEdit(Authentication memberVO 
+										,@PathVariable String cmpnyId) {
 		
 		CompanyVO companyVO =  this.memberService.selectOneCompanyByEmilAddr(cmpnyId);
-		model.addAttribute("companyVO",companyVO);
 		
 		// 보유기술 리스트 조회
 		List<MbrPrmStkVO> mbrPrmStkList = memberService.selectMbrPrmStkCmpnyList(cmpnyId);
-		model.addAttribute("mbrPrmStkList", mbrPrmStkList);
 		
-		return "member/mypagecompanyedit";
+		return new ApiResponse();
 	}
 	
 	/**
-	 * 
+	 * 기업 마이페이지 내용 수정을 하는 컨트롤러.
 	 * @param memberCompanyModifyVO
 	 * @param memberVO
 	 * @return
 	 */
 	@PostMapping("/member/mypage/company/edit")
 	public Map<String, Object> doCompanyMyPageEdit(@RequestBody MemberCompanyModifyVO memberCompanyModifyVO 
-									, @SessionAttribute(value = "_LOGIN_USER_" , required = false)MemberVO memberVO) {
-		
-		if (memberVO == null) {
-			return Map.of("response", false, "message", "로그인 세션이 만료되었거나 유효하지 않습니다.");
-		}
+												, Authentication memberVO) {
 		
 		if (memberCompanyModifyVO.getCmpnyNm() == null || memberCompanyModifyVO.getCmpnyAddr() == null || memberCompanyModifyVO.getCmpnyAccuntNum() == null) {
 			return Map.of("response",
@@ -456,10 +448,11 @@ public class MemberController {
 			);
 		}
 		
-		boolean isSuccess = this.memberService.updateCompanyMemberMyPage(memberCompanyModifyVO, memberVO);
+		MemberVO member = (MemberVO) memberVO.getPrincipal();
+		boolean isSuccess = this.memberService.updateCompanyMemberMyPage(memberCompanyModifyVO, member);
 		
 		if (isSuccess && memberCompanyModifyVO.getMbrPrmStkList() != null) {
-			boolean skillsUpdated = memberService.updateMbrSkills(memberCompanyModifyVO.getMbrPrmStkList(), memberVO.getEmilAddr());
+			boolean skillsUpdated = memberService.updateMbrSkills(memberCompanyModifyVO.getMbrPrmStkList(), member.getEmilAddr());
 			if (!skillsUpdated) {
 				return Map.of("response", false, "message", "보유 기술 업데이트에 실패했습니다.");
 			}
