@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -67,7 +68,7 @@ public class ProjectServiceImple implements ProjectService {
 	private FileHandler fileHandler;
 
 	@Override
-	public boolean createNewProject(WriteProjectVO writeProjectVO, List<String> skillList) throws ParseException {
+	public boolean createNewProject(WriteProjectVO writeProjectVO) throws ParseException {
 
 		// 날짜 정보 설정하기.
 		ProjectDateVO projectDateVO = new ProjectDateVO();
@@ -130,16 +131,16 @@ public class ProjectServiceImple implements ProjectService {
 			totalInsertedFiles++;
 		}
 
-		ProjectSkillVO projectSkillVO = new ProjectSkillVO();
-		// 프로젝트 스킬정보를 데이터베이스에 저장한다.
-		for (String id : skillList) {
-			projectSkillVO.setPjId(pjId);
-			projectSkillVO.setPrmStkId(id);
-			int insertedCnt = this.projectDao.insertProjectSkills(projectSkillVO);
-			if (insertedCnt == 0) {
-				throw new IllegalArgumentException("프로젝트 주요 기술들을 서버에 저장하는 도중 오류가 발생했습니다.");
-			}
-		}
+//		ProjectSkillVO projectSkillVO = new ProjectSkillVO();
+//		// 프로젝트 스킬정보를 데이터베이스에 저장한다.
+//		for (String id : skillList) {
+//			projectSkillVO.setPjId(pjId);
+//			projectSkillVO.setPrmStkId(id);
+//			int insertedCnt = this.projectDao.insertProjectSkills(projectSkillVO);
+//			if (insertedCnt == 0) {
+//				throw new IllegalArgumentException("프로젝트 주요 기술들을 서버에 저장하는 도중 오류가 발생했습니다.");
+//			}
+//		}
 		
 		// 프로젝트 산업군 집합 테이블에 입력 받은 값을 넣는 추가 작업 
 		
@@ -287,11 +288,12 @@ public class ProjectServiceImple implements ProjectService {
 		return projectList;
 	}
 
+	@Transactional
 	@Override
 	public ProjectVO readOneProjectInfo(String pjId) {
 		// 해당 프로젝트에 대한 정보를 가져와야함.
 		ProjectVO projectVO = this.projectDao.selectProjectInfo(pjId);
-		
+		this.projectDao.updateProjectViewCnt(pjId);
 		return projectVO;
 	}
 
@@ -369,8 +371,7 @@ public class ProjectServiceImple implements ProjectService {
 	}
 
 	@Override
-	public List<ApplyProjectVO> readAllApplyMember(String pjId, MemberVO memberVO) {
-		
+	public List<ApplyProjectVO> readAllApplyMember(String pjId, String email) {
 		ProjectVO projectVO = this.projectDao.selectProjectInfo(pjId);
 		
 		// if(!projectVO.getOrdrId().equals(memberVO.getEmilAddr())){
@@ -385,7 +386,8 @@ public class ProjectServiceImple implements ProjectService {
 	}
 
 	@Override
-	public boolean updateApplyMember(SelectApplyMemberVO selectApplyMemberVO, MemberVO memberVO) {
+	public boolean updateApplyMember(SelectApplyMemberVO selectApplyMemberVO, String email) {
+		MemberVO memberVO = memberDao.selectOneMember(email);
 		ProjectVO projectVO = this.projectDao.selectProjectInfo(selectApplyMemberVO.getPjId());
 		
 		if(!projectVO.getOrdrId().equals(memberVO.getEmilAddr())){
@@ -395,7 +397,7 @@ public class ProjectServiceImple implements ProjectService {
 			throw new IllegalArgumentException("지원자 선정을 완료하였습니다.");
 		}
 		
-		return this.projectDao.updateProjectApplyMember(selectApplyMemberVO)>0;
+		return this.projectDao.updateProjectApplyMember(selectApplyMemberVO) > 0;
 	}
 	
 	/**
@@ -436,14 +438,8 @@ public class ProjectServiceImple implements ProjectService {
 	}
 
 	@Override
-	public List<ProjectVO> readAllProjectCompanyOrder(MemberVO memberVO) {
-		// 기업이 발주한 프로젝트 리스트를 조회하는 메서드를 호출한다.
-		List<ProjectVO> projectList = this.projectDao.selectAllProjectCompanyOrder(memberVO.getEmilAddr());
-		return projectList;
-	}
-
-	@Override
-	public List<ApplyProjectVO> readAllApply(MemberVO memberVO) {
+	public List<ApplyProjectVO> readAllApply(String email) {
+		MemberVO memberVO = this.memberDao.selectOneMember(email);
 		return this.projectDao.selectAllApply(memberVO);
 	}
 
@@ -519,5 +515,12 @@ public class ProjectServiceImple implements ProjectService {
 	public boolean updateProject(ProjectVO projectVO) {
 		int updateCount = this.projectDao.updateProject(projectVO);
 		return updateCount > 0;
+	}
+
+
+
+	@Override
+	public ApplyProjectVO selectOneApplyInfo(String pjApplyId) {
+		return this.projectDao.selectOneApplyInfo(pjApplyId);
 	}
 }

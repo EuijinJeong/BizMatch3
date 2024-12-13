@@ -131,20 +131,18 @@
 		NULL,
 		#{pjTtl},
 		SYSDATE,
-		TO_DATE(#{strtDt},
-		'YYYY-MM-DD'),
+		TO_DATE(#{strtDt},'YYYY-MM-DD'),
 		TO_DATE(#{endDt}, 'YYYY-MM-DD'),
 		#{cntrctAccnt},
 		#{pjDesc},
-		NULL,
+		0,
 		NULL,
 		SYSDATE,
 		0,
 		0,
 		0,
 		0,
-		TO_DATE(#{pjRcrutStrtDt},
-		'YYYY-MM-DD'),
+		TO_DATE(#{pjRcrutStrtDt},'YYYY-MM-DD'),
 		TO_DATE(#{pjRcrutEndDt}, 'YYYY-MM-DD'))
 	</insert>
 
@@ -291,7 +289,7 @@
 	</resultMap>
 	<select id="selectProjectInfo"
 			parameterType="string"
-			resultMap="projectVOMap">
+			resultMap="projectListVOMap">
 		  SELECT P.PJ_ID
 			, P.ORDR_ID
 			, P.OBTN_ID
@@ -319,6 +317,12 @@
 			, II.UPPR_INDSTR_ID
 			, PRM.PRM_STK_ID
 			, PRM.PRM_STK
+			, PA.PJ_APPLY_ID 
+			, PA.EMIL_ADDR APPLY_EMIL_ADDR
+			, PJ_APPLY_RGSTR_DT
+			, PJ_APPLY_TTL
+			, PJ_APPLY_DESC
+			, PJ_APPLY_MDFY_DT
 			, PY.PYMNT_ID 
 			, PY.GRNT_AMT 
 			, PY.CNTRCT_AMT 
@@ -328,19 +332,22 @@
 			, PY.PYMNT_TYP 
 			, PY.IMP_UID 
 			, PY.DPST_RFND_AMNT 
-			, PY.DPST_RFND_DT 
-			  FROM PJ_INFO P
-			  JOIN PJ_INDSTR PI
-			    ON P.PJ_ID = PI.PJ_ID 
-			  JOIN INDSTR_INFO II
-			    ON II.INDSTR_ID = PI.SMJR_ID
-			  JOIN PJ_PRM_STK PPS
-			    ON PPS.PJ_ID = P.PJ_ID 
-			  JOIN PRM_STK PRM
-			    ON PRM.PRM_STK_ID = PPS.PRM_STK_ID
-			  JOIN PYMNT_INFO PY
-			    ON PY.PJ_ID = P.PJ_ID 
-		 WHERE P.PJ_ID = #{_parameter}
+			, PY.DPST_RFND_DT
+	     FROM PJ_INFO P
+			LEFT JOIN PJ_INDSTR PI
+			     ON P.PJ_ID = PI.PJ_ID 
+			LEFT JOIN INDSTR_INFO II
+			     ON II.INDSTR_ID = PI.SMJR_ID
+			LEFT JOIN PJ_PRM_STK PPS
+			     ON PPS.PJ_ID = P.PJ_ID 
+			LEFT JOIN PRM_STK PRM
+			     ON PRM.PRM_STK_ID = PPS.PRM_STK_ID
+			LEFT JOIN PJ_APPLY PA
+			     ON PA.PJ_ID = P.PJ_ID 
+			LEFT JOIN PYMNT_INFO PY
+			  ON PY.PJ_ID = P.PJ_ID 
+		   WHERE P.PJ_ID = #{_parameter}
+		 <!--TODO LEFT JOIN -> JOIN  -->
 	</select>
 
 	<select id="selectForPagination"
@@ -740,7 +747,7 @@
 		    TO_CHAR(PI.END_DT, 'YYYY-MM-DD') AS END_DT,
 		    PI.CNTRCT_ACCNT,
 		    PI.PJ_DESC,
-		    TO_CHAR(PI.IS_DLT, 'YYYY-MM-DD') AS IS_DLT,
+		    PI.IS_DLT,
 		    TO_CHAR(PI.DLT_DT, 'YYYY-MM-DD') AS DLT_DT,
 		    PI.LST_MOD_DT,
 		    PI.IS_RCRUT_ADD,
@@ -935,6 +942,9 @@
 				<id column="INDSTR_ID" property="indstrId"/>
 			</association>
 		</association>
+		<association property="paymentVO" javaType="com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentVO" autoMapping="true">
+         <id column="PYMNT_ID" property="pymntId"/>
+      	</association>
 		<collection property="projectSkillList"
 					 ofType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectSkillVO"
 					 autoMapping="true">
@@ -945,8 +955,14 @@
 				<id column="PRM_STK_ID" property="prmStkId"/>
 			</association>
 		</collection>
+		<collection property="applyProjectVOList" ofType="com.ktdsuniversity.edu.bizmatch.project.vo.ApplyProjectVO" autoMapping="true">
+			<id column="PJ_APPLY_ID" property="pjApplyId"></id>
+			<result column="APPLY_EMIL_ADDR" property="emilAddr"/>
+		</collection>
 	</resultMap>
-	<select id="selectProjectList" parameterType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO" resultMap="projectListVOMap">
+	<select id="selectProjectList" 
+			parameterType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO" 
+			resultMap="projectListVOMap">
 		SELECT P.PJ_ID
 			, P.ORDR_ID
 			, P.OBTN_ID
@@ -956,7 +972,7 @@
 			, TO_CHAR(P.END_DT, 'YYYY-MM-DD') END_DT
 			, P.CNTRCT_ACCNT
 			, P.PJ_DESC
-			, TO_CHAR(P.IS_DLT, 'YYYY-MM-DD') IS_DLT
+			, P.IS_DLT
 			, TO_CHAR(P.DLT_DT, 'YYYY-MM-DD') DLT_DT
 			, P.LST_MOD_DT
 			, P.IS_RCRUT_ADD
@@ -974,19 +990,24 @@
 			, II.UPPR_INDSTR_ID
 			, PRM.PRM_STK_ID
 			, PRM.PRM_STK
-			  FROM PJ_INFO P
-			  JOIN PJ_INDSTR PI
-			    ON P.PJ_ID = PI.PJ_ID 
-			  JOIN INDSTR_INFO II
-			    ON II.INDSTR_ID = PI.SMJR_ID
-			  JOIN PJ_PRM_STK PPS
-			    ON PPS.PJ_ID = P.PJ_ID 
-			  JOIN PRM_STK PRM
-			    ON PRM.PRM_STK_ID = PPS.PRM_STK_ID
+			, PA.PJ_APPLY_ID 
+			, PA.EMIL_ADDR APPLY_EMIL_ADDR
+	     FROM PJ_INFO P
+			LEFT JOIN PJ_INDSTR PI
+			     ON P.PJ_ID = PI.PJ_ID 
+			LEFT JOIN INDSTR_INFO II
+			     ON II.INDSTR_ID = PI.SMJR_ID
+			LEFT JOIN PJ_PRM_STK PPS
+			     ON PPS.PJ_ID = P.PJ_ID 
+			LEFT JOIN PRM_STK PRM
+			     ON PRM.PRM_STK_ID = PPS.PRM_STK_ID
+			LEFT JOIN PJ_APPLY PA
+			     ON PA.PJ_ID = P.PJ_ID 
 			 WHERE P.OBTN_ID IS NULL
-			 <if test="mbrCtgry == 0">
+			  AND P.PJ_STT IN (0,3)
+			 <!-- <if test="mbrCtgry == 0">
 			 	AND P.ORDR_ID NOT IN (SELECT EMIL_ADDR FROM MBR_INFO WHERE CMP_ID = #{cmpId})
-			 </if>
+			 </if> -->
    </select>
    
 	<select id="selectAllMyOrderProjectList" 
@@ -1001,7 +1022,7 @@
 			, TO_CHAR(P.END_DT, 'YYYY-MM-DD') END_DT
 			, P.CNTRCT_ACCNT
 			, P.PJ_DESC
-			, TO_CHAR(P.IS_DLT, 'YYYY-MM-DD') IS_DLT
+			, P.IS_DLT
 			, TO_CHAR(P.DLT_DT, 'YYYY-MM-DD') DLT_DT
 			, P.LST_MOD_DT
 			, P.IS_RCRUT_ADD
@@ -1024,9 +1045,9 @@
 			    ON P.PJ_ID = PI.PJ_ID 
 			  JOIN INDSTR_INFO II
 			    ON II.INDSTR_ID = PI.SMJR_ID
-			  JOIN PJ_PRM_STK PPS
+			LEFT JOIN PJ_PRM_STK PPS
 			    ON PPS.PJ_ID = P.PJ_ID 
-			  JOIN PRM_STK PRM
+			LEFT JOIN PRM_STK PRM
 			    ON PRM.PRM_STK_ID = PPS.PRM_STK_ID
 			 WHERE P.ORDR_ID IN (SELECT EMIL_ADDR 
 								   FROM MBR_INFO MI
@@ -1041,5 +1062,23 @@
     WHERE PJ_ID = #{pjId}
    
    </update>
+  
+   <select id="selectOneApplyInfo" parameterType="string" resultMap="applyProjectVOMap">
+   	SELECT PY.PJ_APPLY_ID
+		 , PY.EMIL_ADDR
+		 , PY.PJ_ID
+		 , TO_CHAR(PY.PJ_APPLY_RGSTR_DT, 'YYYY-MM-DD') PJ_APPLY_RGSTR_DT
+		 , PY.PJ_APPLY_TTL
+		 , PY.PJ_APPLY_DESC
+		 , TO_CHAR(PY.PJ_APPLY_MDFY_DT,'YYYY-MM-DD') PJ_APPLY_MDFY_DT
+		 , PT.PJ_APPLY_ATT_ID
+		 , PT.PJ_APPLY_ID
+		 , PT.PJ_APPLY_ATT_URL
+		 , PT.PJ_APPLY_ATT_URL_NONREAD
+	  FROM PJ_APPLY PY
+	  JOIN PJ_APPLY_ATT PT
+	    ON PT.PJ_APPLY_ID = PY.PJ_APPLY_ID
+	 WHERE PY.PJ_APPLY_ID = #{_parameter}
+   </select>
    
 </mapper>

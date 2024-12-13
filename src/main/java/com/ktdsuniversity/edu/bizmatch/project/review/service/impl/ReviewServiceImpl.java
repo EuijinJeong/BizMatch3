@@ -11,7 +11,6 @@ import com.ktdsuniversity.edu.bizmatch.project.review.service.ReviewService;
 import com.ktdsuniversity.edu.bizmatch.project.review.vo.DeleteReviewVO;
 import com.ktdsuniversity.edu.bizmatch.project.review.vo.ReviewVO;
 import com.ktdsuniversity.edu.bizmatch.project.review.vo.WriteReviewVO;
-import com.ktdsuniversity.edu.bizmatch.report.vo.ReviewReportVO;
 
 @Service
 public class ReviewServiceImpl implements ReviewService{
@@ -48,5 +47,15 @@ public class ReviewServiceImpl implements ReviewService{
 	public boolean deleteOneReview(DeleteReviewVO deleteReviewVO) {
 		int deleteCount = this.reviewDao.deleteOneReview(deleteReviewVO);
 		return deleteCount > 0;
+	}
+
+	@Override
+	public List<ReviewVO> readReviewListSortedHighRate(String cmpId) {
+		return this.reviewDao.selectReviewListSortedByHighRate(cmpId);
+	}
+
+	@Override
+	public List<ReviewVO> readReviewListSortLowRate(String cmpId) {
+		return this.reviewDao.selectReviewListSortedByLowRate(cmpId);
 	}
 }

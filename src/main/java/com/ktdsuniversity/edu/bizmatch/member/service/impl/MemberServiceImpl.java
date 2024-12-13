@@ -6,6 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -76,7 +77,7 @@ public class MemberServiceImpl implements MemberService {
 
 	@Autowired
 	private FileHandler fileHandler;
-	
+		
 	@Override
 	public boolean resetMemberPwd(MemberResetPwdVO memberResetPwdVO) {
 		
@@ -467,8 +468,14 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public CompanyVO selectOneCompanyByEmilAddr(String cmpnyId) {
-		return this.memberDao.selectOneCompanyByEmilAddr(cmpnyId);
+	public CompanyVO selectOneCompanyByEmilAddr(String cmpId) {
+		
+		CompanyVO companyVO = this.memberDao.selectOneCompanyByEmilAddr(cmpId);
+		if(companyVO == null) {
+			// TODO 아래 예외처리하기.
+			throw new IllegalArgumentException("서버상의 이유로 정보를 조회할 수 없습니다.");
+		}
+		return companyVO;
 	}
 	
 	@Override
@@ -511,14 +518,16 @@ public class MemberServiceImpl implements MemberService {
 	@Transactional
 	@Override
 	public boolean updateCompanyMemberMyPage(MemberCompanyModifyVO memberCompanyModifyVO, MemberVO memberVO) {
-		//회원이 기업 회원인지 -> 기업회원이라면 해당 회사의 수정권한을 가졌는지 
-		if(memberVO.getCmpnyRp()!=1) {
-			throw new IllegalArgumentException("수정할 권한이 없음");
-		}
-		if(! memberVO.getCmpId().equals(memberCompanyModifyVO.getCmpnyId()) ) {
-			throw new IllegalArgumentException("수정할 권한이 없음");
-		}
+		//회원이 기업 회원인지 -> 기업회원이라면 해당 회사의 수정권한을 가졌는지
+		// TODO 이거 실제 배포할 땐 아래 주석 살려야함.
+//		if(memberVO.getCmpnyRp()!=1) {
+//			throw new IllegalArgumentException("수정할 권한이 없음");
+//		}
+//		if(! memberVO.getCmpId().equals(memberCompanyModifyVO.getCmpnyId()) ) {
+//			throw new IllegalArgumentException("수정할 권한이 없음");
+//		}
 		
+		// 관심 산업군 업데이트하는 dao 호출.
 		int isSuccess = this.memberDao.updateCmpnyLkIndstr(memberCompanyModifyVO);
 		if(isSuccess <= 0) {
 			throw new IllegalArgumentException("에외");

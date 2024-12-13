@@ -243,4 +243,9 @@ public class ProjectDaoImpl extends SqlSessionDaoSupport implements ProjectDao{
 				
 		
 	}
+
+	@Override
+	public ApplyProjectVO selectOneApplyInfo(String pjApplyId) {
+		return this.getSqlSession().selectOne(NAMESPACE+".selectOneApplyInfo", pjApplyId);
+	}
 }

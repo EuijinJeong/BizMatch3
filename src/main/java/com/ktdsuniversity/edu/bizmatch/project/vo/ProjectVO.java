@@ -32,7 +32,15 @@ public class ProjectVO {
 	private String pjApplyId;
 	private PaymentVO paymentVO;
 	private ProjectIndustryVO projectIndustryVO;
+	private List<ApplyProjectVO> applyProjectVOList;
 	
+	
+	public List<ApplyProjectVO> getApplyProjectVOList() {
+		return applyProjectVOList;
+	}
+	public void setApplyProjectVOList(List<ApplyProjectVO> applyProjectVOList) {
+		this.applyProjectVOList = applyProjectVOList;
+	}
 	public String getPjId() {
 		return pjId;
 	}

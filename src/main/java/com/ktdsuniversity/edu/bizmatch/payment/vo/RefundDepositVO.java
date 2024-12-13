@@ -15,7 +15,7 @@ public class RefundDepositVO {
 		return dpstRfndAmnt;
 	}
 	public void setDpstRfndAmnt(int dpstRfndAmnt) {
-		dpstRfndAmnt = dpstRfndAmnt;
+		this.dpstRfndAmnt = dpstRfndAmnt;
 	}
 	
 	

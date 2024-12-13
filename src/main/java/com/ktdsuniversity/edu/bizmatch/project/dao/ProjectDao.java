@@ -258,5 +258,12 @@ public interface ProjectDao {
 	public ApplyProjectVO selectOneApplyViewInfo(SearchApplyVO searchApplyVO);
 	
 	public int updateProject(ProjectVO projectVO);
+	
+	/**
+	 * 프로젝트 지원서 하나 가져오는 메서드
+	 * @param pjApplyId
+	 * @return
+	 */
+	public ApplyProjectVO selectOneApplyInfo(String pjApplyId);
 }
 

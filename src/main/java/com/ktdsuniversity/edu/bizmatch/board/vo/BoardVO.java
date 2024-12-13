@@ -1,17 +1,20 @@
 package com.ktdsuniversity.edu.bizmatch.board.vo;
 
+import java.util.List;
+
 public class BoardVO {
-	private String pstId    ;
-	private String athrId   ;
-	private int pstCtgry ;
-	private String pstNm    ;
-	private String pstCntnt ;
+	private String pstId;
+	private String athrId;
+	private int pstCtgry;
+	private String pstNm;
+	private String pstCntnt;
 	private String lstModDt;
-	private int isDlt    ;
-	private String dltDt    ;
-	private int pstHt    ;
+	private int isDlt;
+	private String dltDt;
+	private int pstHt;
 	private int isPstOpn;
 	private String mbrNm;
+	private List<BoardCommentVO> commentList;
 	
 	public String getMbrNm() {
 		return mbrNm;
@@ -19,9 +22,6 @@ public class BoardVO {
 	public void setMbrNm(String mbrNm) {
 		this.mbrNm = mbrNm;
 	}
-	
-	// private String athrNm;
-	
 	public String getPstId() {
 		return pstId;
 	}
@@ -81,5 +81,11 @@ public class BoardVO {
 	}
 	public void setIsPstOpn(int isPstOpn) {
 		this.isPstOpn = isPstOpn;
+	}
+	public List<BoardCommentVO> getCommentList() {
+		return commentList;
+	}
+	public void setCommentList(List<BoardCommentVO> commentList) {
+		this.commentList = commentList;
 	}
 }

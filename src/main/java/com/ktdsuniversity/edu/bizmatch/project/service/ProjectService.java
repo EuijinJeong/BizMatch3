@@ -29,7 +29,7 @@ public interface ProjectService {
 	 * @return
 	 * @throws ParseException 
 	 */
-	public boolean createNewProject(WriteProjectVO writeProjectVO, List<String> skillList) throws ParseException;
+	public boolean createNewProject(WriteProjectVO writeProjectVO) throws ParseException;
 	
 	/**
 	 * 하나의 프로젝트 정보를 수정하는 메서드.
@@ -81,7 +81,6 @@ public interface ProjectService {
 	public ProjectVO readOneProjectInfo(String pjId);
 	
 	/**
-<<<<<<< HEAD
 	 * 이하 댓글 관련 Service 메서드
 	 * @param id
 	 * @return
@@ -122,10 +121,10 @@ public interface ProjectService {
 	/**
 	 * 지원자 모두를 불러오는 메소드
 	 * @param pjId
-	 * @param memberVO
+	 * @param email
 	 * @return
 	 */
-	public List<ApplyProjectVO> readAllApplyMember(String pjId, MemberVO memberVO);
+	public List<ApplyProjectVO> readAllApplyMember(String pjId, String email);
 	
 	/**
 	 * 
@@ -133,7 +132,7 @@ public interface ProjectService {
 	 * @param memberVO
 	 * @return
 	 */
-	public boolean updateApplyMember(SelectApplyMemberVO selectApplyMemberVO, MemberVO memberVO);
+	public boolean updateApplyMember(SelectApplyMemberVO selectApplyMemberVO, String email);
 	
 	/**
 	 * 특정 프로젝트의 필요한 모든 주요 기술들을 조회하는 메서드.
@@ -141,13 +140,6 @@ public interface ProjectService {
 	 * @return
 	 */
 	public List<ProjectSkillVO> readAllProjectSkill(String pjId);
-
-	/**
-	 * 하나의 기업이 발주했던 모든 프로젝트 검색
-	 * @param cmpId : 회사 아이디.
-	 * @return
-	 */
-	public List<ProjectVO> readAllProjectCompanyOrder(MemberVO memberVO);
 
 	/**
 	 * 회원이 수행했던 모든 프로젝트 검색
@@ -159,10 +151,10 @@ public interface ProjectService {
 	
 	/**
 	 * 지원한 지원서 전부 가져오기
-	 * @param memberVO
+	 * @param email
 	 * @return
 	 */
-	public List<ApplyProjectVO> readAllApply(MemberVO memberVO);
+	public List<ApplyProjectVO> readAllApply(String email);
 	
 	/**
 	 * 새로운 프로젝트 스크랩 정보를 추가하는 메서드.
@@ -193,10 +185,10 @@ public interface ProjectService {
 	
 	/**
 	 * 기업회원이 발주한 모든 프로젝트의 목록을 불러오는 메소드이다. -의진-
-	 * @param cmpId
+	 * @param email
 	 * @return
 	 */
-	public List<ProjectVO> readAllMyOrderProjectList(String cmpId);
+	public List<ProjectVO> readAllMyOrderProjectList(String email);
 	
 	/**
 	 * 작성된 지원서를 조회하는 메서드 -동원-
@@ -213,4 +205,10 @@ public interface ProjectService {
 	public ApplyProjectVO selectOneApplyViewInfo(SearchApplyVO searchApplyVO);
 	
 	public boolean updateProject(ProjectVO projectVO);
+	/**
+	 * 지원서 아이디 이용해서 지원서 정보 다 가져오는 메소드 
+	 * @param pjApplyId
+	 * @return
+	 */
+	public ApplyProjectVO selectOneApplyInfo(String pjApplyId);
 }

@@ -14,7 +14,7 @@ public class CompanyVO {
 	private String cmpnyId;
 	private String cmpnyNm;
 	private String cmpnyBizCtgry;
-	private String mjrId;
+	private String mjrId; 
 	private String cmpnyAddr;
 	private String cmpnyPhnNum;
 	private String cmpnySiteUrl;
@@ -26,11 +26,9 @@ public class CompanyVO {
 	private String cmpnyAccuuntNum;
 	private String compnyLkIndstrMjrNm;
 	private String compnyLkIndstrSmjrNm;
-	
+	private String compnyLkIndstrMjrId;
+	private String compnyLkIndstrSmjrId;
 	private List<MbrPrmStkVO> mbrPrmStkVOList;
-	
-	
-	
 	
 	public MemberVO getMemberVO() {
 		return memberVO;
@@ -129,13 +127,16 @@ public class CompanyVO {
 	public void setCmpnyAccuuntNum(String cmpnyAccuuntNum) {
 		this.cmpnyAccuuntNum = cmpnyAccuuntNum;
 	}
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("회사이름:"+cmpnyNm+"\n");
-		sb.append("회사계좌:"+cmpnyAccuuntNum+"\n");
-		sb.append("회사아이디:"+cmpnyId+"\n");
-		sb.append("회사소개글:"+cmpnyIntr+"\n");
-		return sb.toString();
+	public String getCompnyLkIndstrMjrId() {
+		return compnyLkIndstrMjrId;
+	}
+	public void setCompnyLkIndstrMjrId(String compnyLkIndstrMjrId) {
+		this.compnyLkIndstrMjrId = compnyLkIndstrMjrId;
+	}
+	public String getCompnyLkIndstrSmjrId() {
+		return compnyLkIndstrSmjrId;
+	}
+	public void setCompnyLkIndstrSmjrId(String compnyLkIndstrSmjrId) {
+		this.compnyLkIndstrSmjrId = compnyLkIndstrSmjrId;
 	}
 }

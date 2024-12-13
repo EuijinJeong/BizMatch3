@@ -48,7 +48,7 @@ public class SecurityAuthenticationProvider implements AuthenticationProvider {
 	 * SecurityContext => HttpSession을 대체할 인증 정보들이 모여있는 곳.
 	 * 
 	 * @param authentication 사용자가 인증을 요청한 정보. (이메일, 비번)
-	 * @return Authentication supprot에 정의된 인증 토큰 -> SecurityContext에 저장 -> 인증 완료.
+	 * @return Authentication support 에 정의된 인증 토큰 -> SecurityContext에 저장 -> 인증 완료.
 	 */
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {

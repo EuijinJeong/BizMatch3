@@ -30,7 +30,20 @@
 	<select id="selectOneMemberForResetPwd"
 			parameterType = "string"
 			resultType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO">
-		SELECT * 
+		SELECT MBR_NM 
+		     , EMIL_ADDR 
+		     , PWD 
+		     , MBR_PHN_NUM 
+		     , TO_DATE(BRTH_DT, 'YYYY-MM-DD') BRTH_DT 
+		     , ADDR 
+		     , MBR_STT 
+		     , TO_DATE(SGNUP_DT,'YYYY-MM-DD') SGNUP_DT 
+		     , MBR_CTGRY 
+		     , PNLTY 
+		     , IS_QT 
+		     , ACCNT_NUM 
+		     , CMP_ID 
+		     , SALT 
 		  FROM MBR_INFO 
 		 WHERE EMIL_ADDR = #{_parameter}
 	</select>
@@ -149,7 +162,8 @@
 		, MBR_CTGRY
 		, CMPNY_RP
 		, SALT
-		, CMP_Id )
+		, CMP_Id
+		, SGNUP_DT )
 		VALUES
 		( #{mbrNm}
 		, #{emilAddr}
@@ -159,6 +173,7 @@
 		, #{cmpnyRp}
 		, #{salt}
 		, #{cmpId}
+		, SYSDATE
 		)
 	</insert>
 	
@@ -175,7 +190,8 @@
 		,MBR_CTGRY
 		,SALT
 		,MJR_ID
-		,SMJR_ID)
+		,SMJR_ID
+		,SGNUP_DT )
 		VALUES
 		( #{mbrNm}
 		, #{emilAddr}
@@ -187,6 +203,7 @@
 		, #{salt}
 		, #{mjrId}
 		, #{smjrId}
+		, SYSDATE
 		)
 	</insert>
 
@@ -293,8 +310,6 @@
  		 WHERE MBR_PRTFL_ID = #{_parameter}
 	</delete>
 	
-	
-
 	<!-- 멤버 탈퇴 업데이트 쿼리문. -->
 	<select id="updateMemberDeactivate" parameterType="string">
 	UPDATE MBR_INFO 
@@ -332,58 +347,69 @@
  	</resultMap>
  	
  	<resultMap type="com.ktdsuniversity.edu.bizmatch.member.vo.CompanyVO" 
-		   id="companyVOMap" 
-		   autoMapping="true">
-	<id column="CMPNY_ID" property="cmpnyId"/>
-	<result column="CMPNY_ACCUNT_NUM" property="cmpnyAccuuntNum" />
-	<result column="MJR_NM" property="compnyLkIndstrMjrNm"/>
-	<result column="SMJR_NM" property="compnyLkIndstrSmjrNm"/>
-	<association property="memberVO" javaType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO">
+			   id="companyVOMap" 
+			   autoMapping="true">
+		<id column="CMPNY_ID" property="cmpnyId"/>
+		<result column="CMPNY_ACCUNT_NUM" property="cmpnyAccuuntNum" />
+		<result column="MJR_NM" property="compnyLkIndstrMjrNm"/>
+		<result column="SMJR_NM" property="compnyLkIndstrSmjrNm"/>
+		<result column="LK_MJR_ID" property="compnyLkIndstrMjrId" />
+		<result column="LK_SMJR_ID" property="compnyLkIndstrSmjrId" />
+	<association property="memberVO" 
+				 javaType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO">
 		<id column="EMIL_ADDR" property="emilAddr"/>
 	</association>
-	<collection property="mbrPrmStkVOList" ofType="com.ktdsuniversity.edu.bizmatch.common.skills.vo.MbrPrmStkVO" autoMapping="true">
+	<collection property="mbrPrmStkVOList" 
+				ofType="com.ktdsuniversity.edu.bizmatch.common.skills.vo.MbrPrmStkVO" 
+				autoMapping="true">
 		<id column="MBR_PRM_STK_ID" property="mbrPrmStkId"/>
-		<association property="prmStkVO" javaType="com.ktdsuniversity.edu.bizmatch.member.vo.PrmStkVO" autoMapping="true">
+		<association property="prmStkVO" 
+					 javaType="com.ktdsuniversity.edu.bizmatch.member.vo.PrmStkVO" 
+					 autoMapping="true">
 			<id column="PRM_STK_ID" property="prmStkId"/>
 		</association>
 	</collection>
 	</resultMap>
  	<!-- 마이페이지 기업정보 조회 -->
- 	<select id="selectOneCompanyByEmilAddr" parameterType="string" resultMap="companyVOMap">
+ 	<select id="selectOneCompanyByEmilAddr" 
+ 			parameterType="string" 
+ 			resultMap="companyVOMap">
    		SELECT CI.CMPNY_ID 
- 	  , CI.CMPNY_NM 
- 	  , CI.CMPNY_BIZ_CTGRY 
- 	  , CI.MJR_ID 
- 	  , CI.CMPNY_ADDR 
- 	  , CI.CMPNY_PHN_NUM 
- 	  , CI.CMPNY_SITE_URL 
- 	  , CI.CMPNY_EMPLY_CNT 
- 	  , CI.CMPNY_BRN 
- 	  , CI.SMJR_ID 
- 	  , CI.CMPNY_INTR 
- 	  , CI.CMPNY_ACCUNT_NUM 
- 	  , MI.EMIL_ADDR 
- 	  , MPS.MBR_PRM_STK_ID
- 	  , PS.PRM_STK_ID 
- 	  , PS.PRM_STK 
- 	  , MLI.LK_INDSTR_ID 
- 	  , II.INDSTR_NM AS MJR_NM
- 	  , II2.INDSTR_NM AS SMJR_NM
-   FROM CMPNY_INFO CI
-  LEFT JOIN MBR_INFO MI
-     ON MI.CMP_ID = CI.CMPNY_ID 
-  LEFT JOIN MBR_PRM_STK MPS
-     ON MPS.EMIL_ADDR = MI.EMIL_ADDR 
-  LEFT JOIN PRM_STK PS
-     ON PS.PRM_STK_ID = MPS.PRM_STK_ID
-  LEFT JOIN MBR_LK_INDSTR MLI
-     ON MLI.EMIL_ADDR = MI.EMIL_ADDR
-  LEFT JOIN INDSTR_INFO II 
-     ON II.INDSTR_ID = MLI.MJR_ID 
-  LEFT JOIN INDSTR_INFO II2
-     ON II2.INDSTR_ID = MLI.SMJR_ID 
-  WHERE CI.CMPNY_ID = #{_parameter}
-    AND MI.CMPNY_RP = 1
+			 	  , CI.CMPNY_NM 
+			 	  , CI.CMPNY_BIZ_CTGRY 
+			 	  , CI.MJR_ID 
+			 	  , CI.CMPNY_ADDR 
+			 	  , CI.CMPNY_PHN_NUM 
+			 	  , CI.CMPNY_SITE_URL 
+			 	  , CI.CMPNY_EMPLY_CNT 
+			 	  , CI.CMPNY_BRN 
+			 	  , CI.SMJR_ID 
+			 	  , CI.CMPNY_INTR 
+			 	  , CI.CMPNY_ACCUNT_NUM 
+			 	  , MI.EMIL_ADDR 
+			 	  , MPS.MBR_PRM_STK_ID
+			 	  , PS.PRM_STK_ID 
+			 	  , PS.PRM_STK 
+			 	  , MLI.LK_INDSTR_ID 
+			 	  , II.INDSTR_NM AS MJR_NM
+			 	  , II2.INDSTR_NM AS SMJR_NM
+			 	  , MLI.MJR_ID AS LK_MJR_ID
+			 	  , MLI.SMJR_ID AS LK_SMJR_ID
+		   FROM CMPNY_INFO CI
+		   LEFT JOIN MBR_INFO MI
+		     ON MI.CMP_ID = CI.CMPNY_ID 
+		   LEFT JOIN MBR_PRM_STK MPS
+		     ON MPS.EMIL_ADDR = MI.EMIL_ADDR 
+		   LEFT JOIN PRM_STK PS
+		     ON PS.PRM_STK_ID = MPS.PRM_STK_ID
+		   LEFT JOIN MBR_LK_INDSTR MLI
+		     ON MLI.EMIL_ADDR = MI.EMIL_ADDR
+		   LEFT JOIN INDSTR_INFO II 
+		     ON II.INDSTR_ID = MLI.MJR_ID 
+		   LEFT JOIN INDSTR_INFO II2
+		     ON II2.INDSTR_ID = MLI.SMJR_ID 
+		  WHERE CI.CMPNY_ID = #{_parameter}
+		    AND MI.CMPNY_RP = 1
  	</select>
  	
 
@@ -409,11 +435,14 @@
     		ON mi.EMIL_ADDR = pi.OBTN_ID
  		 WHERE mi.EMIL_ADDR IN (SELECT EMIL_ADDR FROM MBR_INFO WHERE CMP_ID = #{_parameter})
    		   AND pr.IS_DLT = 0
+   		   AND pr.RVW_RPRT_CNT = 0
    		 ORDER BY pr.RVW_DT DESC
  	</select>
  	
  	<!-- 최신순 리뷰 리스트 조회 -->
- 	<select id="selectReviewList" parameterType="string" resultMap="reviewVOMap">
+ 	<select id="selectReviewList" 
+ 			parameterType="string" 
+ 			resultMap="reviewVOMap">
  		SELECT pi.PJ_ID 
 	 		 , pr.RVW_ID
 	 		 , pr.RVW_CNTNT
@@ -460,7 +489,6 @@
 		  WHERE RNUM <![CDATA[>=]]> #{currPageNo} * #{exposureListSize} + 1
  	</select>
  	
- 	
  	<!-- 최신순 pagination list 조회 쿼리문-->
  	<select id="selectPagination" 
  			parameterType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberPaginationVO" 
@@ -490,7 +518,9 @@
  	</select>
  	
  	<!-- 기업 별점 높은순 리뷰 리스트 조회 -->
- 	<select id="selectCompanyReviewListByScrDesc" parameterType="string" resultMap="reviewVOMap">
+ 	<select id="selectCompanyReviewListByScrDesc" 
+ 			parameterType="string" 
+ 			resultMap="reviewVOMap">
  		SELECT pi.PJ_ID
 	 		 , pr.RVW_ID
 	 		 , pr.RVW_CNTNT
@@ -511,7 +541,9 @@
  	</select>
  	
  	<!-- 별점 높은순 리뷰 리스트 조회 -->
- 	<select id="selectReviewListByScrDesc" parameterType="string" resultMap="reviewVOMap">
+ 	<select id="selectReviewListByScrDesc" 
+ 			parameterType="string" 
+ 			resultMap="reviewVOMap">
  		SELECT pi.PJ_ID
 	 		 , pr.RVW_ID
 	 		 , pr.RVW_CNTNT
@@ -560,7 +592,6 @@
 		  WHERE RNUM <![CDATA[>=]]> #{currPageNo} * #{exposureListSize} + 1
  	</select>
  	
- 	
  	<!-- 별점 높은순 pagination list 조회 쿼리문-->
  	<select id="selectPaginationByScrDesc" 
  			parameterType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberPaginationVO" 
@@ -591,7 +622,9 @@
  	</select>
  	
  	<!-- 기업 별점 낮은순 리뷰 리스트 조회 -->
- 	<select id="selectCompanyReviewListByScrAsc" parameterType="string" resultMap="reviewVOMap">
+ 	<select id="selectCompanyReviewListByScrAsc" 
+ 			parameterType="string" 
+ 			resultMap="reviewVOMap">
  		SELECT pi.PJ_ID
 	 		 , pr.RVW_ID
 	 		 , pr.RVW_CNTNT
@@ -708,7 +741,8 @@
      		ON ID.INDSTR_ID = A.UPPR_INDSTR_ID
  	</select>
  	
- 	<update id="updateMemberCompanyMyPage" parameterType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberCompanyModifyVO">
+ 	<update id="updateMemberCompanyMyPage" 
+ 			parameterType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberCompanyModifyVO">
  	UPDATE CMPNY_INFO 
 	   SET CMPNY_NM = #{cmpnyNm}
 	     , CMPNY_SITE_URL = #{cmpnySiteUrl}
@@ -801,8 +835,8 @@
  	<update id="updateCmpnyLkIndstr" 
  			parameterType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberCompanyModifyVO">
  		UPDATE MBR_LK_INDSTR
-   		   SET MJR_ID = #{cmpnyBizCtgryId}
-   	 		 , SMJR_ID = #{cmpnyIndstrId}
+   		   SET MJR_ID = #{mjrId}
+   	 		 , SMJR_ID = #{smjrId}
   		 WHERE EMIL_ADDR = #{emilAddr}
  	</update>
  	
@@ -839,5 +873,14 @@
 		  FROM MBR_PRTFL
 		 WHERE EMIL_ADDR IN (SELECT EMIL_ADDR FROM MBR_INFO WHERE CMP_ID = #{_parameter})
 		 ORDER BY MBR_PRTFL_ID DESC
+	</select>
+	
+	<!-- 이메일을 통해 기업 아이디를 조회하는 쿼리문. -->
+	<select id="selectCmpIdByEmail"
+			parameterType="string"
+			resultType="string">
+		SELECT CMP_ID 
+		  FROM MBR_INFO  
+		 WHERE EMIL_ADDR = #{_parameter}
 	</select>
 </mapper>
