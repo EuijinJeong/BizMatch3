@@ -54,8 +54,8 @@ app:
       /api/member/signin,
       /ws/**,
       /api/board,
-      /api//board/view/**,
-      /api//board/comment/view/**
+      /api/board/view/**,
+      /api/board/comment/view/**
   interceptor:
     accesslog:
       addpathpatterns: /**

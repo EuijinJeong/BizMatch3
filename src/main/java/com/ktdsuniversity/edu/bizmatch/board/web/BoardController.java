@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ktdsuniversity.edu.bizmatch.board.service.BoardService;
-
 import com.ktdsuniversity.edu.bizmatch.board.vo.BoardCommentVO;
 import com.ktdsuniversity.edu.bizmatch.board.vo.BoardCommentWriteVO;
 import com.ktdsuniversity.edu.bizmatch.board.vo.BoardModifyCommentVO;
@@ -60,7 +59,13 @@ public class BoardController {
 		return new ApiResponse(boardVO);
 	}
 	
-	
+	@PostMapping("/board/view/increase/{id}")
+	public ApiResponse increaseBoardView(@PathVariable String id) {
+		
+		boolean result = boardService.doIncreaseViews(id);
+
+		return new ApiResponse(result);
+	}
 //	/**
 //	 * 게시글 작성페이지
 //	 * 
@@ -78,8 +83,8 @@ public class BoardController {
 	 * @return
 	 */
 	@PostMapping("/board/write")
-	public ApiResponse doCreateNewBoard(@RequestBody BoardWriteVO boardWirteVO , Authentication memberVO) {
-		
+	public ApiResponse doCreateNewBoard(@RequestBody BoardWriteVO boardWirteVO 
+									, Authentication memberVO) {
 		
 		if(ParameterCheck.parameterCodeValid(boardWirteVO.getPstNm(), 0)) {
 			throw new BoardException("제목은 필수 입력입니다.", boardWirteVO);
