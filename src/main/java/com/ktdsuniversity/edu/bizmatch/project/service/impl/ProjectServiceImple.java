@@ -523,4 +523,11 @@ public class ProjectServiceImple implements ProjectService {
 	public ApplyProjectVO selectOneApplyInfo(String pjApplyId) {
 		return this.projectDao.selectOneApplyInfo(pjApplyId);
 	}
+
+
+
+	@Override
+	public boolean deleteApplyAtt(String pjApplyAttId) {
+		return this.projectDao.deleteOneApplyAtt(pjApplyAttId)>0;
+	}
 }
