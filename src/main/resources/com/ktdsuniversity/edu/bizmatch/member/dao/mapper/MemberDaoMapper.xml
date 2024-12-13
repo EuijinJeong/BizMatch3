@@ -752,7 +752,8 @@
  	 WHERE CMPNY_ID = #{cmpnyId}
  	</update>
  	
- 	<update id="updateMyInfoMember" parameterType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberModifyVO">
+ 	<update id="updateMyInfoMember" 
+ 			parameterType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberModifyVO">
  	UPDATE MBR_INFO 
 	   SET MBR_NM =#{mbrNm}
 	   	 , MBR_PHN_NUM = #{mbrPhnNum}
@@ -761,18 +762,18 @@
  	</update>
  	
  	
- 	<update id="updateFrreelancerMemberMypage" parameterType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberFreelancerModifyVO">
- 	UPDATE MBR_INFO
- 	  SET MBR_INTR = #{mbrIntr}
- 	    , MJR_ID = #{mjrId}
- 	    , SMJR_ID = #{smjrId}
- 	    , ACCNT_NUM = #{accntNum}
- 	WHERE EMIL_ADDR = #{emilAddr}
- 	
+	<update id="updateFreelancerMemberMypage" 
+			parameterType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberFreelancerModifyVO">
+		UPDATE MBR_INFO
+		  SET MBR_INTR = #{mbrIntr}
+		    , ACCNT_NUM = #{accntNum}
+		WHERE EMIL_ADDR = #{emilAddr}
  	</update>
  	
  	<!-- 특정 회원의 소속 산업군명 조회 쿼리문 -->
- 	<select id="selectIndstrNmByEmilAddr" parameterType="string" resultType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberMyPageIndsryVO">
+ 	<select id="selectIndstrNmByEmilAddr" 
+ 			parameterType="string" 
+ 			resultType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberMyPageIndsryVO">
  		SELECT ii.INDSTR_NM MJR_NM
 	 		 , II2.INDSTR_NM SMJR_NM
   		  FROM MBR_INFO mi
@@ -784,7 +785,9 @@
  	</select>
  	
  	<!-- 특정 회원 정보 조회 쿼리문 -->
- 	<select id="selectOneMemberVO" parameterType="string" resultType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO">
+ 	<select id="selectOneMemberVO" 
+ 			parameterType="string" 
+ 			resultType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO">
  		SELECT MBR_NM
 	 		 , EMIL_ADDR
 	 		 , PWD

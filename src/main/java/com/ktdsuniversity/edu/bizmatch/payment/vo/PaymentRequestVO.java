@@ -1,7 +1,5 @@
 package com.ktdsuniversity.edu.bizmatch.payment.vo;
 
-import com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO;
-
 public class PaymentRequestVO {
 	private String pymntId; // 결제 아이디.
 	private String pjId; // 프로젝트 아이디.
@@ -11,10 +9,9 @@ public class PaymentRequestVO {
 	private String emilAddr; // 결제자 이메일 정보.
 	private int paymentType; // 0 보증금 1 계약금.
 	private String impUid; //아임포트 결제 성공 시 고유한 식별번호
-	private String mbrNm;
+	private String mbrNm; // 결제자 이름.
 	private int grntAmt; // 보증금 금액.
 	private String grntPdDt; // 보증금 납부일.
-	private MemberVO memberVO; // 세션을 위한 변수.
 
 	// getter and setter
 	public String getGrntPdDt() {
@@ -87,11 +84,5 @@ public class PaymentRequestVO {
 	}
 	public String getMbrNm() {
 		return mbrNm;
-	}
-	public MemberVO getMemberVO() {
-		return memberVO;
-	}
-	public void setMemberVO(MemberVO memberVO) {
-		this.memberVO = memberVO;
 	}
 }
