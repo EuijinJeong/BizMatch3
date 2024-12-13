@@ -560,7 +560,7 @@ public class MemberController {
 		return new ApiResponse(memberPortfolioVO);
 	}
 	
-	@GetMapping("/portfolio/img/{imgUrl}")
+	@GetMapping("/portfolio/img/{imgUrl}/")
 	public ResponseEntity<byte[]> showImage(@PathVariable String imgUrl){
 		String savePath = baseDirPrefix+imgUrl;
 		File file = new File(savePath);

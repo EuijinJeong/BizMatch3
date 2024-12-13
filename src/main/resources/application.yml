@@ -43,11 +43,11 @@ app:
     apiKey: 7126540884433771
     apiSecret: gLYIyTzw9aGbZZcObqGfd4EpZ4WKxoeL3QaIDxXKKMquhtJDHt6tH44d4JS9jGBTEyZoVyPTKUBTXOO8
   multipart:
-    base-dir: C:\uploadfiles/
+    base-dir: C:/uploadfiles/
     obfuscation:
       enable: true
       hide-ext:
-        enable: true
+        enable: false
   security:
     permit-all-urls:
       /api/member/signup/email/available/,

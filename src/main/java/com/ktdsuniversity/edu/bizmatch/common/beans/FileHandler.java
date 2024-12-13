@@ -49,6 +49,7 @@ public class FileHandler {
 
 		// 2. 클라이언트가 파일을 전송했다면
 		if (multipartFile != null && !multipartFile.isEmpty()) {
+			
 			// 3. 파일을 서버 컴퓨터의 특정 폴더로 저장시킨다.
 			String obfuscatedFileName = multipartFile.getOriginalFilename();
 

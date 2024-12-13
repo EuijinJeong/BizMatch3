@@ -111,6 +111,7 @@ public class SecurityConfig {
 		http.authorizeHttpRequests(httpRequest->
 									 httpRequest.requestMatchers("/").permitAll()
 									 			.requestMatchers("/kakao/**").permitAll()
+									 			.requestMatchers("/images/**").permitAll()
 									 			.requestMatchers("/api/**").permitAll()
 												.requestMatchers("/member/signup/**").permitAll()
 												.requestMatchers("/bizno/api/ask/**").permitAll()
@@ -120,8 +121,8 @@ public class SecurityConfig {
 												.requestMatchers("/api/member/signup/email/available/").permitAll()
 												.requestMatchers("/ws/**").permitAll()
 												.requestMatchers("/api/board").permitAll()
-												.requestMatchers("/api//board/view/**").permitAll()
-												.requestMatchers("/api//board/comment/view/**").permitAll());
+												.requestMatchers("/api/board/view/**").permitAll()
+												.requestMatchers("/api/board/comment/view/**").permitAll());
 		
 		http.addFilterAfter(this.jsonWebTokenAuthenticationFilter, BasicAuthenticationFilter.class);
 		
