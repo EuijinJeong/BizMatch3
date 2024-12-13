@@ -301,7 +301,7 @@ public class ProjectServiceImple implements ProjectService {
 	 * 이하 댓글 관련 Service 메서드
 	 */
 	@Override
-	public boolean updateDeleteState(String id) {
+	public boolean updateDeleteCommentState(String id) {
 		return this.projectDao.deleteOneComment(id)>0;
 	}
 

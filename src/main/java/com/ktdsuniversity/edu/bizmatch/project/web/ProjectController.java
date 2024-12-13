@@ -17,12 +17,14 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
+import com.ktdsuniversity.edu.bizmatch.board.vo.BoardCommentVO;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.project.ProjectApplyFailException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.project.ProjectWriteFailException;
 import com.ktdsuniversity.edu.bizmatch.common.utils.ParameterCheck;
@@ -33,7 +35,8 @@ import com.ktdsuniversity.edu.bizmatch.payment.service.PaymentService;
 import com.ktdsuniversity.edu.bizmatch.project.service.ProjectService;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ApplyProjectVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectApplyAttVO;
-import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentPaginationVO;
+import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentModifyVO;
+
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentWriteVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectSkillVO;
@@ -99,15 +102,10 @@ public class ProjectController {
 	 */
 	@GetMapping("/project/info/{pjId}")
 	public ApiResponse viewProjectInfoPage(@PathVariable String pjId,
-			ProjectCommentPaginationVO projectCommentPaginationVO,
 			Authentication loginMemberVO) {
-		int listSize = this.projectService.getAllComment(pjId).size();
-		projectCommentPaginationVO.setPageCount(listSize);
-		projectCommentPaginationVO.setSearchIdParam(pjId);
-		List<ProjectCommentVO> commentList = this.projectService.getPaginationComment(projectCommentPaginationVO, pjId);
-
+		
 		ProjectVO projectVO = this.projectService.readOneProjectInfo(pjId);
-		System.out.println(projectVO);
+
 		return new ApiResponse(projectVO);
 	}
 
@@ -604,20 +602,52 @@ public class ProjectController {
 //	}
 //	
 	/**
-	 * 
-	 * @param projectCommentWriteVO
-	 * @param memberVO
+	 * @param projectCommentWriteVO : 프로젝트 댓글 작성 데이터
 	 * @return
 	 */
-	@PostMapping("/project/info/write")
-	public ApiResponse writeComment(ProjectCommentWriteVO projectCommentWriteVO,
-									Authentication memberVO) {
-		projectCommentWriteVO.setAthrId(memberVO.getName());
+	@PostMapping("/project/comment/write")
+	public ApiResponse writeComment(@RequestBody ProjectCommentWriteVO projectCommentWriteVO) {
+	
 		boolean result = this.projectService.createNewComment(projectCommentWriteVO);
 		
 		return new ApiResponse(result);
 	}
 
+	// 이하 댓글 관련 맵핑
+	/**
+	 * @param pjId : 프로젝트 아이디
+	 * @return
+	 */
+	@GetMapping("/project/comment/view/{pjId}")
+	public ApiResponse viewCommen(@PathVariable String pjId) {
+		List<ProjectCommentVO> result  = this.projectService.getAllComment(pjId);
+		return new ApiResponse(result);
+	}
+	
+	/**
+	 * @param ProjectCommentModifyVO : 댓글 수정 데이터
+	 * @param memberVO
+	 * @return
+	 */
+	@PostMapping("/project/comment/modify")
+	public ApiResponse modifyComment(@RequestBody ProjectCommentModifyVO projectCommentModifyVO) {
+		boolean result = this.projectService.modifyComment(projectCommentModifyVO);
+		return new ApiResponse(result);
+	}
+	
+	/**
+	 * @param commentId : 삭제할 댓글 아이디
+	 * @return
+	 */
+	@PostMapping("/project/comment/delete/{commentId}")
+	public ApiResponse deleteComment(@PathVariable String commentId) {
+		boolean result = this.projectService.updateDeleteCommentState(commentId);
+		return new ApiResponse(result);
+	}
+	
+	// 이상 댓글 관련 맵핑
+	
+	
 	/**
 	 * 기업이 발주한 프로젝트의 목록을 가져오는 컨트롤러.
 	 * 
