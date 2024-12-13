@@ -9,9 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ktdsuniversity.edu.bizmatch.common.vo.ApiResponse;
@@ -34,20 +32,7 @@ public class PaymentController {
 	
 	@Autowired
 	private ProjectService projectService;
-	
-	
-	/**
-	 * 계약금 결제 정보를 가져오는 컨트롤러.
-	 * @param pjId
-	 * @param model
-	 * @return
-	 */
-	@GetMapping("/bizmatch/payment/ask/downpayment/{pjId}")
-	public ApiResponse paymentDownpaymentPage(@PathVariable String pjId) {
-		ProjectVO projectVO = this.projectService.readOneProjectInfo(pjId);
-		return new ApiResponse(projectVO);
-	}
-	
+
 	/**
 	 * 보증금 결제 정보를 가져오는 컨트롤러.
 	 * @param pjId
@@ -61,17 +46,15 @@ public class PaymentController {
 	}
 	
 	/**
-	 * 계약금 결제 요청을 하는 컨트롤러.
-	 * @param paymentVO
+	 * 계약금 결제 정보를 가져오는 컨트롤러.
+	 * @param pjId
+	 * @param model
 	 * @return
 	 */
-	@PostMapping("/bizmatch/payment/ask/downpayment")
-	public ApiResponse askDownPayment(PaymentRequestVO paymentRequestVO) {
-		paymentRequestVO.toString();
-		paymentRequestVO.setPaymentType(1);
-		boolean isSuccess = this.paymentService.createDownPayment(paymentRequestVO);
-		
-		return new ApiResponse(isSuccess);
+	@GetMapping("/bizmatch/payment/ask/downpayment/{pjId}")
+	public ApiResponse paymentDownpaymentPage(@PathVariable String pjId) {
+		ProjectVO projectVO = this.projectService.readOneProjectInfo(pjId);
+		return new ApiResponse(projectVO);
 	}
 	
 	/**
@@ -90,41 +73,42 @@ public class PaymentController {
 		return new ApiResponse(isSuccess);
 	}
 	
+	/**
+	 * 계약금 결제 요청을 하는 컨트롤러.
+	 * @param paymentVO
+	 * @return
+	 */
+	@PostMapping("/bizmatch/payment/ask/downpayment")
+	public ApiResponse askDownPayment(PaymentRequestVO paymentRequestVO) {
+		paymentRequestVO.toString();
+		paymentRequestVO.setPaymentType(1);
+		boolean isSuccess = this.paymentService.createDownPayment(paymentRequestVO);
+		
+		return new ApiResponse(isSuccess);
+	}
 	
+	/**
+	 * 결제 내역을 가지고 오는 컨트롤러.
+	 * @param memberVO
+	 * @return
+	 */
 	@GetMapping("/get/paymentlist")
 	public ApiResponse getPaymentList(Authentication memberVO) {
 		List<PaymentVO> paymentList = this.paymentService.readAllPaymentInfo(memberVO.getName());
 		return new ApiResponse(paymentList);
 	}
 
-	
+	/**
+	 * 결제 내역 상세 정보를 가져오는 컨트롤러.
+	 * @param memberVO
+	 * @param paymentSearchVO
+	 * @return
+	 */
 	@GetMapping("/payment/details")
 	public ApiResponse getPaymentDetails(Authentication memberVO, PaymentSearchVO paymentSearchVO) {
 		List<PaymentHistoryVO> paymentHistoryList = this.paymentService.readPaymentDetails(paymentSearchVO);
 		return new ApiResponse(paymentHistoryList);
 	}
 	
-	
-	
 }
-//@GetMapping("/bizmatch/payment/ask/downpayment/error/500")
-//public String viewDownPaymentErrorPage() {
-//	return "/error/payment_error";
-//}
-///**
-// * 결제 오류 페이지를 보여주는 컨트롤러.
-// * @return
-// */
-//@GetMapping("/bizmatch/payment/ask/deposit/error/500")
-//public String viewPaymentErrorPage() {
-//	return "/error/payment_error";
-//}
 
-///**
-// * 사용자가 단숨 변심으로 결제 취소를 하면 그냥 메인페이지 보여줘야함.
-// * @return 메인페이지 Url
-// */
-//@GetMapping("/bizmatch/payment/usercancel/")
-//public String viewMainPage() {
-//	return "redirect:/";
-//}
