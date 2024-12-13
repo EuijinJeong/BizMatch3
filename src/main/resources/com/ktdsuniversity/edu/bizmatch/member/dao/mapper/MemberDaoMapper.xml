@@ -752,7 +752,8 @@
  	 WHERE CMPNY_ID = #{cmpnyId}
  	</update>
  	
- 	<update id="updateMyInfoMember" parameterType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberModifyVO">
+ 	<update id="updateMyInfoMember" 
+ 			parameterType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberModifyVO">
  	UPDATE MBR_INFO 
 	   SET MBR_NM =#{mbrNm}
 	   	 , MBR_PHN_NUM = #{mbrPhnNum}

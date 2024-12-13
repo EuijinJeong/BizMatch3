@@ -422,11 +422,14 @@ public class MemberController {
 										,@PathVariable String cmpnyId) {
 		
 		CompanyVO companyVO =  this.memberService.selectOneCompanyByEmilAddr(cmpnyId);
-		
 		// 보유기술 리스트 조회
 		List<MbrPrmStkVO> mbrPrmStkList = memberService.selectMbrPrmStkCmpnyList(cmpnyId);
 		
-		return new ApiResponse();
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("companyVO", companyVO);
+		resultMap.put("mbrPrmStkList", mbrPrmStkList);
+		
+		return new ApiResponse(resultMap);
 	}
 	
 	/**
@@ -439,7 +442,6 @@ public class MemberController {
 	public Map<String, Object> doCompanyMyPageEdit(@RequestBody MemberCompanyModifyVO memberCompanyModifyVO 
 												, Authentication memberVO) {
 		
-		System.out.println(memberCompanyModifyVO);
 		if (memberCompanyModifyVO.getCmpnyNm() == null || memberCompanyModifyVO.getCmpnyAddr() == null || memberCompanyModifyVO.getCmpnyAccuntNum() == null) {
 			return Map.of("response",
 					false,
