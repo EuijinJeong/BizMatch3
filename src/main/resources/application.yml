@@ -12,7 +12,7 @@ spring:
   servlet:
     multipart:
       # 애플리케이션이 받을 수 있는 최대 업로드 용량(100MB)
-      max-file-size: 100000000
+      max-file-size: 100000000 
       # 한 유저가 업로드 할 수 있는 최대 업로드 용량(10MB)
       max-request-size: 10000000
       # JSP를 사용하기 위해 JSP 파일들의 경로를 설정. -> WebConfig.java로 설정을 이동함.
@@ -43,24 +43,19 @@ app:
     apiKey: 7126540884433771
     apiSecret: gLYIyTzw9aGbZZcObqGfd4EpZ4WKxoeL3QaIDxXKKMquhtJDHt6tH44d4JS9jGBTEyZoVyPTKUBTXOO8
   multipart:
-    base-dir: /users/jeong-uijin/desktop/uploadfiles
+    base-dir: C:/uploadfiles/
     obfuscation:
       enable: true
       hide-ext:
-        enable: true
+        enable: false
   security:
     permit-all-urls:
       /api/member/signup/email/available/,
-      /api/email/check/,
-      /api/email/authnum/samecheck,
-      /api/member/signup/cmpnycheck,
-      /api/member/signup/company,
-      /api/bizno/api/ask,
-      /member/signin,
-      /api/board,
-      /api//board/view/**,
-      /api/board/comment/view/**,
+      /api/member/signin,
       /ws/**,
+      /api/board,
+      /api/board/view/**,
+      /api/board/comment/view/**
   interceptor:
     accesslog:
       addpathpatterns: /**
@@ -91,4 +86,4 @@ spring:
 # prod profile 전용 설정.
 app:
   multipart:
-    base-dir: /usr/local/src/tomcat/apache-tomcat-10.1.31-second/uploadfiles
+    base-dir: /usr/local/src/tomcat/apache-tomcat-10.1.31-second/uploadfiles/

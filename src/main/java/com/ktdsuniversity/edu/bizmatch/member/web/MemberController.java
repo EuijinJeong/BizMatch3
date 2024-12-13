@@ -1,5 +1,8 @@
 package com.ktdsuniversity.edu.bizmatch.member.web;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,10 +12,14 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -60,6 +67,10 @@ public class MemberController {
 	private MemberService memberService;
 	
 	private final RestTemplate restTemplate;
+	
+	@Value("${app.multipart.base-dir}")
+	private String baseDirPrefix;
+
 	
 	public MemberController(RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
@@ -535,7 +546,29 @@ public class MemberController {
 	 */
 	@GetMapping("/member/mypage/company/portfolio")
 	public ApiResponse viewCompanyPortfolioListPage(@RequestParam String cmpId) {
-		return new ApiResponse(this.memberService.selectAllCmpnyPortfolios(cmpId));
+		List<MemberPortfolioVO> memberPortfolioVO= this.memberService.selectAllCmpnyPortfolios(cmpId);
+		return new ApiResponse(memberPortfolioVO);
+	}
+	
+	@GetMapping("/portfolio/img/{imgUrl}/")
+	public ResponseEntity<byte[]> showImage(@PathVariable String imgUrl){
+		String savePath = baseDirPrefix+imgUrl;
+		File file = new File(savePath);
+		byte[] result=null;
+		ResponseEntity<byte[]> entity=null;
+		
+		try {
+			result = FileCopyUtils.copyToByteArray(file);
+			
+			HttpHeaders header = new HttpHeaders();
+			header.add("Content-type",Files.probeContentType(file.toPath())); 	
+			
+			entity = new ResponseEntity<>(result,header,HttpStatus.OK);
+		} catch (IOException e) {
+			return null;
+		}
+		
+		return entity;
 	}
 	
 	/**
