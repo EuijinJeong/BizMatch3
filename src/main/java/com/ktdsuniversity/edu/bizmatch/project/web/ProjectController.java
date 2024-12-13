@@ -433,9 +433,10 @@ public class ProjectController {
 	 * @return
 	 */
 	@PostMapping("/project/apply/edit")
-	public String updateApplyContent(ApplyProjectVO applyProjectVO) {
+	public ApiResponse updateApplyContent(ApplyProjectVO applyProjectVO) {
 		boolean isUpdated = this.projectService.updateProjectApply(applyProjectVO);
-		return null;
+		System.out.println(isUpdated);
+		return new ApiResponse(isUpdated);
 	}
 
 	/**

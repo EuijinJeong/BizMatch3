@@ -30,7 +30,7 @@ public class MemberImageController {
 			result = FileCopyUtils.copyToByteArray(file);
 			
 			HttpHeaders header = new HttpHeaders();
-			header.add("Content-type",Files.probeContentType(file.toPath())); 	
+			header.add("Content-type",Files.probeContentType(file.toPath()));
 			
 			entity = new ResponseEntity<>(result,header,HttpStatus.OK);
 		} catch (IOException e) {
