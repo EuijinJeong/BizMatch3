@@ -205,7 +205,7 @@ public class MemberDaoImpl extends SqlSessionDaoSupport implements MemberDao {
 
 	@Override
 	public int updateFrreelancerMemberMypage(MemberFreelancerModifyVO memberFreelancerModifyVO) {
-		this.getSqlSession().update(NAMESPACE+".updateFrreelancerMemberMypage", memberFreelancerModifyVO);
+		this.getSqlSession().update(NAMESPACE+".updateFreelancerMemberMypage", memberFreelancerModifyVO);
 		return 0;
 	}
 	

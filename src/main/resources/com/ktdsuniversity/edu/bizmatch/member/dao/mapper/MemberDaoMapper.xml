@@ -761,11 +761,10 @@
  	</update>
  	
  	
- 	<update id="updateFrreelancerMemberMypage" parameterType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberFreelancerModifyVO">
+ 	<update id="updateFreelancerMemberMypage" 
+ 			parameterType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberFreelancerModifyVO">
  	UPDATE MBR_INFO
  	  SET MBR_INTR = #{mbrIntr}
- 	    , MJR_ID = #{mjrId}
- 	    , SMJR_ID = #{smjrId}
  	    , ACCNT_NUM = #{accntNum}
  	WHERE EMIL_ADDR = #{emilAddr}
  	
@@ -784,7 +783,9 @@
  	</select>
  	
  	<!-- 특정 회원 정보 조회 쿼리문 -->
- 	<select id="selectOneMemberVO" parameterType="string" resultType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO">
+ 	<select id="selectOneMemberVO" 
+ 			parameterType="string" 
+ 			resultType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO">
  		SELECT MBR_NM
 	 		 , EMIL_ADDR
 	 		 , PWD

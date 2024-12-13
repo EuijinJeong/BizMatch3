@@ -598,10 +598,10 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public boolean updateFreelancerMemberMypage(MemberFreelancerModifyVO memberFreelancerModifyVO) {
 		
-		boolean isSuccess = updateMbrSkills(memberFreelancerModifyVO.getMbrPrmStkList(), memberFreelancerModifyVO.getEmilAddr());
-		if(!isSuccess) {
-			throw new IllegalArgumentException("에외");
-		}
+//		boolean isSuccess = updateMbrSkills(memberFreelancerModifyVO.getMbrPrmStkList(), memberFreelancerModifyVO.getEmilAddr());
+//		if(!isSuccess) {
+//			throw new IllegalArgumentException("에외");
+//		}
 		return this.memberDao.updateFrreelancerMemberMypage(memberFreelancerModifyVO)>0;
 		
 	}

@@ -463,35 +463,27 @@ public class MemberController {
 		return Map.of("response", isSuccess, "data", memberCompanyModifyVO);
 	}
 	
-//	/**
-//	 * 프리랜서 마이페이지 수정 페이지
-//	 * @return
-//	 */
-//	@GetMapping("/member/mypage/freelancer/edit/{email}")
-//	public String viewFreelancerMyPageEdit(Authentication loginMemberVO
-//										, @PathVariable String email, Model model) {
-//		
-//		int ctgry = loginMemberVO.getMbrCtgry();
-//		if(ctgry == 0) {
-//			return "redirect:/member/mypage/company/edit/"+loginMemberVO.getCmpId();
-//		}
-//		
-//		// 보유기술 리스트 조회
-//		List<MbrPrmStkVO> mbrPrmStkList = memberService.selectMbrPrmStkList(loginMemberVO.getEmilAddr());
-//		model.addAttribute("mbrPrmStkList", mbrPrmStkList);
-//		
-//		// 소속 산업군명 조회
-//		MemberMyPageIndsryVO memberMyPageIndsryVO = memberService.selectIndstrNmByEmilAddr(loginMemberVO.getEmilAddr());
-//		model.addAttribute("memberMyPageIndsryVO", memberMyPageIndsryVO);
-//		
-//		MemberVO memberVO = memberService.selectOneMemberVO(loginMemberVO.getEmilAddr());
-//		model.addAttribute("memberVO", memberVO);
-//
-//		return "member/mypagefreelanceredit";
-//	}
+	/**
+	 * 프리랜서 마이페이지 수정 페이지
+	 * @return
+	 */
+	@GetMapping("/member/mypage/freelancer/edit/{email}")
+	public ApiResponse viewFreelancerMyPageEdit(Authentication loginMemberVO
+										, @PathVariable String email) {
+		
+		// 보유기술 리스트 조회
+		List<MbrPrmStkVO> mbrPrmStkList = memberService.selectMbrPrmStkList(email);
+		
+		// 소속 산업군명 조회
+		MemberMyPageIndsryVO memberMyPageIndsryVO = memberService.selectIndstrNmByEmilAddr(email);
+		
+		MemberVO memberVO = memberService.selectOneMemberVO(email);
+
+		return new ApiResponse(memberVO);
+	}
 	
 	/**
-	 * 
+	 * 프리랜서 마이페이지 정보를 수정하는 컨트롤러.
 	 * @param memberVO
 	 * @param memberFreelancerModifyVO
 	 * @return
@@ -504,10 +496,6 @@ public class MemberController {
 		return new ApiResponse(isSuccess);
 	}
 	
-//	@GetMapping("/member/newportfolio")
-//	public String loadWriteNewPortfolioPage() {
-//		return "/portfolio/portfolio_write";
-//	}
 	/**
 	 * 새로운 포트폴리오를 등록하는 요청을 보내는 컨트롤러이다.
 	 * @param memberPortfolioVO : 사용자가 입력한 포트폴리오 정보.
