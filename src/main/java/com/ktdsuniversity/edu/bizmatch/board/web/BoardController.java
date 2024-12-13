@@ -60,7 +60,13 @@ public class BoardController {
 		return new ApiResponse(boardVO);
 	}
 	
-	
+	@PostMapping("/board/view/increase/{id}")
+	public ApiResponse increaseBoardView(@PathVariable String id) {
+		
+		boolean result = boardService.doIncreaseViews(id);
+
+		return new ApiResponse(result);
+	}
 //	/**
 //	 * 게시글 작성페이지
 //	 * 
