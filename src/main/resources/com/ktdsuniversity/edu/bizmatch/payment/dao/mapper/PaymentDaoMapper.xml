@@ -23,7 +23,7 @@
 	    WHERE PJ_ID = #{pjId}
 	</update>
 
-	<!-- 한  -->
+	<!-- 한 프로젝트의 계약금을 검색하는 쿼리문. -->
 	<select id="selectProjectAmount"
 			parameterType="string"
 			resultType="_int">

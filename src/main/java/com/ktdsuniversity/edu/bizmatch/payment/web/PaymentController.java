@@ -9,10 +9,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ktdsuniversity.edu.bizmatch.common.vo.ApiResponse;
+import com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO;
 import com.ktdsuniversity.edu.bizmatch.payment.service.PaymentService;
 import com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentHistoryVO;
 import com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentRequestVO;
@@ -63,11 +65,13 @@ public class PaymentController {
 	 * @return
 	 */
 	@PostMapping("/bizmatch/payment/ask/deposit")
-	public ApiResponse doPaymentDeposit(PaymentRequestVO depositPaymentRequestVO) {
+	public ApiResponse doPaymentDeposit(@RequestBody PaymentRequestVO depositPaymentRequestVO
+									, Authentication memberVO) {
 		
 		// 결제 타입 0-> 보증금 결제.
 		depositPaymentRequestVO.setPaymentType(0);
-		depositPaymentRequestVO.toString();
+		MemberVO member = (MemberVO) memberVO.getPrincipal();
+		depositPaymentRequestVO.setEmilAddr(member.getEmilAddr());
 		
 		boolean isSuccess = this.paymentService.createDepositPay(depositPaymentRequestVO);
 		return new ApiResponse(isSuccess);
