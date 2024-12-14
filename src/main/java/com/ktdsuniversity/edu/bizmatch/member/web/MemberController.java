@@ -1,5 +1,8 @@
 package com.ktdsuniversity.edu.bizmatch.member.web;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,10 +12,14 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -60,6 +67,10 @@ public class MemberController {
 	private MemberService memberService;
 	
 	private final RestTemplate restTemplate;
+	
+	@Value("${app.multipart.base-dir}")
+	private String baseDirPrefix;
+
 	
 	public MemberController(RestTemplate restTemplate) {
 		this.restTemplate = restTemplate;
@@ -422,11 +433,14 @@ public class MemberController {
 										,@PathVariable String cmpnyId) {
 		
 		CompanyVO companyVO =  this.memberService.selectOneCompanyByEmilAddr(cmpnyId);
-		
 		// 보유기술 리스트 조회
 		List<MbrPrmStkVO> mbrPrmStkList = memberService.selectMbrPrmStkCmpnyList(cmpnyId);
 		
-		return new ApiResponse();
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("companyVO", companyVO);
+		resultMap.put("mbrPrmStkList", mbrPrmStkList);
+		
+		return new ApiResponse(resultMap);
 	}
 	
 	/**
@@ -439,7 +453,6 @@ public class MemberController {
 	public Map<String, Object> doCompanyMyPageEdit(@RequestBody MemberCompanyModifyVO memberCompanyModifyVO 
 												, Authentication memberVO) {
 		
-		System.out.println(memberCompanyModifyVO);
 		if (memberCompanyModifyVO.getCmpnyNm() == null || memberCompanyModifyVO.getCmpnyAddr() == null || memberCompanyModifyVO.getCmpnyAccuntNum() == null) {
 			return Map.of("response",
 					false,
@@ -463,35 +476,27 @@ public class MemberController {
 		return Map.of("response", isSuccess, "data", memberCompanyModifyVO);
 	}
 	
-//	/**
-//	 * 프리랜서 마이페이지 수정 페이지
-//	 * @return
-//	 */
-//	@GetMapping("/member/mypage/freelancer/edit/{email}")
-//	public String viewFreelancerMyPageEdit(Authentication loginMemberVO
-//										, @PathVariable String email, Model model) {
-//		
-//		int ctgry = loginMemberVO.getMbrCtgry();
-//		if(ctgry == 0) {
-//			return "redirect:/member/mypage/company/edit/"+loginMemberVO.getCmpId();
-//		}
-//		
-//		// 보유기술 리스트 조회
-//		List<MbrPrmStkVO> mbrPrmStkList = memberService.selectMbrPrmStkList(loginMemberVO.getEmilAddr());
-//		model.addAttribute("mbrPrmStkList", mbrPrmStkList);
-//		
-//		// 소속 산업군명 조회
-//		MemberMyPageIndsryVO memberMyPageIndsryVO = memberService.selectIndstrNmByEmilAddr(loginMemberVO.getEmilAddr());
-//		model.addAttribute("memberMyPageIndsryVO", memberMyPageIndsryVO);
-//		
-//		MemberVO memberVO = memberService.selectOneMemberVO(loginMemberVO.getEmilAddr());
-//		model.addAttribute("memberVO", memberVO);
-//
-//		return "member/mypagefreelanceredit";
-//	}
+	/**
+	 * 프리랜서 마이페이지 수정 페이지
+	 * @return
+	 */
+	@GetMapping("/member/mypage/freelancer/edit/{email}")
+	public ApiResponse viewFreelancerMyPageEdit(Authentication loginMemberVO
+										, @PathVariable String email) {
+		
+		// 보유기술 리스트 조회
+		List<MbrPrmStkVO> mbrPrmStkList = memberService.selectMbrPrmStkList(email);
+		
+		// 소속 산업군명 조회
+		MemberMyPageIndsryVO memberMyPageIndsryVO = memberService.selectIndstrNmByEmilAddr(email);
+		
+		MemberVO memberVO = memberService.selectOneMemberVO(email);
+
+		return new ApiResponse(memberVO);
+	}
 	
 	/**
-	 * 
+	 * 프리랜서 마이페이지 정보를 수정하는 컨트롤러.
 	 * @param memberVO
 	 * @param memberFreelancerModifyVO
 	 * @return
@@ -504,10 +509,6 @@ public class MemberController {
 		return new ApiResponse(isSuccess);
 	}
 	
-//	@GetMapping("/member/newportfolio")
-//	public String loadWriteNewPortfolioPage() {
-//		return "/portfolio/portfolio_write";
-//	}
 	/**
 	 * 새로운 포트폴리오를 등록하는 요청을 보내는 컨트롤러이다.
 	 * @param memberPortfolioVO : 사용자가 입력한 포트폴리오 정보.
@@ -545,7 +546,29 @@ public class MemberController {
 	 */
 	@GetMapping("/member/mypage/company/portfolio")
 	public ApiResponse viewCompanyPortfolioListPage(@RequestParam String cmpId) {
-		return new ApiResponse(this.memberService.selectAllCmpnyPortfolios(cmpId));
+		List<MemberPortfolioVO> memberPortfolioVO= this.memberService.selectAllCmpnyPortfolios(cmpId);
+		return new ApiResponse(memberPortfolioVO);
+	}
+	
+	@GetMapping("/portfolio/img/{imgUrl}/")
+	public ResponseEntity<byte[]> showImage(@PathVariable String imgUrl){
+		String savePath = baseDirPrefix+imgUrl;
+		File file = new File(savePath);
+		byte[] result=null;
+		ResponseEntity<byte[]> entity=null;
+		
+		try {
+			result = FileCopyUtils.copyToByteArray(file);
+			
+			HttpHeaders header = new HttpHeaders();
+			header.add("Content-type",Files.probeContentType(file.toPath())); 	
+			
+			entity = new ResponseEntity<>(result,header,HttpStatus.OK);
+		} catch (IOException e) {
+			return null;
+		}
+		
+		return entity;
 	}
 	
 	/**

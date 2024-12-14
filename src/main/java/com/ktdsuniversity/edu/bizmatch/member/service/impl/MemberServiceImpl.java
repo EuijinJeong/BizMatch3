@@ -6,6 +6,7 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -76,7 +77,7 @@ public class MemberServiceImpl implements MemberService {
 
 	@Autowired
 	private FileHandler fileHandler;
-	
+		
 	@Override
 	public boolean resetMemberPwd(MemberResetPwdVO memberResetPwdVO) {
 		
@@ -518,7 +519,7 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public boolean updateCompanyMemberMyPage(MemberCompanyModifyVO memberCompanyModifyVO, MemberVO memberVO) {
 		//회원이 기업 회원인지 -> 기업회원이라면 해당 회사의 수정권한을 가졌는지
-		// TODO 이거 실제 배포할 땐 아래 주석 살려야함.
+		
 //		if(memberVO.getCmpnyRp()!=1) {
 //			throw new IllegalArgumentException("수정할 권한이 없음");
 //		}
@@ -527,11 +528,13 @@ public class MemberServiceImpl implements MemberService {
 //		}
 		
 		// 관심 산업군 업데이트하는 dao 호출.
+		// 어떤 개인 회원의 관심 산업군을 업데이트 하는 쿼리문을 호출함.
 		int isSuccess = this.memberDao.updateCmpnyLkIndstr(memberCompanyModifyVO);
 		if(isSuccess <= 0) {
 			throw new IllegalArgumentException("에외");
 		}
 		
+		// 기업의 관심 산업군 정보를 업데이트 하는 쿼리문을 호출한다.
 		return this.memberDao.updateMemberCompanyMyPage(memberCompanyModifyVO)>0;
 	}
 
@@ -598,10 +601,10 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public boolean updateFreelancerMemberMypage(MemberFreelancerModifyVO memberFreelancerModifyVO) {
 		
-		boolean isSuccess = updateMbrSkills(memberFreelancerModifyVO.getMbrPrmStkList(), memberFreelancerModifyVO.getEmilAddr());
-		if(!isSuccess) {
-			throw new IllegalArgumentException("에외");
-		}
+//		boolean isSuccess = updateMbrSkills(memberFreelancerModifyVO.getMbrPrmStkList(), memberFreelancerModifyVO.getEmilAddr());
+//		if(!isSuccess) {
+//			throw new IllegalArgumentException("에외");
+//		}
 		return this.memberDao.updateFrreelancerMemberMypage(memberFreelancerModifyVO)>0;
 		
 	}

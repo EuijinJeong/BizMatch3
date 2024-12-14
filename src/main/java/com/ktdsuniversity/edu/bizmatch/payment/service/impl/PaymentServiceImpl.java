@@ -72,6 +72,8 @@ public class PaymentServiceImpl implements PaymentService {
 	public boolean createDownPayment(PaymentRequestVO downPaymentRequestVO) {
 		// 프로젝트 정보를 조회한다.
 		ProjectVO projectVO = this.projectDao.selectOneProjectInfo(downPaymentRequestVO.getPjId());
+		
+		// TODO: 실제 배포 때 아래 주석 풀어야합니다.
 //		// 프로젝트 금액과 결제 금액이 동일한지 검사한다.
 //		if(downPaymentRequestVO.getCntrctAmt() != this.paymentDao.selectProjectAmount(downPaymentRequestVO.getPjId())) {
 //			boolean isCanceled = this.cancelRequest(downPaymentRequestVO, downPaymentRequestVO.getGrntAmt());

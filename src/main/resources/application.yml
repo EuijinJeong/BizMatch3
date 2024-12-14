@@ -1,0 +1,89 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: hello-spring
+  # 데이터 연결을 위한 설정
+  datasource:
+    url: jdbc:oracle:thin:@//ec2-3-34-180-91.ap-northeast-2.compute.amazonaws.com:1521/XE
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    username: bizmatch
+    password: admin1234
+  servlet:
+    multipart:
+      # 애플리케이션이 받을 수 있는 최대 업로드 용량(100MB)
+      max-file-size: 100000000 
+      # 한 유저가 업로드 할 수 있는 최대 업로드 용량(10MB)
+      max-request-size: 10000000
+      # JSP를 사용하기 위해 JSP 파일들의 경로를 설정. -> WebConfig.java로 설정을 이동함.
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: jej001228@gmail.com
+    password: jpav snwr izmz ifzd
+    properties:
+      mail:
+        smtp:
+          auth: true
+          timeout: 5000
+          starttls:
+            enable: true
+# mybatis 설정 파일의 경로 지정.
+mybatis:
+  # mybatis-config.xml 파일의 위치를 지정.
+  config-location: classpath:mybatis/mybatisconfig.xml
+  mapper-locations: classpath:com/ktdsuniversity/edu/bizmatch/**/dao/mapper/*.xml
+
+# Application 전용 설정. (Spring과 관계 없음.)
+app:
+  jwt:
+    issuer: hello-spring-security
+    secret-key: spring-security-secret-key-ramdom-token-key
+  iamport:
+    apiKey: 7126540884433771
+    apiSecret: gLYIyTzw9aGbZZcObqGfd4EpZ4WKxoeL3QaIDxXKKMquhtJDHt6tH44d4JS9jGBTEyZoVyPTKUBTXOO8
+  multipart:
+    base-dir: C:/uploadfiles/
+    obfuscation:
+      enable: true
+      hide-ext:
+        enable: false
+  security:
+    permit-all-urls:
+      /api/member/signup/email/available/,
+      /api/member/signin,
+      /ws/**,
+      /api/board,
+      /api/board/view/**,
+      /api/board/comment/view/**
+  interceptor:
+    accesslog:
+      addpathpatterns: /**
+      excludepath: /js/**,
+        /css/**,
+        /img/**,
+        /mailhtml/**
+    logincheck:
+      addpathpatterns: /**
+      excludepath: /,
+        /member/signin/**,
+        /member/select/**,
+        /member/signup/**,
+        /js/**,
+        /css/**,
+        /img/**,
+        /error/**,
+        /mailhtml/**,
+        /bizno/**,
+        /email/**
+# Profile 분리
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+# prod profile 전용 설정.
+app:
+  multipart:
+    base-dir: /usr/local/src/tomcat/apache-tomcat-10.1.31-second/uploadfiles/

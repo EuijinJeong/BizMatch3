@@ -5,7 +5,8 @@ public class MemberPortfolioAttVO {
 	private String mbrPrtflAttId; // 포트폴리오 첨부파일 아이디.
 	private String attUrl; // 첨부파일 난독화 전 url.
 	private String attUrlNonread; // 첨부파일 난독화 한 후 url.
-	private String mbrPrtflId; // 멤버 포트폴리오 정보 아이디값. fk.
+	private String mbrPrtflId; // 멤버 포트폴리오 정보 아이디값. 
+	
 	
 	// getter and setter.
 	public String getMbrPrtflAttId() {

@@ -289,7 +289,7 @@
 	</resultMap>
 	<select id="selectProjectInfo"
 			parameterType="string"
-			resultMap="projectVOMap">
+			resultMap="projectListVOMap">
 		  SELECT P.PJ_ID
 			, P.ORDR_ID
 			, P.OBTN_ID
@@ -311,9 +311,18 @@
 			, PI.PJ_INDSTR_ID
 			, PI.MJR_ID
 			, PI.SMJR_ID
+			, PPS.PJ_PRM_STK_ID 
 			, II.INDSTR_ID
 			, II.INDSTR_NM
 			, II.UPPR_INDSTR_ID
+			, PRM.PRM_STK_ID
+			, PRM.PRM_STK
+			, PA.PJ_APPLY_ID 
+			, PA.EMIL_ADDR APPLY_EMIL_ADDR
+			, PJ_APPLY_RGSTR_DT
+			, PJ_APPLY_TTL
+			, PJ_APPLY_DESC
+			, PJ_APPLY_MDFY_DT
 			, PY.PYMNT_ID 
 			, PY.GRNT_AMT 
 			, PY.CNTRCT_AMT 
@@ -323,15 +332,21 @@
 			, PY.PYMNT_TYP 
 			, PY.IMP_UID 
 			, PY.DPST_RFND_AMNT 
-			, PY.DPST_RFND_DT 
-			  FROM PJ_INFO P
-			 LEFT JOIN PJ_INDSTR PI
-			    ON P.PJ_ID = PI.PJ_ID 
-			 LEFT JOIN INDSTR_INFO II
-			    ON II.INDSTR_ID = PI.SMJR_ID
-			 LEFT JOIN PYMNT_INFO PY
-			    ON PY.PJ_ID = P.PJ_ID 
-		 WHERE P.PJ_ID = #{_parameter}
+			, PY.DPST_RFND_DT
+	     FROM PJ_INFO P
+			LEFT JOIN PJ_INDSTR PI
+			     ON P.PJ_ID = PI.PJ_ID 
+			LEFT JOIN INDSTR_INFO II
+			     ON II.INDSTR_ID = PI.SMJR_ID
+			LEFT JOIN PJ_PRM_STK PPS
+			     ON PPS.PJ_ID = P.PJ_ID 
+			LEFT JOIN PRM_STK PRM
+			     ON PRM.PRM_STK_ID = PPS.PRM_STK_ID
+			LEFT JOIN PJ_APPLY PA
+			     ON PA.PJ_ID = P.PJ_ID 
+			LEFT JOIN PYMNT_INFO PY
+			  ON PY.PJ_ID = P.PJ_ID 
+		   WHERE P.PJ_ID = #{_parameter}
 		 <!--TODO LEFT JOIN -> JOIN  -->
 	</select>
 
@@ -927,6 +942,9 @@
 				<id column="INDSTR_ID" property="indstrId"/>
 			</association>
 		</association>
+		<association property="paymentVO" javaType="com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentVO" autoMapping="true">
+         <id column="PYMNT_ID" property="pymntId"/>
+      	</association>
 		<collection property="projectSkillList"
 					 ofType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectSkillVO"
 					 autoMapping="true">
