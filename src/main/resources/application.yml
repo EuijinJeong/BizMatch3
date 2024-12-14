@@ -59,6 +59,10 @@ app:
       /api/member/findpwd,
       /api/email/check/,
       /api/email/authnum/samecheck,
+      /api/bizno/api/ask,
+      /api/member/signup/cmpnycheck,
+      /api/member/signup/company,
+      /api/member/signup/freelaner,
   interceptor:
     accesslog:
       addpathpatterns: /**

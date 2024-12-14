@@ -177,7 +177,7 @@ public class MemberController {
 	@GetMapping("/bizno/api/ask")
 	public Map handleBiznoApi(@RequestParam String cmpnyBrn) {
 		Map<String, Object> request = new HashMap<>();
-		// TODO 사업자 번호 - 이거 뜯을 수 있나?
+		// TODO 사업자 번호 - 이거 뜯을 수 있나? - 의진 -
 		request.put("key", "amVqMDAxMjI4QGdtYWlsLmNvbSAg");
 		request.put("gb", "1");
 		request.put("q", cmpnyBrn);
