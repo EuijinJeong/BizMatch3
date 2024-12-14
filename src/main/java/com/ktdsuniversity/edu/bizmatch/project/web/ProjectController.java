@@ -158,7 +158,7 @@ public class ProjectController {
 	 */
 	@PostMapping("/project/write")
 	public ApiResponse doCreateProject(WriteProjectVO writeProjectVO
-			,
+			,@RequestParam("prmStkId") List<String> prmStkIdList,
 			Authentication memberVO) throws ParseException {
 
 		// 유효성 검사들.
@@ -217,10 +217,10 @@ public class ProjectController {
 		MemberVO loginMemberVO = (MemberVO)memberVO.getPrincipal();
 		writeProjectVO.setOrdrId(loginMemberVO.getEmilAddr());
 
-//		// 이제 수정된 호출
-//		List<String> skillList = new ArrayList<>(prmStkIdList);
+		// 이제 수정된 호출
+		List<String> skillList = new ArrayList<>(prmStkIdList);
 
-		boolean isSuccessed = this.projectService.createNewProject(writeProjectVO);
+		boolean isSuccessed = this.projectService.createNewProject(writeProjectVO,skillList);
 
 		return new ApiResponse(isSuccessed);
 	}
