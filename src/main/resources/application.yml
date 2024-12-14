@@ -57,6 +57,8 @@ app:
       /api/board/view/**,
       /api/board/comment/view/**,
       /api/member/findpwd,
+      /api/email/check/,
+      /api/email/authnum/samecheck,
   interceptor:
     accesslog:
       addpathpatterns: /**
