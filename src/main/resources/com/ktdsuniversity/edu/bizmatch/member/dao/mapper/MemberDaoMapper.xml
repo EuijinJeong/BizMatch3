@@ -30,20 +30,7 @@
 	<select id="selectOneMemberForResetPwd"
 			parameterType = "string"
 			resultType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO">
-		SELECT MBR_NM 
-		     , EMIL_ADDR 
-		     , PWD 
-		     , MBR_PHN_NUM 
-		     , TO_DATE(BRTH_DT, 'YYYY-MM-DD') BRTH_DT 
-		     , ADDR 
-		     , MBR_STT 
-		     , TO_DATE(SGNUP_DT,'YYYY-MM-DD') SGNUP_DT 
-		     , MBR_CTGRY 
-		     , PNLTY 
-		     , IS_QT 
-		     , ACCNT_NUM 
-		     , CMP_ID 
-		     , SALT 
+		SELECT *
 		  FROM MBR_INFO 
 		 WHERE EMIL_ADDR = #{_parameter}
 	</select>

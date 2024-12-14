@@ -6,7 +6,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -303,7 +302,9 @@ public class MemberServiceImpl implements MemberService {
 	public boolean sendFindPwdEmail(String email) {
 		// 사용자가 입력한 이메일이 우리 회원 데베에 있는지 먼저 조회
 		MemberVO memberVO =  this.memberDao.selectOneMember(email);
-		
+		if(memberVO == null) {
+			throw new IllegalArgumentException("찾으시는 회원이 존재하지 않습니다.");
+		}
 		String findEmail = memberVO.getEmilAddr();
 		
 		// 사용자가 입력한 이메일에 해당하는 회원 정보가 존재하지 않는 경우.

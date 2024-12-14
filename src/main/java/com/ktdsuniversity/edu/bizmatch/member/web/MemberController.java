@@ -243,7 +243,7 @@ public class MemberController {
 	}
 	
 	/**
-	 * 
+	 * 내 정보를 가져오는 요청을 받는 컨트롤러.
 	 * @param authentication
 	 * @return
 	 */
@@ -527,16 +527,6 @@ public class MemberController {
 		return new ApiResponse(isCreated);
 	}
 	
-//	/**
-//	 * 프리랜서 포트폴리오 페이지를 로드하는 컨트롤러.
-//	 * @param loginMemberVO
-//	 * @return
-//	 */
-//	@GetMapping("/member/mypage/freelancer/portfolio/{email}")
-//	public String loadPortfolioListPageFL(@PathVariable String email,
-//										Authentication loginMemberVO) {
-//		return "portfolio/portfoliolist";
-//	}
 
 	/**
 	 * 회사
@@ -658,15 +648,6 @@ public class MemberController {
 		return new ApiResponse(memberPortfolioVO);
 	}
 	
-//	/**
-//	 * 
-//	 * @return
-//	 */
-//	@GetMapping("/view/portfolio/view/detail/{mbrPrtflId}")
-//	public String loadDataPortfolioDetailsOne() {
-//		return "/portfolio/portfoliolist";
-//	}
-	
 	/**
 	 * 하나의 포트폴리오 정보를 제거하는 메소드.
 	 * @param mbrPrtflId
@@ -692,13 +673,11 @@ public class MemberController {
 		return new ApiResponse(isUpdated);
 	}
 	
-//	@GetMapping("/member/company/
-//	public ApiResponse getCmpIdByEmail(Authentication memberVO) {
-//		String email = memberVO.getName();
-//		
-//		return new ApiResponse();
-//	}
-	
+	/**
+	 * 로그아웃 요청을 받는 컨트롤러.
+	 * @param memberVO
+	 * @return
+	 */
 	@GetMapping("/member/logout")
 	public ApiResponse doLogout(Authentication memberVO) {
 		return new ApiResponse();
