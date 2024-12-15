@@ -63,6 +63,7 @@ app:
       /api/member/signup/cmpnycheck,
       /api/member/signup/company,
       /api/member/signup/freelaner,
+      /api/member/resetpwd,
   interceptor:
     accesslog:
       addpathpatterns: /**

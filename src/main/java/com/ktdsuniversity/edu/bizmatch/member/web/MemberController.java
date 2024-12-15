@@ -77,7 +77,7 @@ public class MemberController {
 	}
 	
 	/**
-	 * 비밀번호 재설정 요청을 처리하는 컨트롤러.
+	 * 비밀번호 재설정 요청을 위해 이메일을 보내는 요청을 받는 컨트롤러.
 	 * @param email
 	 * @return
 	 */
@@ -111,7 +111,8 @@ public class MemberController {
 	 * @param memberCompanySignUpVO
 	 * @return
 	 */
-	@PostMapping(value = "/member/signup/company", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PostMapping(value = "/member/signup/company"
+				, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ApiResponse signUpCompanyMember(@ModelAttribute MemberCompanySignUpVO memberCompanySignUpVO) {
 		
 //		 사용자가 입력한 값 유효성 검사.
