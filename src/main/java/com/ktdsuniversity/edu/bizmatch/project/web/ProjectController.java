@@ -293,39 +293,15 @@ public class ProjectController {
 //	}
 
 	/**
-	 * 프로젝트 추가모집 수정 페이지를 로드하는 컨트롤러.
-	 * 
-	 * @param memberVO
-	 * @param projectVO
-	 * @return
-	 */
-//	@GetMapping("/project/update/addrecurit/")
-//	public String loadAddRecuritPage(@SessionAttribute(value = "_LOGIN_USER_") MemberVO memberVO, ProjectVO projectVO) {
-//
-//		return null;
-//	}
-//
-//	/**
-//	 * 추가모집 정보를 서버에 업로드하는 컨트롤러.
-//	 * 
-//	 * @param modifyProjectVO
-//	 * @return
-//	 */
-//	@PostMapping("/project/update/addrecurit/")
-//	public String createRecuritInfo(ModifyProjectVO modifyProjectVO) {
-//		boolean isUpdated = this.projectService.updateAddtionalRecruitment(modifyProjectVO);
-//
-//		return null;
-//	}
-
-	/**
 	 * 추가모집 3일 추가
 	 * @param memberVO
 	 * @param pjId
 	 * @return
 	 */
 	@PostMapping("/project/update/addrecruitment/{pjId}")
-	public ApiResponse UpdateAddThreeDate(@PathVariable String pjId) {
+	public ApiResponse UpdateAddThreeDate(@PathVariable String pjId
+										, @RequestParam String AddDay
+										, Authentication memberVO) {
 		ProjectVO projectVO = this.projectService.readOneProjectInfo(pjId);
 		try {
 			// 1. 모집 종료일을 3일 연장하기
@@ -336,7 +312,7 @@ public class ProjectController {
 			// 2. 3일 더하기
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime(endDate);
-			calendar.add(Calendar.DAY_OF_YEAR, 3); // 3일 더하기
+			calendar.add(Calendar.DAY_OF_YEAR, Integer.parseInt(AddDay)); // 3일 더하기
 			Date newEndDate = calendar.getTime(); // 새로운 종료일
 
 			// 3. 새로운 종료일을 다시 String으로 변환
