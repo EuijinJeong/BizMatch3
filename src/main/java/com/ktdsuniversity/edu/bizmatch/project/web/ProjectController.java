@@ -33,6 +33,7 @@ import com.ktdsuniversity.edu.bizmatch.member.vo.PrmStkVO;
 import com.ktdsuniversity.edu.bizmatch.payment.service.PaymentService;
 import com.ktdsuniversity.edu.bizmatch.project.service.ProjectService;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ApplyProjectVO;
+import com.ktdsuniversity.edu.bizmatch.project.vo.ModifyProjectVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectApplyAttVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentModifyVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentVO;
@@ -280,17 +281,22 @@ public class ProjectController {
 //		return null;
 //	}
 //
-//	/**
-//	 * 프로젝트 수정 요청을 보내는 컨트롤러.
-//	 * 
-//	 * @param modifyProjectVO
-//	 * @return
-//	 */
-//	@PostMapping("/project/update/content/{pjId}")
-//	public String UpdateProjectInfo(ModifyProjectVO modifyProjectVO) {
-//		boolean isUpdated = this.projectService.updateOneProject(modifyProjectVO);
-//		return null;
-//	}
+	/**
+	 * 프로젝트 수정 요청을 보내는 컨트롤러.
+	 * 
+	 * @param modifyProjectVO
+	 * @return
+	 */
+	@PostMapping("/project/update/content/{pjId}")
+	public ApiResponse UpdateProjectInfo(@PathVariable String pjId, ModifyProjectVO modifyProjectVO) {
+		boolean isUpdated = this.projectService.updateOneProject(modifyProjectVO);
+		modifyProjectVO.setPjId(pjId);
+		System.out.println(isUpdated);
+		return new ApiResponse(isUpdated);
+	}
+	
+	
+	
 
 	/**
 	 * 프로젝트 추가모집 수정 페이지를 로드하는 컨트롤러.

@@ -130,8 +130,8 @@ public class ProjectDaoImpl extends SqlSessionDaoSupport implements ProjectDao{
 	}
 	
 	@Override
-	public int updateProjectIndustry(ProjectIndustryVO projectIndustryVO) {
-		return this.getSqlSession().update(NAMESPACE + ".updateProjectIndustry", projectIndustryVO);
+	public int updateProjectIndustry(ModifyProjectVO modifyProjectVO) {
+		return this.getSqlSession().update(NAMESPACE + ".updateProjectIndustry", modifyProjectVO);
 	}
 	
 	@Override

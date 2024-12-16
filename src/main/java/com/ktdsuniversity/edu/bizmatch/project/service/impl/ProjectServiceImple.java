@@ -153,10 +153,11 @@ public class ProjectServiceImple implements ProjectService {
 		return this.projectDao.insertNewIndustryGroup(projectIndustryVO) > 0;
 	}
 
+	@Transactional
 	@Override
 	public boolean updateOneProject(ModifyProjectVO modifyProjectVO) {
 		int updateCount = this.projectDao.updateOneProject(modifyProjectVO);
-		int updateIndustryCount = this.projectDao.updateProjectIndustry(modifyProjectVO.getProjectIndustryVO());
+		int updateIndustryCount = this.projectDao.updateProjectIndustry(modifyProjectVO);
 
 //		if(updateCount == 0 || updateIndustryCount == 0) {
 //			throw new ProjectWriteFailException("서버상의 문제로 정보 수정이 불가능합니다.", modifyProjectVO);
@@ -339,10 +340,9 @@ public class ProjectServiceImple implements ProjectService {
 	public boolean updateAddtionalRecruitment(ModifyProjectVO modifyProjectVO) {
 		// 기본적인 정보 수정.
 		int updateCnt = this.projectDao.updateAddtionalRecruitment(modifyProjectVO);
-		// 산업정보 수정.
-		int updateIndustryCnt = this.projectDao.updateProjectIndustry(modifyProjectVO.getProjectIndustryVO());
+		
 
-		if (updateCnt == 0 || updateIndustryCnt == 0) {
+		if (updateCnt == 0 ) {
 			throw new ProjectUpdateFailException("서버상의 이유로 정보 수정이 불가능합니다.", modifyProjectVO);
 		}
 		return true;

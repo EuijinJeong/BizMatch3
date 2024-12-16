@@ -546,7 +546,7 @@
 		CNTRCT_ACCNT=#{cntrctAccnt},
 		PJ_DESC=#{pjDesc},
 		LST_MOD_DT=SYSDATE,
-		PJ_RCRUT_CNT=#{pjRcrutCnt},
+		PJ_RCRUT_CNT=#{pjRcrutCnt}
 		WHERE PJ_ID=#{pjId}
 	</update>
 
@@ -559,9 +559,10 @@
 
 	<!-- 프로젝트의 산업군 정보를 업데이트하는 쿼리문. -->
 	<update id="updateProjectIndustry"
-		parameterType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectIndustryVO">
+		parameterType="com.ktdsuniversity.edu.bizmatch.project.vo.ModifyProjectVO">
 		UPDATE PJ_INDSTR
-		SET INDSTR_ID = #{indstrId}
+		SET MJR_ID = #{mjrId},
+		   SMJR_ID = #{smjrId}
 		WHERE PJ_ID = #{pjId}
 	</update>
 
