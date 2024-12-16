@@ -219,6 +219,8 @@ public class ProjectController {
 
 		// 이제 수정된 호출
 		List<String> skillList = new ArrayList<>(prmStkIdList);
+		
+		System.out.println("Received prmStkId List: " + skillList);
 
 		boolean isSuccessed = this.projectService.createNewProject(writeProjectVO,skillList);
 
