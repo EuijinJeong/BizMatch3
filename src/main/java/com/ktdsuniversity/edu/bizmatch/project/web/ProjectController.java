@@ -374,27 +374,6 @@ public class ProjectController {
 //	}
 
 	/**
-	 * 지원서 수정페이지를 로드하는 컨트롤러.
-	 * 
-	 * @param memberVO
-	 * @param applyProjectVO
-	 * @return
-	 */
-
-	@GetMapping("/project/apply/edit/{pjId}")
-	public ApiResponse loadUpdateApplyContentPage(Authentication memberVO,
-			@PathVariable String pjId) {
-
-		SearchApplyVO searchApplyVO = new SearchApplyVO();
-		searchApplyVO.setEmilAddr(memberVO.getName());
-		searchApplyVO.setPjId(pjId);
-
-		ApplyProjectVO applyProjectVO = projectService.selectOneApplyProject(searchApplyVO);
-
-		return new ApiResponse(applyProjectVO);
-	}
-
-	/**
 	 * 지원자의 지원서 불러오는 컨트롤러
 	 * 
 	 * @return
@@ -435,7 +414,6 @@ public class ProjectController {
 	@PostMapping("/project/apply/edit")
 	public ApiResponse updateApplyContent(ApplyProjectVO applyProjectVO) {
 		boolean isUpdated = this.projectService.updateProjectApply(applyProjectVO);
-		System.out.println(isUpdated);
 		return new ApiResponse(isUpdated);
 	}
 
