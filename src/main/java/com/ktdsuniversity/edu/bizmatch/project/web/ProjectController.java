@@ -325,7 +325,7 @@ public class ProjectController {
 	 * @return
 	 */
 	@PostMapping("/project/update/addrecruitment/{pjId}")
-	public ApiResponse UpdateAddThreeDate(@PathVariable String pjId) {
+	public ApiResponse UpdateAddThreeDate(@PathVariable String pjId, @RequestParam String addDate) {
 		ProjectVO projectVO = this.projectService.readOneProjectInfo(pjId);
 		try {
 			// 1. 모집 종료일을 3일 연장하기
@@ -336,7 +336,7 @@ public class ProjectController {
 			// 2. 3일 더하기
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime(endDate);
-			calendar.add(Calendar.DAY_OF_YEAR, 3); // 3일 더하기
+			calendar.add(Calendar.DAY_OF_YEAR, Integer.parseInt(addDate)); 
 			Date newEndDate = calendar.getTime(); // 새로운 종료일
 
 			// 3. 새로운 종료일을 다시 String으로 변환
