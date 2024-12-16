@@ -632,8 +632,7 @@
 		UPDATE PJ_INFO
 		SET OBTN_ID = #{emilAddr},
 		PJ_STT = 2
-		WHERE PJ_ID =
-		#{pjId}
+		WHERE PJ_ID = #{pjId}
 	</update>
 	
 	<!-- 한 프로젝트에 지원한 모든 지원자 정보를 조회하는 쿼리문. -->
@@ -1102,5 +1101,9 @@
    <delete id="deleteOneApplyAtt" parameterType="string">
   DELETE FROM PJ_APPLY_ATT 
    WHERE PJ_APPLY_ID= #{_parameter}
+   </delete>
+   <delete id="deleteApplyByPjId" parameterType="string">
+   DELETE FROM PJ_APPLY 
+   WHERE PJ_ID= #{_parameter}
    </delete>
 </mapper>

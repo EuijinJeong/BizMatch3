@@ -325,7 +325,7 @@ public class ProjectController {
 //	}
 
 	/**
-	 * 추가모집 3일 추가
+	 * 추가모집 
 	 * @param memberVO
 	 * @param pjId
 	 * @return
@@ -461,12 +461,22 @@ public class ProjectController {
 	 * @return
 	 */
 	@PostMapping("/project/apply/delete")
-	public ApiResponse deleteApplyContent(Authentication memberVO
-									, @RequestParam String pjApplyId) {
+	public ApiResponse deleteApplyContent(@RequestParam String pjApplyId) {
 
 		this.projectService.deleteProjectApply(pjApplyId);
 
 		return new ApiResponse(true);
+	}
+	/**
+	 * 프로젝트 지원을 선정하는 컨트롤러
+	 * @param pjApplyId 지원서 아이디로 검색해서 ordrId에다가 지원서를 작성한 사람의 이메일 넣어줌
+	 * @return
+	 */
+	@PostMapping("/project/apply/accept")
+	public ApiResponse acceptAppltContent(@RequestParam String pjApplyId, Authentication memberVO) {
+		MemberVO loginMemberVO = (MemberVO)memberVO.getPrincipal();
+		boolean isSuccess = this.projectService.updateApplyMember(pjApplyId, loginMemberVO);
+		return new ApiResponse(isSuccess);
 	}
 
 	/**
@@ -521,21 +531,6 @@ public class ProjectController {
 		return new ApiResponse(skills);
 	}
 
-	/**
-	 * 지원기업 선택하기
-	 * @param pjId
-	 * @param memberVO
-	 * @param selectApplyMemberVO
-	 * @return
-	 */
-	@PostMapping("/project/apply/member/{pjId}")
-	public ApiResponse doChoiceApplyMember(@PathVariable String pjId
-									, Authentication memberVO
-									, SelectApplyMemberVO selectApplyMemberVO) {
-		boolean isUpdated = this.projectService.updateApplyMember(selectApplyMemberVO, memberVO.getName());
-		
-		return new ApiResponse(isUpdated);
-	}
 
 	/**
 	 * 

@@ -408,16 +408,25 @@ public class ProjectServiceImple implements ProjectService {
 		return this.projectDao.selectAllApplyMember(pjId);
 	}
 
+	@Transactional
 	@Override
-	public boolean updateApplyMember(SelectApplyMemberVO selectApplyMemberVO, String email) {
-		MemberVO memberVO = memberDao.selectOneMember(email);
-		ProjectVO projectVO = this.projectDao.selectProjectInfo(selectApplyMemberVO.getPjId());
+	public boolean updateApplyMember(String pjApplyId, MemberVO memberVO) {
+		ApplyProjectVO applyProjectVO= this.projectDao.selectOneApplyInfo(pjApplyId);
+		
+		ProjectVO projectVO = this.projectDao.selectProjectInfo(applyProjectVO.getPjId());
+		
+		SelectApplyMemberVO selectApplyMemberVO = new SelectApplyMemberVO();
+		selectApplyMemberVO.setPjId(applyProjectVO.getPjId());
+		selectApplyMemberVO.setEmilAddr(applyProjectVO.getEmilAddr());
 
 		if (!projectVO.getOrdrId().equals(memberVO.getEmilAddr())) {
 			throw new IllegalArgumentException("정보가 일치하지 않습니다.");
 		}
 		if (projectVO.getObtnId() != null) {
 			throw new IllegalArgumentException("지원자 선정을 완료하였습니다.");
+		}
+		if(this.projectDao.deleteApplyByPjId(projectVO.getPjId())>0) {
+			throw new IllegalArgumentException("잠시 후 다시 시도해주세요");
 		}
 
 		return this.projectDao.updateProjectApplyMember(selectApplyMemberVO) > 0;

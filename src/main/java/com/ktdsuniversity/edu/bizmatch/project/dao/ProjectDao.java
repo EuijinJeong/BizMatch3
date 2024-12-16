@@ -269,8 +269,10 @@ public interface ProjectDao {
 	 * @param pjApplyId
 	 * @return
 	 */
-
 	public int deleteApplyAtt(String pjApplyId);
+	
+	public int deleteApplyByPjId(String pjId);
+	
 
 }
 
