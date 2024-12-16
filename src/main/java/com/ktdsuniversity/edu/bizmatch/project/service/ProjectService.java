@@ -116,7 +116,7 @@ public interface ProjectService {
 	 * @param applyProjectVO
 	 * @return
 	 */
-	public void deleteProjectApply(ApplyProjectVO applyProjectVO);
+	public void deleteProjectApply(String pjApplyId);
 	
 	/**
 	 * 지원자 모두를 불러오는 메소드
@@ -212,10 +212,5 @@ public interface ProjectService {
 	 */
 	public ApplyProjectVO selectOneApplyInfo(String pjApplyId);
 	
-	/**
-	 * 프로젝트 지원서의 첨부자료 하나 없애는 메소드
-	 * @param pjApplyAttId
-	 * @return
-	 */
-	public boolean deleteApplyAtt(String pjApplyAttId);
+	
 }
