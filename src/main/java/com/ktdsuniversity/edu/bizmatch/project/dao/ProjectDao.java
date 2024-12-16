@@ -137,7 +137,7 @@ public interface ProjectDao {
 	 * @param applyProjectVO
 	 * @return
 	 */
-	public int deleteProjectApply(ApplyProjectVO applyProjectVO);
+	public int deleteProjectApply(String pjApplyId);
 	
 	/**
 	 * 해당 프로젝트에 지원자 들을 찾는 메소드
@@ -267,10 +267,10 @@ public interface ProjectDao {
 	public ApplyProjectVO selectOneApplyInfo(String pjApplyId);
 	
 	/**
-	 * 프로젝트 지원서 첨부자료 하나 지우는 메서드
-	 * @param pjApplyAttId
+	 * 프로젝트 지원서 첨부자료 지우는 메서드
+	 * @param pjApplyId
 	 * @return
 	 */
-	public int deleteOneApplyAtt(String pjApplyAttId);
+	public int deleteApplyAtt(String pjApplyId);
 }
 
