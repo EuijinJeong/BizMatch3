@@ -380,12 +380,17 @@ public class ProjectServiceImple implements ProjectService {
 		return updateCnt > 0;
 	}
 
+	
+	@Transactional
 	@Override
-	public void deleteProjectApply(ApplyProjectVO applyProjectVO) {
-		int deleteCnt = this.projectDao.deleteProjectApply(applyProjectVO);
-		if (deleteCnt == 0) {
-			throw new ProjectDeleteException("지원서를 삭제하는 중 서버상의 이유로 오류가 발생했습니다.", applyProjectVO.getPjId());
+	public void deleteProjectApply(String pjApplyId) {
+		if(!(this.projectDao.deleteProjectApply(pjApplyId)>0)) {
+			throw new ProjectDeleteException("지원서를 삭제하는 중 서버상의 이유로 오류가 발생했습니다.", pjApplyId);
+
 		}
+		if(!(this.projectDao.deleteApplyAtt(pjApplyId) > 0)) {
+			throw new ProjectDeleteException("지원서를 삭제하는 중 서버상의 이유로 오류가 발생했습니다.", pjApplyId);
+		};
 	}
 
 	@Override
@@ -539,12 +544,5 @@ public class ProjectServiceImple implements ProjectService {
 	@Override
 	public ApplyProjectVO selectOneApplyInfo(String pjApplyId) {
 		return this.projectDao.selectOneApplyInfo(pjApplyId);
-	}
-
-
-
-	@Override
-	public boolean deleteApplyAtt(String pjApplyAttId) {
-		return this.projectDao.deleteOneApplyAtt(pjApplyAttId)>0;
 	}
 }

@@ -454,13 +454,11 @@ public class ProjectController {
 	 * @param applyProjectVO
 	 * @return
 	 */
-	@PostMapping("/project/apply/delete/{pjApplyId}")
+	@PostMapping("/project/apply/delete")
 	public ApiResponse deleteApplyContent(Authentication memberVO
-									, ApplyProjectVO applyProjectVO
-									, @PathVariable String pjApplyId) {
+									, @RequestParam String pjApplyId) {
 
-		applyProjectVO.setPjApplyId(pjApplyId);
-		this.projectService.deleteProjectApply(applyProjectVO);
+		this.projectService.deleteProjectApply(pjApplyId);
 
 		return new ApiResponse(true);
 	}
@@ -646,14 +644,5 @@ public class ProjectController {
 		return new ApiResponse(applyProjectVO);
 	}
 	
-	/**
-	 * 특정 프로젝트의 첨부자료를 삭제하는 컨트롤러.
-	 * @param pjApplyAttId
-	 * @return
-	 */
-	@PostMapping("/project/apply/att/delete")
-	public ApiResponse deleteApplyAtt(@RequestParam String pjApplyAttId) {
-		boolean isSuccess = this.projectService.deleteApplyAtt(pjApplyAttId);
-		return new ApiResponse(isSuccess);
-	}
+
 }
