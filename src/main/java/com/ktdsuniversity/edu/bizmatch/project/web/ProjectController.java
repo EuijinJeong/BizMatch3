@@ -299,7 +299,8 @@ public class ProjectController {
 	 * @return
 	 */
 	@PostMapping("/project/update/addrecruitment/{pjId}")
-	public ApiResponse UpdateAddThreeDate(@PathVariable String pjId, @RequestParam String addDate) {
+	public ApiResponse UpdateAddThreeDate(@PathVariable String pjId
+										, @RequestParam String addDate) {
 		ProjectVO projectVO = this.projectService.readOneProjectInfo(pjId);
 		try {
 			// 1. 모집 종료일을 3일 연장하기
