@@ -233,15 +233,12 @@ public class ProjectDaoImpl extends SqlSessionDaoSupport implements ProjectDao{
 
 	@Override
 	public ApplyProjectVO selectOneApplyViewInfo(SearchApplyVO searchApplyVO) {
-		
 		return this.getSqlSession().selectOne(NAMESPACE + ".selectOneApplyViewInfo" , searchApplyVO);
 	}
 
 	@Override
 	public int updateProject(ProjectVO projectVO) {
 		return this.getSqlSession().update(NAMESPACE + ".updateProject",projectVO);
-				
-		
 	}
 
 	@Override
@@ -252,5 +249,10 @@ public class ProjectDaoImpl extends SqlSessionDaoSupport implements ProjectDao{
 	@Override
 	public int deleteOneApplyAtt(String pjApplyAttId) {
 		return this.getSqlSession().delete(NAMESPACE+".deleteOneApplyAtt", pjApplyAttId);
+	}
+
+	@Override
+	public int deleteAllProjectAtt(String pjId) {
+		return this.getSqlSession().delete(NAMESPACE + ".deleteAllProjectAtt", pjId);
 	}
 }

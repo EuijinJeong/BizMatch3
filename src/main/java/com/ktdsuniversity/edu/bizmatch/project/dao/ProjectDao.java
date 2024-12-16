@@ -205,8 +205,6 @@ public interface ProjectDao {
 	
 	public int insertNewIndustryGroup(ProjectIndustryVO projectIndustryVO);
 
-
-	
 	/**
 	 * 특정 프로젝트의 특정 지원서의 정보를 가져오는 쿼리문을 호출하는 메서드.
 	 * @param applyProjectVO
@@ -272,5 +270,12 @@ public interface ProjectDao {
 	 * @return
 	 */
 	public int deleteOneApplyAtt(String pjApplyAttId);
+	
+	/**
+	 * 특정 프로젝트 첨부자료를 전부 지우는 쿼리문을 호출하는 메서드.
+	 * @param pjId
+	 * @return
+	 */
+	public int deleteAllProjectAtt(String pjId);
 }
 

@@ -359,19 +359,20 @@ public class ProjectController {
 		}
 	}
 
-//	/**
-//	 * 프로젝트 삭제를 처리하는 컨트롤러. -TODO-
-//	 * 
-//	 * @param memberVO
-//	 * @param pjId
-//	 * @return
-//	 */
-//	@PostMapping("/project/delete/")
-//	public String deleteProject(@SessionAttribute(value = "_LOGIN_USER_") MemberVO memberVO, String pjId) {
-//		boolean isDeleted = this.projectService.deleteOneProject(null);
-//
-//		return null;
-//	}
+	/**
+	 * 프로젝트 삭제를 처리하는 컨트롤러. -TODO-
+	 * 
+	 * @param memberVO
+	 * @param pjId
+	 * @return
+	 */
+	@PostMapping("/project/delete/{pjId}")
+	public String deleteProject(@RequestParam String pjId
+							, Authentication memberVO) {
+		
+		boolean isDeleted = this.projectService.deleteOneProject(pjId);
+		return null;
+	}
 
 	/**
 	 * 지원서 수정페이지를 로드하는 컨트롤러.
@@ -380,7 +381,6 @@ public class ProjectController {
 	 * @param applyProjectVO
 	 * @return
 	 */
-
 	@GetMapping("/project/apply/edit/{pjId}")
 	public ApiResponse loadUpdateApplyContentPage(Authentication memberVO,
 			@PathVariable String pjId) {
@@ -477,8 +477,8 @@ public class ProjectController {
 	 * @return
 	 */
 	@GetMapping("/project/apply/member/{pjId}")
-	public ApiResponse viewApplyMemberPage(Authentication memberVO,
-									@PathVariable String pjId) {
+	public ApiResponse viewApplyMemberPage(Authentication memberVO
+										, @PathVariable String pjId) {
 		ProjectVO projectVO = this.projectService.readOneProjectInfo(pjId);
 		
 		// 돈을 안냈으면.
@@ -499,7 +499,6 @@ public class ProjectController {
 
 	/**
 	 * 프로젝트에 첨부할 수 있는 전체 스킬들의 목록을 불러오는 컨트롤러이다.
-	 * 
 	 * @return
 	 */
 	@GetMapping("/project/skill") // api/project/skill
@@ -523,7 +522,6 @@ public class ProjectController {
 
 	/**
 	 * 지원기업 선택하기
-	 * 
 	 * @param pjId
 	 * @param memberVO
 	 * @param selectApplyMemberVO
@@ -537,29 +535,6 @@ public class ProjectController {
 		
 		return new ApiResponse(isUpdated);
 	}
-
-	/**
-	 * 기업회원 내 프로젝트 조회페이지를 로드하는 컨트롤러.
-	 * 
-	 * @param memberVO
-	 * @return
-	 */
-	@GetMapping("/project/myproject")
-	public ApiResponse viewAllProjectOrder(Authentication memberVO) {
-		
-		return new ApiResponse();
-	}
-
-//	/**
-//	 * 한명의 회원이 수주했던 즉 수행했던 모든 프로젝트 조회하는 페이지를 로드하는 컨트롤러 -의진-
-//	 * 
-//	 * @param memberVO
-//	 * @return
-//	 */
-//	@GetMapping("/project/all/order/recipient")
-//	public String viewAllProject(Authentication memberVO) {
-//		
-//	}
 
 	/**
 	 * 
@@ -642,6 +617,11 @@ public class ProjectController {
 		return new ApiResponse(applyProjectVO);
 	}
 	
+	/**
+	 * 특정 프로젝트의 첨부자료를 삭제하는 컨트롤러.
+	 * @param pjApplyAttId
+	 * @return
+	 */
 	@PostMapping("/project/apply/att/delete")
 	public ApiResponse deleteApplyAtt(@RequestParam String pjApplyAttId) {
 		boolean isSuccess = this.projectService.deleteApplyAtt(pjApplyAttId);
