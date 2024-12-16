@@ -294,8 +294,10 @@ public class ProjectServiceImple implements ProjectService {
 	 * 이하 댓글 관련 Service 메서드
 	 */
 	@Override
-	public boolean updateDeleteState(String id) {
-		return this.projectDao.deleteOneComment(id) > 0;
+
+	public boolean updateDeleteCommentState(String id) {
+		return this.projectDao.deleteOneComment(id)>0;
+
 	}
 
 	@Override
@@ -351,6 +353,29 @@ public class ProjectServiceImple implements ProjectService {
 		int updateCnt = this.projectDao.updateProjectApply(applyProjectVO);
 		if (updateCnt == 0) {
 			throw new ProjectApplyFailException("프로젝트 지원서를 수정하는 중 서버에서 오류가 발생했습니다.", applyProjectVO);
+		}
+		
+		List<MultipartFile> fileList = applyProjectVO.getFileList();
+		if (fileList != null && !fileList.isEmpty()) {
+			List<StoreResultVO> fileStoreList = this.fileHandler.storeListFile(fileList); // 파일 리스트 난독화 해서 리스트 반환해줌.
+			
+			for (StoreResultVO fileResult : fileStoreList) {
+				ProjectApplyFileVO projectApplyFileVO = new ProjectApplyFileVO();
+				String originfileName = fileResult.getOriginFileName(); // 원본 파일 이름.
+				String obfuscatedFileName = fileResult.getObfuscatedFileName(); // 난독화한 파일 이름.
+				projectApplyFileVO.setPjApplyAttUrl(originfileName);
+				projectApplyFileVO.setPjApplyAttUrlNoneread(obfuscatedFileName);
+				projectApplyFileVO.setEmilAddr(applyProjectVO.getEmilAddr());
+				projectApplyFileVO.setPjApplyId(applyProjectVO.getPjApplyId());
+				
+			
+
+				// 파일을 insert함.
+				boolean insertFileCnt = this.fileDao.insertApplyProjectFile(projectApplyFileVO)>0;
+				if(!insertFileCnt) {
+					throw new IllegalArgumentException("파일 저장 중 에러");
+				}
+			}
 		}
 		return updateCnt > 0;
 	}
