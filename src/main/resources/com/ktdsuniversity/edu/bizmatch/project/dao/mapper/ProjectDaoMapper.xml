@@ -333,6 +333,10 @@
 			, PY.IMP_UID 
 			, PY.DPST_RFND_AMNT 
 			, PY.DPST_RFND_DT
+			, PA.PJ_ATT_ID
+			, PA.PJ_ID
+			, PA.PJ_ATT_URL
+			, PA.PJ_ATT_URL_NONREAD
 	     FROM PJ_INFO P
 			LEFT JOIN PJ_INDSTR PI
 			     ON P.PJ_ID = PI.PJ_ID 
@@ -346,6 +350,8 @@
 			     ON PA.PJ_ID = P.PJ_ID 
 			LEFT JOIN PYMNT_INFO PY
 			  ON PY.PJ_ID = P.PJ_ID 
+			LEFT JOIN PJ_ATT PA
+			  ON PA.PJ_ID = P.PJ_ID
 		   WHERE P.PJ_ID = #{_parameter}
 		 <!--TODO LEFT JOIN -> JOIN  -->
 	</select>
@@ -958,6 +964,9 @@
 		<collection property="applyProjectVOList" ofType="com.ktdsuniversity.edu.bizmatch.project.vo.ApplyProjectVO" autoMapping="true">
 			<id column="PJ_APPLY_ID" property="pjApplyId"></id>
 			<result column="APPLY_EMIL_ADDR" property="emilAddr"/>
+		</collection>
+		<collection property="projectAtt" ofType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectAttachmentVO" autoMapping="true">
+			<id column="PJ_ATT_ID" property="pjAttId"></id>
 		</collection>
 	</resultMap>
 	<select id="selectProjectList" 
