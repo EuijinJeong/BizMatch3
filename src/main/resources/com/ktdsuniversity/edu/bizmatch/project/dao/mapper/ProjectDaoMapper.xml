@@ -1080,5 +1080,8 @@
 	    ON PT.PJ_APPLY_ID = PY.PJ_APPLY_ID
 	 WHERE PY.PJ_APPLY_ID = #{_parameter}
    </select>
-   
+   <delete id="deleteOneApplyAtt" parameterType="string">
+   DELETE FROM PJ_APPLY_ATT 
+	WHERE PJ_APPLY_ATT_ID = #{_parameter}
+   </delete>
 </mapper>

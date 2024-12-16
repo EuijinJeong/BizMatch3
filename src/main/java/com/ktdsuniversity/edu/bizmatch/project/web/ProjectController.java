@@ -641,4 +641,10 @@ public class ProjectController {
 		ApplyProjectVO applyProjectVO = this.projectService.selectOneApplyInfo(pjApplyId);
 		return new ApiResponse(applyProjectVO);
 	}
+	
+	@PostMapping("/project/apply/att/delete")
+	public ApiResponse deleteApplyAtt(@RequestParam String pjApplyAttId) {
+		boolean isSuccess = this.projectService.deleteApplyAtt(pjApplyAttId);
+		return new ApiResponse(isSuccess);
+	}
 }

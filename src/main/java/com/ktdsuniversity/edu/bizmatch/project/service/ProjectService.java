@@ -211,4 +211,11 @@ public interface ProjectService {
 	 * @return
 	 */
 	public ApplyProjectVO selectOneApplyInfo(String pjApplyId);
+	
+	/**
+	 * 프로젝트 지원서의 첨부자료 하나 없애는 메소드
+	 * @param pjApplyAttId
+	 * @return
+	 */
+	public boolean deleteApplyAtt(String pjApplyAttId);
 }
