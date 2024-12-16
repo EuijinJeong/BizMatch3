@@ -83,11 +83,15 @@ public class PaymentController {
 	 * @return
 	 */
 	@PostMapping("/bizmatch/payment/ask/downpayment")
-	public ApiResponse askDownPayment(PaymentRequestVO paymentRequestVO) {
-		paymentRequestVO.toString();
-		paymentRequestVO.setPaymentType(1);
-		boolean isSuccess = this.paymentService.createDownPayment(paymentRequestVO);
+	public ApiResponse askDownPayment(@RequestBody PaymentRequestVO paymentRequestVO
+									, Authentication memberVO) {
 		
+		// 결제 타입 1 -> 계약금 결제.
+		paymentRequestVO.setPaymentType(1);
+		MemberVO member = (MemberVO) memberVO.getPrincipal();
+		paymentRequestVO.setEmilAddr(member.getEmilAddr());
+		
+		boolean isSuccess = this.paymentService.createDownPayment(paymentRequestVO);
 		return new ApiResponse(isSuccess);
 	}
 	

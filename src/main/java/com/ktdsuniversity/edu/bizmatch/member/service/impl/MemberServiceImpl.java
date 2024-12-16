@@ -589,10 +589,8 @@ public class MemberServiceImpl implements MemberService {
 			return false;
 		}
 		
-		
 		if(isPossible) {
 			this.emailService.deleteTempEmailAuthNum(memberModifyVO.getNewEmilAddr());
-			
 			return this.memberDao.updateMyInfoMember(memberModifyVO) > 0;
 		}
 		return false;
