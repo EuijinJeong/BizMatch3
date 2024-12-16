@@ -85,7 +85,7 @@ public interface ProjectService {
 	 * @param id
 	 * @return
 	 */
-	public boolean updateDeleteState(String id);
+	public boolean updateDeleteCommentState(String id);
 	public List<ProjectCommentVO> getPaginationComment(ProjectCommentPaginationVO projectCommentPaginationVO,String id);
 	public boolean createNewComment(ProjectCommentWriteVO projectCommentWriteVO);
 	public boolean modifyComment(ProjectCommentModifyVO projectCommentModifyVO);
