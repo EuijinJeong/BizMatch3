@@ -352,6 +352,29 @@ public class ProjectServiceImple implements ProjectService {
 		if (updateCnt == 0) {
 			throw new ProjectApplyFailException("프로젝트 지원서를 수정하는 중 서버에서 오류가 발생했습니다.", applyProjectVO);
 		}
+		
+		List<MultipartFile> fileList = applyProjectVO.getFileList();
+		if (fileList != null && !fileList.isEmpty()) {
+			List<StoreResultVO> fileStoreList = this.fileHandler.storeListFile(fileList); // 파일 리스트 난독화 해서 리스트 반환해줌.
+			
+			for (StoreResultVO fileResult : fileStoreList) {
+				ProjectApplyFileVO projectApplyFileVO = new ProjectApplyFileVO();
+				String originfileName = fileResult.getOriginFileName(); // 원본 파일 이름.
+				String obfuscatedFileName = fileResult.getObfuscatedFileName(); // 난독화한 파일 이름.
+				projectApplyFileVO.setPjApplyAttUrl(originfileName);
+				projectApplyFileVO.setPjApplyAttUrlNoneread(obfuscatedFileName);
+				projectApplyFileVO.setEmilAddr(applyProjectVO.getEmilAddr());
+				projectApplyFileVO.setPjApplyId(applyProjectVO.getPjApplyId());
+				
+			
+
+				// 파일을 insert함.
+				boolean insertFileCnt = this.fileDao.insertApplyProjectFile(projectApplyFileVO)>0;
+				if(!insertFileCnt) {
+					throw new IllegalArgumentException("파일 저장 중 에러");
+				}
+			}
+		}
 		return updateCnt > 0;
 	}
 
@@ -514,5 +537,12 @@ public class ProjectServiceImple implements ProjectService {
 	@Override
 	public ApplyProjectVO selectOneApplyInfo(String pjApplyId) {
 		return this.projectDao.selectOneApplyInfo(pjApplyId);
+	}
+
+
+
+	@Override
+	public boolean deleteApplyAtt(String pjApplyAttId) {
+		return this.projectDao.deleteOneApplyAtt(pjApplyAttId)>0;
 	}
 }

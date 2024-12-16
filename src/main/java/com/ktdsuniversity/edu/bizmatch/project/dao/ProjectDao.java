@@ -265,5 +265,12 @@ public interface ProjectDao {
 	 * @return
 	 */
 	public ApplyProjectVO selectOneApplyInfo(String pjApplyId);
+	
+	/**
+	 * 프로젝트 지원서 첨부자료 하나 지우는 메서드
+	 * @param pjApplyAttId
+	 * @return
+	 */
+	public int deleteOneApplyAtt(String pjApplyAttId);
 }
 
