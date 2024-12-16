@@ -263,7 +263,8 @@
 		JOIN INDSTR_INFO II
 		ON II.INDSTR_ID = PN.SMJR_ID 
 		WHERE P.OBTN_ID IS NULL 
-		<if test="_parameter != null">
+		ORDER BY P.RGSTR_DT DESC
+		<!-- <if test="_parameter != null">
 			<include
 				refid="selectAllProjectCodition" />
 		</if>
@@ -272,8 +273,8 @@
 			<when test="orderBy == 'latest'">P.RGSTR_DT DESC</when>
 			<when test="orderBy == 'deadline'">P.PJ_RCRUT_END_DT ASC</when>
 			<when test="orderBy == 'amount'">P.CNTRCT_ACCNT DESC</when>
-			<otherwise>P.RGSTR_DT DESC</otherwise> <!-- 기본 정렬 기준 -->
-		</choose>
+			<otherwise>P.RGSTR_DT DESC</otherwise> 기본 정렬 기준
+		</choose> -->
 
 	</select>
 	
@@ -1005,6 +1006,7 @@
 			     ON PA.PJ_ID = P.PJ_ID 
 			 WHERE P.OBTN_ID IS NULL
 			  AND P.PJ_STT IN (0,3)
+			  ORDER BY P.RGSTR_DT DESC
 			 <!-- <if test="mbrCtgry == 0">
 			 	AND P.ORDR_ID NOT IN (SELECT EMIL_ADDR FROM MBR_INFO WHERE CMP_ID = #{cmpId})
 			 </if> -->
