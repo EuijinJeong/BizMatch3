@@ -43,7 +43,7 @@ app:
     apiKey: 7126540884433771
     apiSecret: gLYIyTzw9aGbZZcObqGfd4EpZ4WKxoeL3QaIDxXKKMquhtJDHt6tH44d4JS9jGBTEyZoVyPTKUBTXOO8
   multipart:
-    base-dir: C:/uploadfiles/
+    base-dir: /Users/jeong-uijin/Desktop/uploadfiles
     obfuscation:
       enable: true
       hide-ext:
@@ -55,7 +55,15 @@ app:
       /ws/**,
       /api/board,
       /api/board/view/**,
-      /api/board/comment/view/**
+      /api/board/comment/view/**,
+      /api/member/findpwd,
+      /api/email/check/,
+      /api/email/authnum/samecheck,
+      /api/bizno/api/ask,
+      /api/member/signup/cmpnycheck,
+      /api/member/signup/company,
+      /api/member/signup/freelaner,
+      /api/member/resetpwd,
   interceptor:
     accesslog:
       addpathpatterns: /**

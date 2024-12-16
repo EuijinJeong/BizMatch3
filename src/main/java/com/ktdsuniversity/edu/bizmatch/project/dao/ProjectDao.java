@@ -116,7 +116,7 @@ public interface ProjectDao {
 	 * @param projectIndustryVO : 프로젝트 수정 정보를 담은 객체.
 	 * @return : 수정된 쿼리문의 개수.
 	 */
-	public int updateProjectIndustry(ProjectIndustryVO projectIndustryVO);
+	public int updateProjectIndustry(ModifyProjectVO modifyProjectVO);
 	
 	/**
 	 * 프로젝트 추가모집시 수정하는 쿼리문을 호출하는 메서드.
@@ -205,8 +205,6 @@ public interface ProjectDao {
 	
 	public int insertNewIndustryGroup(ProjectIndustryVO projectIndustryVO);
 
-
-	
 	/**
 	 * 특정 프로젝트의 특정 지원서의 정보를 가져오는 쿼리문을 호출하는 메서드.
 	 * @param applyProjectVO
@@ -271,6 +269,8 @@ public interface ProjectDao {
 	 * @param pjApplyId
 	 * @return
 	 */
+
 	public int deleteApplyAtt(String pjApplyId);
+
 }
 

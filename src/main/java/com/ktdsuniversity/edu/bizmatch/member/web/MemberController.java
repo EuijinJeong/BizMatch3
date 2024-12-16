@@ -77,7 +77,7 @@ public class MemberController {
 	}
 	
 	/**
-	 * 비밀번호 재설정 요청을 처리하는 컨트롤러.
+	 * 비밀번호 재설정 요청을 위해 이메일을 보내는 요청을 받는 컨트롤러.
 	 * @param email
 	 * @return
 	 */
@@ -111,7 +111,8 @@ public class MemberController {
 	 * @param memberCompanySignUpVO
 	 * @return
 	 */
-	@PostMapping(value = "/member/signup/company", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PostMapping(value = "/member/signup/company"
+				, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ApiResponse signUpCompanyMember(@ModelAttribute MemberCompanySignUpVO memberCompanySignUpVO) {
 		
 //		 사용자가 입력한 값 유효성 검사.
@@ -177,7 +178,7 @@ public class MemberController {
 	@GetMapping("/bizno/api/ask")
 	public Map handleBiznoApi(@RequestParam String cmpnyBrn) {
 		Map<String, Object> request = new HashMap<>();
-		// TODO 사업자 번호 - 이거 뜯을 수 있나?
+		// TODO 사업자 번호 - 이거 뜯을 수 있나? - 의진 -
 		request.put("key", "amVqMDAxMjI4QGdtYWlsLmNvbSAg");
 		request.put("gb", "1");
 		request.put("q", cmpnyBrn);
@@ -243,7 +244,7 @@ public class MemberController {
 	}
 	
 	/**
-	 * 
+	 * 내 정보를 가져오는 요청을 받는 컨트롤러.
 	 * @param authentication
 	 * @return
 	 */
@@ -527,16 +528,6 @@ public class MemberController {
 		return new ApiResponse(isCreated);
 	}
 	
-//	/**
-//	 * 프리랜서 포트폴리오 페이지를 로드하는 컨트롤러.
-//	 * @param loginMemberVO
-//	 * @return
-//	 */
-//	@GetMapping("/member/mypage/freelancer/portfolio/{email}")
-//	public String loadPortfolioListPageFL(@PathVariable String email,
-//										Authentication loginMemberVO) {
-//		return "portfolio/portfoliolist";
-//	}
 
 	/**
 	 * 회사
@@ -658,15 +649,6 @@ public class MemberController {
 		return new ApiResponse(memberPortfolioVO);
 	}
 	
-//	/**
-//	 * 
-//	 * @return
-//	 */
-//	@GetMapping("/view/portfolio/view/detail/{mbrPrtflId}")
-//	public String loadDataPortfolioDetailsOne() {
-//		return "/portfolio/portfoliolist";
-//	}
-	
 	/**
 	 * 하나의 포트폴리오 정보를 제거하는 메소드.
 	 * @param mbrPrtflId
@@ -692,13 +674,11 @@ public class MemberController {
 		return new ApiResponse(isUpdated);
 	}
 	
-//	@GetMapping("/member/company/
-//	public ApiResponse getCmpIdByEmail(Authentication memberVO) {
-//		String email = memberVO.getName();
-//		
-//		return new ApiResponse();
-//	}
-	
+	/**
+	 * 로그아웃 요청을 받는 컨트롤러.
+	 * @param memberVO
+	 * @return
+	 */
 	@GetMapping("/member/logout")
 	public ApiResponse doLogout(Authentication memberVO) {
 		return new ApiResponse();

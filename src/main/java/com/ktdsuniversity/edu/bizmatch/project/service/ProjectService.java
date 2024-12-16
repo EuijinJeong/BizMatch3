@@ -29,7 +29,7 @@ public interface ProjectService {
 	 * @return
 	 * @throws ParseException 
 	 */
-	public boolean createNewProject(WriteProjectVO writeProjectVO) throws ParseException;
+	public boolean createNewProject(WriteProjectVO writeProjectVO, List<String> skillList) throws ParseException;
 	
 	/**
 	 * 하나의 프로젝트 정보를 수정하는 메서드.
