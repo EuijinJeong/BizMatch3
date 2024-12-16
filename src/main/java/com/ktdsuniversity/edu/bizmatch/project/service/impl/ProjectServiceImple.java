@@ -395,9 +395,9 @@ public class ProjectServiceImple implements ProjectService {
 	public List<ApplyProjectVO> readAllApplyMember(String pjId, String email) {
 		ProjectVO projectVO = this.projectDao.selectProjectInfo(pjId);
 
-		// if(!projectVO.getOrdrId().equals(memberVO.getEmilAddr())){
-		// throw new IllegalArgumentException("정보가 일치하지 않습니다.");
-		// }
+//		 if(!projectVO.getOrdrId().equals(memberVO.getEmilAddr())){
+//		 throw new IllegalArgumentException("정보가 일치하지 않습니다.");
+//		 }
 		if (!(projectVO.getObtnId() == null)) {
 			// TODO 지원자 선정 완료 오류 고쳐야함.
 			throw new IllegalArgumentException("지원자 선정을 완료하였습니다.");

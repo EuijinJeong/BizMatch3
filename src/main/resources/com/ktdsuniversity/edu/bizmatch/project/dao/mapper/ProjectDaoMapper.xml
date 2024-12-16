@@ -353,7 +353,6 @@
 			LEFT JOIN PJ_ATT PA
 			  ON PA.PJ_ID = P.PJ_ID
 		   WHERE P.PJ_ID = #{_parameter}
-		 <!--TODO LEFT JOIN -> JOIN  -->
 	</select>
 
 	<select id="selectForPagination"
