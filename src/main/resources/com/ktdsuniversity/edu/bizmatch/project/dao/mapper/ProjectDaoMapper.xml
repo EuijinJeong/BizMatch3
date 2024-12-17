@@ -1014,6 +1014,7 @@
 			     ON PA.PJ_ID = P.PJ_ID 
 			 WHERE P.OBTN_ID IS NULL
 			  AND P.PJ_STT IN (0,3)
+			  AND P.IS_DLT = 0
 			  ORDER BY P.RGSTR_DT DESC
 			 <!-- <if test="mbrCtgry == 0">
 			 	AND P.ORDR_ID NOT IN (SELECT EMIL_ADDR FROM MBR_INFO WHERE CMP_ID = #{cmpId})
