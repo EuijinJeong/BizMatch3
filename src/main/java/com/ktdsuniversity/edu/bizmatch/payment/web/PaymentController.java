@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ktdsuniversity.edu.bizmatch.common.vo.ApiResponse;
@@ -113,7 +114,15 @@ public class PaymentController {
 	 * @return
 	 */
 	@GetMapping("/payment/details")
-	public ApiResponse getPaymentDetails(Authentication memberVO, PaymentSearchVO paymentSearchVO) {
+	public ApiResponse getPaymentDetails(Authentication memberVO
+									, @RequestParam String emilAddr
+									, @RequestParam String startDate
+									, @RequestParam String paymentType) {
+		
+		PaymentSearchVO paymentSearchVO = new PaymentSearchVO();
+		paymentSearchVO.setEmilAddr(emilAddr);
+		paymentSearchVO.setStartDate(startDate);
+		paymentSearchVO.setPaymentType(paymentType);
 		List<PaymentHistoryVO> paymentHistoryList = this.paymentService.readPaymentDetails(paymentSearchVO);
 		return new ApiResponse(paymentHistoryList);
 	}
