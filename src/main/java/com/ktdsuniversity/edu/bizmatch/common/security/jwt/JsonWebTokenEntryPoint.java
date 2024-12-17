@@ -36,7 +36,6 @@ public class JsonWebTokenEntryPoint {
 		String email = loginMemberVO.getEmilAddr();
 		MemberVO memberVO = this.memberDao.selectOneMember(email);
 		if(memberVO == null) {
-//			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("아이디 또는 비밀번호가 일치하지 않습니다.");
 			ApiResponse errorResponse = new ApiResponse(HttpStatus.FORBIDDEN);
 			errorResponse.setErrors(List.of("아이디 또는 비밀번호가 일치하지 않습니다."));
 			return errorResponse;
@@ -48,7 +47,6 @@ public class JsonWebTokenEntryPoint {
 		String salt = memberVO.getSalt();
 		String encryptedPassword = sha.getEncrypt(password, salt);
 		if (!encryptedPassword.equals(memberVO.getPwd())) {
-//			return ResponseEntity.status(HttpStatus.FORBIDDEN).body("아이디 또는 비밀번호가 일치하지 않습니다.");
 			ApiResponse errorResponse = new ApiResponse(HttpStatus.FORBIDDEN);
 			errorResponse.setErrors(List.of("아이디 또는 비밀번호가 일치하지 않습니다."));
 			return errorResponse;
@@ -56,11 +54,11 @@ public class JsonWebTokenEntryPoint {
 		
 		// 사용자가 활성화 상태인지 검사.
 		if(memberVO.getMbrStt() == 0) {
-			// 수락 전이라면
+			return new ApiResponse(HttpStatus.UNAUTHORIZED);
 		}
+		
 		// 토큰 만들어서 돌려준다.
 		String jwt = this.jsonWebTokenProvider.generateJwt(Duration.ofHours(8), memberVO);
 		return new ApiResponse(jwt);
 	}
-	
 }
