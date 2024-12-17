@@ -17,6 +17,7 @@ import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentPaginationVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentWriteVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectIndustryVO;
+import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectScrapDeleteVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectScrapVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectSkillVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectVO;
@@ -259,6 +260,16 @@ public class ProjectDaoImpl extends SqlSessionDaoSupport implements ProjectDao{
 
 	public int deleteApplyByPjId(String pjId) {
 		return this.getSqlSession().delete(NAMESPACE+".deleteApplyByPjId", pjId);
+	}
+
+	@Override
+	public List<ProjectVO> selectAllScrapList(String email) {
+		return this.getSqlSession().selectList(NAMESPACE+".selectAllScrapList", email);
+	}
+
+	@Override
+	public int deleteScrapProject(ProjectScrapDeleteVO projectScrapDeleteVO) {
+		return this.getSqlSession().delete(NAMESPACE+".deleteScrapProject", projectScrapDeleteVO);
 	}
 
 }

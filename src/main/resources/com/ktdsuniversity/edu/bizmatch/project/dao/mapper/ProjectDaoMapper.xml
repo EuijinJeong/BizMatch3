@@ -1105,4 +1105,93 @@
    DELETE FROM PJ_APPLY 
    WHERE PJ_ID= #{_parameter}
    </delete>
+   
+   <resultMap type="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectScrapVO" id="projectScrapVOMap" autoMapping="true">
+   		<id column="PJ_SCRP_ID" property="pjScrpId"></id>
+   		<association property="projectVO" javaType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectVO" autoMapping="true">
+   			<id column="PJ_ID" property="pjId"></id>
+   		<association property="projectIndustryVO"
+					 javaType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectIndustryVO"
+					 autoMapping="true">
+			<id column="PJ_INDSTR_ID" property="pjIndstrId"/>
+			<association property="indstrInfoVO"
+						 javaType="com.ktdsuniversity.edu.bizmatch.common.vo.IndstrInfoVO"
+						 autoMapping="true">
+				<id column="INDSTR_ID" property="indstrId"/>
+			</association>
+		</association>
+		<association property="paymentVO" javaType="com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentVO" autoMapping="true">
+         <id column="PYMNT_ID" property="pymntId"/>
+      	</association>
+		<collection property="projectSkillList"
+					 ofType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectSkillVO"
+					 autoMapping="true">
+			<id column="PJ_PRM_STK_ID" property="pjPrmStkId"/>
+			<association property="prmStkVO"
+						 javaType="com.ktdsuniversity.edu.bizmatch.member.vo.PrmStkVO"
+						 autoMapping="true">
+				<id column="PRM_STK_ID" property="prmStkId"/>
+			</association>
+		</collection>
+		<collection property="applyProjectVOList" ofType="com.ktdsuniversity.edu.bizmatch.project.vo.ApplyProjectVO" autoMapping="true">
+			<id column="PJ_APPLY_ID" property="pjApplyId"></id>
+			<result column="APPLY_EMIL_ADDR" property="emilAddr"/>
+		</collection>
+		<collection property="projectAtt" ofType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectAttachmentVO" autoMapping="true">
+			<id column="PJ_ATT_ID" property="pjAttId"></id>
+		</collection>
+   		
+   		</association>
+   </resultMap>
+   <select id="selectAllScrapList" parameterType="string" resultMap="projectScrapVOMap">
+   		SELECT PS.PJ_SCRP_ID 
+   			, PS.EMIL_ADDR
+		   	, P.PJ_ID
+			, P.ORDR_ID
+			, P.OBTN_ID
+			, P.PJ_TTL
+			, TO_CHAR(P.RGSTR_DT,'YYYY-MM-DD') RGSTR_DT 
+			, TO_CHAR(P.STRT_DT, 'YYYY-MM-DD') STRT_DT 
+			, TO_CHAR(P.END_DT, 'YYYY-MM-DD') END_DT
+			, P.CNTRCT_ACCNT
+			, P.PJ_DESC
+			, P.IS_DLT
+			, TO_CHAR(P.DLT_DT, 'YYYY-MM-DD') DLT_DT
+			, P.LST_MOD_DT
+			, P.IS_RCRUT_ADD
+			, P.PJ_STT
+			, P.VIEW_CNT
+			, P.PJ_RCRUT_CNT
+			, TO_CHAR(P.PJ_RCRUT_STRT_DT, 'YYYY-MM-DD') PJ_RCRUT_STRT_DT
+			, TO_CHAR(P.PJ_RCRUT_END_DT,'YYYY-MM-DD') PJ_RCRUT_END_DT
+			, PI.PJ_INDSTR_ID
+			, PI.MJR_ID
+			, PI.SMJR_ID
+			, PPS.PJ_PRM_STK_ID 
+			, II.INDSTR_ID
+			, II.INDSTR_NM
+			, II.UPPR_INDSTR_ID
+			, PRM.PRM_STK_ID
+			, PRM.PRM_STK
+		  FROM PJ_SCRP PS
+		  JOIN PJ_INFO P
+		    ON P.PJ_ID = PS.PJ_ID 
+		    LEFT JOIN PJ_INDSTR PI
+		     ON PS.PJ_ID = PI.PJ_ID 
+		LEFT JOIN INDSTR_INFO II
+		     ON II.INDSTR_ID = PI.SMJR_ID
+		LEFT JOIN PJ_PRM_STK PPS
+		     ON PPS.PJ_ID = PS.PJ_ID 
+		LEFT JOIN PRM_STK PRM
+			ON PRM.PRM_STK_ID = PPS.PRM_STK_ID
+		  WHERE PS.EMIL_ADDR = #{_parameter}
+		    AND P.PJ_STT IN (0,3)
+		  ORDER BY P.RGSTR_DT DESC
+   </select>
+   <delete id="deleteScrapProject" parameterType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectScrapDeleteVO">
+   		DELETE
+   		  FROM PJ_SCRP
+   		 WHERE EMIL_ADDR = #{email}
+   		   AND PJ_ID = #{pjId}
+   </delete>
 </mapper>

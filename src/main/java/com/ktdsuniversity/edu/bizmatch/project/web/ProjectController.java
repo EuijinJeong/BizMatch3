@@ -38,6 +38,8 @@ import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectApplyAttVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentModifyVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentWriteVO;
+import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectScrapDeleteVO;
+import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectScrapVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectSkillVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.SearchApplyVO;
@@ -106,31 +108,6 @@ public class ProjectController {
 
 		return new ApiResponse(projectVO);
 	}
-
-	/**
-	 * 프로젝트 문의 페이지. temp
-	 * 
-	 * @return
-	 */
-//	@GetMapping("/project/inquiry")
-//	public String viewProjectInquiryPage() {
-//		return "project/project_inquiry_page";
-//	}
-
-	/**
-	 * 프로젝트 찾기 페이지를 반환하는 컨트롤러이다.
-	 * 
-	 * @param memberVO
-	 * @return
-	 */
-//	@GetMapping("/project/findpage")
-//	public String viewProjectFindPage(@SessionAttribute(value = "_LOGIN_USER_", required = false) MemberVO memberVO) {
-//
-//		if (memberVO == null) {
-//			return "redirect:/";
-//		}
-//		return "project/project_find";
-//	}
 
 	/**
 	 * 모든 프로젝트 리스트의 정보를 반환하는 컨트롤러.
@@ -267,19 +244,6 @@ public class ProjectController {
 		return resultMap;
 	}
 
-//	/**
-//	 * 특정 프로젝트 수정페이지를 로드하는 컨트롤러. -TODO-
-//	 * 
-//	 * @param memberVO
-//	 * @param pjId
-//	 * @return
-//	 */
-//	@GetMapping("/project/update/content/{pjId}")
-//	public String loadUpdateProjectPage(@SessionAttribute(value = "_LOGIN_USER_") MemberVO memberVO,
-//			@PathVariable String pjId) {
-//		return null;
-//	}
-//
 	/**
 	 * 프로젝트 수정 요청을 보내는 컨트롤러.
 	 * 
@@ -294,41 +258,8 @@ public class ProjectController {
 		return new ApiResponse(isUpdated);
 	}
 	
-	
-	
-
-	/**
-<<<<<<< HEAD
-	 * 추가모집 3일 추가
-=======
-	 * 프로젝트 추가모집 수정 페이지를 로드하는 컨트롤러.
-	 * 
-	 * @param memberVO
-	 * @param projectVO
-	 * @return
-	 */
-//	@GetMapping("/project/update/addrecurit/")
-//	public String loadAddRecuritPage(@SessionAttribute(value = "_LOGIN_USER_") MemberVO memberVO, ProjectVO projectVO) {
-//
-//		return null;
-//	}
-//
-//	/**
-//	 * 추가모집 정보를 서버에 업로드하는 컨트롤러.
-//	 * 
-//	 * @param modifyProjectVO
-//	 * @return
-//	 */
-//	@PostMapping("/project/update/addrecurit/")
-//	public String createRecuritInfo(ModifyProjectVO modifyProjectVO) {
-//		boolean isUpdated = this.projectService.updateAddtionalRecruitment(modifyProjectVO);
-//
-//		return null;
-//	}
-
 	/**
 	 * 추가모집 
->>>>>>> jcy
 	 * @param memberVO
 	 * @param pjId
 	 * @return
@@ -559,27 +490,43 @@ public class ProjectController {
 		return new ApiResponse(applyProjectVOList);
 	}
 
-//	/*
-//	 * 프로젝트 스크랩을 요청하는 컨트롤러.
-//	 * 
-//	 * @param pjId
-//	 * 
-//	 * @param memberVO
-//	 * 
-//	 * @return
-//	 */
-//	@PostMapping("/project/scrap/{pjId}")
-//	public ApiResponse doScrapProject(@PathVariable String pjId, Authentication memberVO) {
-//		ProjectScrapVO projectScrapVO = new ProjectScrapVO();
-//
-//		projectScrapVO.setEmilAddr(memberVO.getName());
-//		projectScrapVO.setPjId(pjId);
-//
-//		this.projectService.insertProjectScrap(projectScrapVO);
-//
-//		return "redirect:/project/info/{pjId}";
-//	}
-//	
+	/*
+	 * 프로젝트 스크랩을 요청하는 컨트롤러.
+	 * 
+	 * @param pjId
+	 * @param memberVO
+	 * @return
+	 */
+	@PostMapping("/project/scrap/{pjId}")
+	public ApiResponse doScrapProject(@PathVariable String pjId, Authentication memberVO) {
+		ProjectScrapVO projectScrapVO = new ProjectScrapVO();
+		MemberVO loginMemberVO = (MemberVO)memberVO.getPrincipal();
+		projectScrapVO.setEmilAddr(loginMemberVO.getEmilAddr());
+		projectScrapVO.setPjId(pjId);
+
+		boolean isSuccess = this.projectService.insertProjectScrap(projectScrapVO);
+
+		return new ApiResponse(isSuccess);
+	}
+	/**
+	 * 스크랩한 프로젝트를 가져오는 컨트롤러
+	 * @param email
+	 * @return
+	 */
+	@GetMapping("/project/scraplist")
+	public ApiResponse readScrapList(@RequestParam String email) {
+		List<ProjectVO> projectVOList = this.projectService.readAllScrap(email);
+		return new ApiResponse(projectVOList);
+	}
+	/**
+	 * 스크랩을 취소하는 컨트롤러
+	 */
+	@PostMapping("/project/delete/scrap")
+	public ApiResponse deleteScrap(@RequestBody ProjectScrapDeleteVO projectScrapDeleteVO) {
+		boolean isSuccess = this.projectService.deleteScrap(projectScrapDeleteVO);
+		return new ApiResponse(isSuccess);
+	}
+	
 	/**
 	 * @param projectCommentWriteVO : 프로젝트 댓글 작성 데이터
 	 * @return

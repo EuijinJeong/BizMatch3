@@ -41,6 +41,7 @@ import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentWriteVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectDateVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectIndustryVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectListVO;
+import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectScrapDeleteVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectScrapVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectSkillVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectVO;
@@ -472,11 +473,12 @@ public class ProjectServiceImple implements ProjectService {
 	}
 
 	@Override
-	public void insertProjectScrap(ProjectScrapVO projectScrapVO) {
+	public boolean insertProjectScrap(ProjectScrapVO projectScrapVO) {
 		int isInserted = this.projectDao.insertProjectScrap(projectScrapVO);
 		if (isInserted == 0) {
 			throw new ProjectScrapException("프로젝트 정보를 스크랩하는 중 오류가 발생했습니다.", projectScrapVO);
 		}
+		return true;
 	}
 
 	@Override
@@ -548,5 +550,15 @@ public class ProjectServiceImple implements ProjectService {
 	@Override
 	public ApplyProjectVO selectOneApplyInfo(String pjApplyId) {
 		return this.projectDao.selectOneApplyInfo(pjApplyId);
+	}
+
+	@Override
+	public List<ProjectVO> readAllScrap(String email) {
+		return this.projectDao.selectAllScrapList(email);
+	}
+
+	@Override
+	public boolean deleteScrap(ProjectScrapDeleteVO projectScrapDeleteVO) {
+		return this.projectDao.deleteScrapProject(projectScrapDeleteVO)>0;
 	}
 }

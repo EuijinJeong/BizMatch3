@@ -11,6 +11,7 @@ import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentPaginationVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentWriteVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectIndustryVO;
+import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectScrapDeleteVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectScrapVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectSkillVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectVO;
@@ -281,5 +282,19 @@ public interface ProjectDao {
 	public int deleteApplyAtt(String pjApplyId);
 	
 	public int deleteApplyByPjId(String pjId);
+
+	/**
+	 * 즐겨찾기한 프로젝트 리스트를 받아오는 메소드
+	 * @param email
+	 * @return
+	 */
+	public List<ProjectVO> selectAllScrapList(String email);
+
+	/**
+	 * 즐겨찾기한거 하나 제거하는 메소드
+	 * @param pjScrpId
+	 * @return
+	 */
+	public int deleteScrapProject(ProjectScrapDeleteVO projectScrapDeleteVO);
 }
 

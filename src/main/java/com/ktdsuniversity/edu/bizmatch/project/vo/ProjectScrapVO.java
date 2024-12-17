@@ -4,7 +4,15 @@ public class ProjectScrapVO {
 	private String pjScrpId; // 프로젝트 스크랩 아이디.
 	private String emilAddr; // 스크랩을 한 사용자의 아이디.
 	private String pjId; // 스크랩한 프로젝트의 아이디.
+	private ProjectVO projectVO;
 	
+	
+	public ProjectVO getProjectVO() {
+		return projectVO;
+	}
+	public void setProjectVO(ProjectVO projectVO) {
+		this.projectVO = projectVO;
+	}
 	// getter and setter
 	public String getPjScrpId() {
 		return pjScrpId;
