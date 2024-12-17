@@ -143,6 +143,13 @@ public class ProjectController {
 		return new ApiResponse(projectList);
 		
 	}
+	@PostMapping("/project/delete/{id}")
+	public ApiResponse postDeleteProject(@PathVariable String id) {
+		
+		boolean result =this.projectService.deleteOneProject(id);
+		return new ApiResponse(result);
+		
+	}
 
 	/**
 	 * 프로젝트 등록 요청을 하는 컨트롤러.
