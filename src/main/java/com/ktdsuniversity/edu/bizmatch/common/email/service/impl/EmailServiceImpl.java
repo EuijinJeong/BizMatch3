@@ -79,12 +79,12 @@ public class EmailServiceImpl implements EmailService{
 	@Override
 	public void sendEmailForFindPwd(String email) {
 		
-		String host = RequestUtil.getHeader("host");
+//		String host = RequestUtil.getHeader("host");
 		String protocol = "http://";
-		String domain = protocol + host;
+		String domain = protocol + "localhost:3000";
 		
 		// 전송할 url 정보.
-		String url = domain + "/member/resetpwd";
+		String url = domain + "/member/reset/pwd";
 		String html = HtmlParser.getHtml(domain + "/mailhtml/member_find_password.html"
 				,"findPassWord" 
 				, url);

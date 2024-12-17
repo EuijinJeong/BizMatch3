@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -32,14 +33,14 @@ import com.ktdsuniversity.edu.bizmatch.member.vo.PrmStkVO;
 import com.ktdsuniversity.edu.bizmatch.payment.service.PaymentService;
 import com.ktdsuniversity.edu.bizmatch.project.service.ProjectService;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ApplyProjectVO;
+import com.ktdsuniversity.edu.bizmatch.project.vo.ModifyProjectVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectApplyAttVO;
-import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentPaginationVO;
+import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentModifyVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentWriteVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectSkillVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.SearchApplyVO;
-import com.ktdsuniversity.edu.bizmatch.project.vo.SelectApplyMemberVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.WriteProjectVO;
 
 @RestController
@@ -99,15 +100,10 @@ public class ProjectController {
 	 */
 	@GetMapping("/project/info/{pjId}")
 	public ApiResponse viewProjectInfoPage(@PathVariable String pjId,
-			ProjectCommentPaginationVO projectCommentPaginationVO,
 			Authentication loginMemberVO) {
-		int listSize = this.projectService.getAllComment(pjId).size();
-		projectCommentPaginationVO.setPageCount(listSize);
-		projectCommentPaginationVO.setSearchIdParam(pjId);
-		List<ProjectCommentVO> commentList = this.projectService.getPaginationComment(projectCommentPaginationVO, pjId);
-
+		
 		ProjectVO projectVO = this.projectService.readOneProjectInfo(pjId);
-		System.out.println(projectVO);
+
 		return new ApiResponse(projectVO);
 	}
 
@@ -219,6 +215,8 @@ public class ProjectController {
 
 		// 이제 수정된 호출
 		List<String> skillList = new ArrayList<>(prmStkIdList);
+		
+		System.out.println("Received prmStkId List: " + skillList);
 
 		boolean isSuccessed = this.projectService.createNewProject(writeProjectVO,skillList);
 
@@ -282,19 +280,27 @@ public class ProjectController {
 //		return null;
 //	}
 //
-//	/**
-//	 * 프로젝트 수정 요청을 보내는 컨트롤러.
-//	 * 
-//	 * @param modifyProjectVO
-//	 * @return
-//	 */
-//	@PostMapping("/project/update/content/{pjId}")
-//	public String UpdateProjectInfo(ModifyProjectVO modifyProjectVO) {
-//		boolean isUpdated = this.projectService.updateOneProject(modifyProjectVO);
-//		return null;
-//	}
+	/**
+	 * 프로젝트 수정 요청을 보내는 컨트롤러.
+	 * 
+	 * @param modifyProjectVO
+	 * @return
+	 */
+	@PostMapping("/project/update/content/{pjId}")
+	public ApiResponse UpdateProjectInfo(@PathVariable String pjId, ModifyProjectVO modifyProjectVO) {
+		boolean isUpdated = this.projectService.updateOneProject(modifyProjectVO);
+		modifyProjectVO.setPjId(pjId);
+		System.out.println(isUpdated);
+		return new ApiResponse(isUpdated);
+	}
+	
+	
+	
 
 	/**
+<<<<<<< HEAD
+	 * 추가모집 3일 추가
+=======
 	 * 프로젝트 추가모집 수정 페이지를 로드하는 컨트롤러.
 	 * 
 	 * @param memberVO
@@ -321,13 +327,15 @@ public class ProjectController {
 //	}
 
 	/**
-	 * 추가모집 3일 추가
+	 * 추가모집 
+>>>>>>> jcy
 	 * @param memberVO
 	 * @param pjId
 	 * @return
 	 */
 	@PostMapping("/project/update/addrecruitment/{pjId}")
-	public ApiResponse UpdateAddThreeDate(@PathVariable String pjId) {
+	public ApiResponse UpdateAddThreeDate(@PathVariable String pjId
+										, @RequestParam String addDate) {
 		ProjectVO projectVO = this.projectService.readOneProjectInfo(pjId);
 		try {
 			// 1. 모집 종료일을 3일 연장하기
@@ -338,7 +346,7 @@ public class ProjectController {
 			// 2. 3일 더하기
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime(endDate);
-			calendar.add(Calendar.DAY_OF_YEAR, 3); // 3일 더하기
+			calendar.add(Calendar.DAY_OF_YEAR, Integer.parseInt(addDate)); 
 			Date newEndDate = calendar.getTime(); // 새로운 종료일
 
 			// 3. 새로운 종료일을 다시 String으로 변환
@@ -359,19 +367,20 @@ public class ProjectController {
 		}
 	}
 
-//	/**
-//	 * 프로젝트 삭제를 처리하는 컨트롤러. -TODO-
-//	 * 
-//	 * @param memberVO
-//	 * @param pjId
-//	 * @return
-//	 */
-//	@PostMapping("/project/delete/")
-//	public String deleteProject(@SessionAttribute(value = "_LOGIN_USER_") MemberVO memberVO, String pjId) {
-//		boolean isDeleted = this.projectService.deleteOneProject(null);
-//
-//		return null;
-//	}
+	/**
+	 * 프로젝트 삭제를 처리하는 컨트롤러. -TODO-
+	 * 
+	 * @param memberVO
+	 * @param pjId
+	 * @return
+	 */
+	@PostMapping("/project/delete")
+	public ApiResponse deleteProject(@RequestParam String pjId
+							, Authentication memberVO) {
+		
+		boolean isDeleted = this.projectService.deleteOneProject(pjId);
+		return new ApiResponse(isDeleted);
+	}
 
 	/**
 	 * 지원서 수정페이지를 로드하는 컨트롤러.
@@ -380,7 +389,6 @@ public class ProjectController {
 	 * @param applyProjectVO
 	 * @return
 	 */
-
 	@GetMapping("/project/apply/edit/{pjId}")
 	public ApiResponse loadUpdateApplyContentPage(Authentication memberVO,
 			@PathVariable String pjId) {
@@ -435,7 +443,6 @@ public class ProjectController {
 	@PostMapping("/project/apply/edit")
 	public ApiResponse updateApplyContent(ApplyProjectVO applyProjectVO) {
 		boolean isUpdated = this.projectService.updateProjectApply(applyProjectVO);
-		System.out.println(isUpdated);
 		return new ApiResponse(isUpdated);
 	}
 
@@ -457,15 +464,24 @@ public class ProjectController {
 	 * @param applyProjectVO
 	 * @return
 	 */
-	@PostMapping("/project/apply/delete/{pjApplyId}")
-	public ApiResponse deleteApplyContent(Authentication memberVO
-									, ApplyProjectVO applyProjectVO
-									, @PathVariable String pjApplyId) {
+	@PostMapping("/project/apply/delete")
+	public ApiResponse deleteApplyContent(@RequestParam String pjApplyId) {
 
-		applyProjectVO.setPjApplyId(pjApplyId);
-		this.projectService.deleteProjectApply(applyProjectVO);
+		this.projectService.deleteProjectApply(pjApplyId);
 
 		return new ApiResponse(true);
+	}
+	/**
+	 * 프로젝트 지원을 선정하는 컨트롤러
+	 * @param pjApplyId 지원서 아이디로 검색해서 ordrId에다가 지원서를 작성한 사람의 이메일 넣어줌
+	 * @return
+	 */
+	@PostMapping("/project/apply/accept")
+	public ApiResponse acceptAppltContent(@RequestParam String pjApplyId, Authentication memberVO) {
+		MemberVO loginMemberVO = (MemberVO)memberVO.getPrincipal();
+		boolean isSuccess = this.projectService.updateApplyMember(pjApplyId, loginMemberVO);
+		System.out.println(isSuccess);
+		return new ApiResponse(isSuccess);
 	}
 
 	/**
@@ -477,8 +493,8 @@ public class ProjectController {
 	 * @return
 	 */
 	@GetMapping("/project/apply/member/{pjId}")
-	public ApiResponse viewApplyMemberPage(Authentication memberVO,
-									@PathVariable String pjId) {
+	public ApiResponse viewApplyMemberPage(Authentication memberVO
+										, @PathVariable String pjId) {
 		ProjectVO projectVO = this.projectService.readOneProjectInfo(pjId);
 		
 		// 돈을 안냈으면.
@@ -499,7 +515,6 @@ public class ProjectController {
 
 	/**
 	 * 프로젝트에 첨부할 수 있는 전체 스킬들의 목록을 불러오는 컨트롤러이다.
-	 * 
 	 * @return
 	 */
 	@GetMapping("/project/skill") // api/project/skill
@@ -521,45 +536,6 @@ public class ProjectController {
 		return new ApiResponse(skills);
 	}
 
-	/**
-	 * 지원기업 선택하기
-	 * 
-	 * @param pjId
-	 * @param memberVO
-	 * @param selectApplyMemberVO
-	 * @return
-	 */
-	@PostMapping("/project/apply/member/{pjId}")
-	public ApiResponse doChoiceApplyMember(@PathVariable String pjId
-									, Authentication memberVO
-									, SelectApplyMemberVO selectApplyMemberVO) {
-		boolean isUpdated = this.projectService.updateApplyMember(selectApplyMemberVO, memberVO.getName());
-		
-		return new ApiResponse(isUpdated);
-	}
-
-	/**
-	 * 기업회원 내 프로젝트 조회페이지를 로드하는 컨트롤러.
-	 * 
-	 * @param memberVO
-	 * @return
-	 */
-	@GetMapping("/project/myproject")
-	public ApiResponse viewAllProjectOrder(Authentication memberVO) {
-		
-		return new ApiResponse();
-	}
-
-//	/**
-//	 * 한명의 회원이 수주했던 즉 수행했던 모든 프로젝트 조회하는 페이지를 로드하는 컨트롤러 -의진-
-//	 * 
-//	 * @param memberVO
-//	 * @return
-//	 */
-//	@GetMapping("/project/all/order/recipient")
-//	public String viewAllProject(Authentication memberVO) {
-//		
-//	}
 
 	/**
 	 * 
@@ -605,20 +581,52 @@ public class ProjectController {
 //	}
 //	
 	/**
-	 * 
-	 * @param projectCommentWriteVO
-	 * @param memberVO
+	 * @param projectCommentWriteVO : 프로젝트 댓글 작성 데이터
 	 * @return
 	 */
-	@PostMapping("/project/info/write")
-	public ApiResponse writeComment(ProjectCommentWriteVO projectCommentWriteVO,
-									Authentication memberVO) {
-		projectCommentWriteVO.setAthrId(memberVO.getName());
+	@PostMapping("/project/comment/write")
+	public ApiResponse writeComment(@RequestBody ProjectCommentWriteVO projectCommentWriteVO) {
+	
 		boolean result = this.projectService.createNewComment(projectCommentWriteVO);
 		
 		return new ApiResponse(result);
 	}
 
+	// 이하 댓글 관련 맵핑
+	/**
+	 * @param pjId : 프로젝트 아이디
+	 * @return
+	 */
+	@GetMapping("/project/comment/view/{pjId}")
+	public ApiResponse viewCommen(@PathVariable String pjId) {
+		List<ProjectCommentVO> result  = this.projectService.getAllComment(pjId);
+		return new ApiResponse(result);
+	}
+	
+	/**
+	 * @param ProjectCommentModifyVO : 댓글 수정 데이터
+	 * @param memberVO
+	 * @return
+	 */
+	@PostMapping("/project/comment/modify")
+	public ApiResponse modifyComment(@RequestBody ProjectCommentModifyVO projectCommentModifyVO) {
+		boolean result = this.projectService.modifyComment(projectCommentModifyVO);
+		return new ApiResponse(result);
+	}
+	
+	/**
+	 * @param commentId : 삭제할 댓글 아이디
+	 * @return
+	 */
+	@PostMapping("/project/comment/delete/{commentId}")
+	public ApiResponse deleteComment(@PathVariable String commentId) {
+		boolean result = this.projectService.updateDeleteCommentState(commentId);
+		return new ApiResponse(result);
+	}
+	
+	// 이상 댓글 관련 맵핑
+	
+	
 	/**
 	 * 기업이 발주한 프로젝트의 목록을 가져오는 컨트롤러.
 	 * 

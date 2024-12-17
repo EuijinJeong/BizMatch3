@@ -17,8 +17,22 @@ public class ModifyProjectVO {
 	private int pjRcrutCnt; // 프로젝트 모집인원
 	private String pjRcrutStrtDt; // 프로젝트 모집 시작일
 	private String pjRcrutEndDt; // 프로젝트 모집 종료일
-	private ProjectIndustryVO projectIndustryVO; // 프로젝트 산업군.
+	private String mjrId;
+	private String smjrId;
 	
+	
+	public String getMjrId() {
+		return mjrId;
+	}
+	public void setMjrId(String mjrId) {
+		this.mjrId = mjrId;
+	}
+	public String getSmjrId() {
+		return smjrId;
+	}
+	public void setSmjrId(String smjrId) {
+		this.smjrId = smjrId;
+	}
 	// getter and setter
 	public String getPjId() {
 		return pjId;
@@ -110,10 +124,5 @@ public class ModifyProjectVO {
 	public void setPjRcrutEndDt(String pjRcrutEndDt) {
 		this.pjRcrutEndDt = pjRcrutEndDt;
 	}
-	public ProjectIndustryVO getProjectIndustryVO() {
-		return projectIndustryVO;
-	}
-	public void setProjectIndustryVO(ProjectIndustryVO projectIndustryVO) {
-		this.projectIndustryVO = projectIndustryVO;
-	}
+	
 }

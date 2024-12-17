@@ -100,8 +100,10 @@ public class ReviewController {
 			throw new ReviewFailException("별점은 0 이상 5점 이하만 가능합니다");
 		}
 		
+		MemberVO member = (MemberVO) memberVO.getPrincipal();
+		
 		writeReviewVO.setPjId(pjId);
-		writeReviewVO.setEmilAddr(memberVO.getName());
+		writeReviewVO.setEmilAddr(member.getEmilAddr());
 		
 		boolean isSuccess = reviewService.insertOneReview(writeReviewVO);
 		

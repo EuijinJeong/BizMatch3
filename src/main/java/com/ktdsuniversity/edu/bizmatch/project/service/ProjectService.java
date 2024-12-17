@@ -85,7 +85,7 @@ public interface ProjectService {
 	 * @param id
 	 * @return
 	 */
-	public boolean updateDeleteState(String id);
+	public boolean updateDeleteCommentState(String id);
 	public List<ProjectCommentVO> getPaginationComment(ProjectCommentPaginationVO projectCommentPaginationVO,String id);
 	public boolean createNewComment(ProjectCommentWriteVO projectCommentWriteVO);
 	public boolean modifyComment(ProjectCommentModifyVO projectCommentModifyVO);
@@ -116,7 +116,7 @@ public interface ProjectService {
 	 * @param applyProjectVO
 	 * @return
 	 */
-	public void deleteProjectApply(ApplyProjectVO applyProjectVO);
+	public void deleteProjectApply(String pjApplyId);
 	
 	/**
 	 * 지원자 모두를 불러오는 메소드
@@ -132,7 +132,7 @@ public interface ProjectService {
 	 * @param memberVO
 	 * @return
 	 */
-	public boolean updateApplyMember(SelectApplyMemberVO selectApplyMemberVO, String email);
+	public boolean updateApplyMember(String pjApplyId, MemberVO memberVO);
 	
 	/**
 	 * 특정 프로젝트의 필요한 모든 주요 기술들을 조회하는 메서드.
@@ -211,4 +211,6 @@ public interface ProjectService {
 	 * @return
 	 */
 	public ApplyProjectVO selectOneApplyInfo(String pjApplyId);
+	
+	
 }

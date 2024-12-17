@@ -33,8 +33,16 @@ public class ProjectVO {
 	private PaymentVO paymentVO;
 	private ProjectIndustryVO projectIndustryVO;
 	private List<ApplyProjectVO> applyProjectVOList;
+	private List<ProjectAttachmentVO> projectAtt;
 	
 	
+	
+	public List<ProjectAttachmentVO> getProjectAtt() {
+		return projectAtt;
+	}
+	public void setProjectAtt(List<ProjectAttachmentVO> projectAtt) {
+		this.projectAtt = projectAtt;
+	}
 	public List<ApplyProjectVO> getApplyProjectVOList() {
 		return applyProjectVOList;
 	}
