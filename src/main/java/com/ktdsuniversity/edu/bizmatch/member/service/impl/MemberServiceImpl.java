@@ -18,7 +18,9 @@ import com.ktdsuniversity.edu.bizmatch.common.beans.Sha;
 import com.ktdsuniversity.edu.bizmatch.common.category.vo.CategoryVO;
 import com.ktdsuniversity.edu.bizmatch.common.email.service.EmailService;
 import com.ktdsuniversity.edu.bizmatch.common.email.vo.UserEmailAuthNumVO;
+import com.ktdsuniversity.edu.bizmatch.common.exceptions.common.IndustryException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.member.LoginFailException;
+import com.ktdsuniversity.edu.bizmatch.common.exceptions.member.MemberNotFoundException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.member.MemberPortfolioException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.member.SignUpCompanyException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.member.SignUpFailException;
@@ -303,7 +305,7 @@ public class MemberServiceImpl implements MemberService {
 		// 사용자가 입력한 이메일이 우리 회원 데베에 있는지 먼저 조회
 		MemberVO memberVO =  this.memberDao.selectOneMember(email);
 		if(memberVO == null) {
-			throw new IllegalArgumentException("찾으시는 회원이 존재하지 않습니다.");
+			throw new MemberNotFoundException("찾으시는 회원이 존재하지 않습니다.");
 		}
 		String findEmail = memberVO.getEmilAddr();
 		
@@ -322,7 +324,7 @@ public class MemberServiceImpl implements MemberService {
 	public boolean deactivateMember(String email) {
 		int rows = this.memberDao.updateMemberDeactivate(email);
 		if (rows < 1) {
-			throw new IllegalArgumentException("비활성화 상태");
+			throw new SignUpNotApprovedException("비활성화 상태");
 		}
 		return true;
 	}
@@ -358,7 +360,7 @@ public class MemberServiceImpl implements MemberService {
 					tempMbrPrmStkVO.setPrmStkId(prmStkId);
 					int insertCnt = this.mbrPrmStkDao.insertMbrSkill(mbrPrmStkVO);
 					if(insertCnt == 0) {
-						throw new IllegalArgumentException("서버상의 이유로 새로운 기술 스킬을 저장할 수 없습니다.");
+						throw new IndustryException("서버상의 이유로 새로운 기술 스킬을 저장할 수 없습니다.");
 					}
 				}
 			}
@@ -390,6 +392,7 @@ public class MemberServiceImpl implements MemberService {
 		}
 		return portfolioList;
 	}
+	
 	@Override
 	public List<MemberPortfolioVO> selectAllCmpnyPortfolios(String cmpId){
 		List<MemberPortfolioVO> portfolioList = new ArrayList<>();
@@ -474,7 +477,7 @@ public class MemberServiceImpl implements MemberService {
 		CompanyVO companyVO = this.memberDao.selectOneCompanyByEmilAddr(cmpId);
 		if(companyVO == null) {
 			// TODO 아래 예외처리하기.
-			throw new IllegalArgumentException("서버상의 이유로 정보를 조회할 수 없습니다.");
+			throw new MemberNotFoundException("서버상의 이유로 정보를 조회할 수 없습니다.");
 		}
 		return companyVO;
 	}
@@ -532,7 +535,7 @@ public class MemberServiceImpl implements MemberService {
 		// 어떤 개인 회원의 관심 산업군을 업데이트 하는 쿼리문을 호출함.
 		int isSuccess = this.memberDao.updateCmpnyLkIndstr(memberCompanyModifyVO);
 		if(isSuccess <= 0) {
-			throw new IllegalArgumentException("에외");
+			throw new IndustryException("에외");
 		}
 		
 		// 기업의 관심 산업군 정보를 업데이트 하는 쿼리문을 호출한다.

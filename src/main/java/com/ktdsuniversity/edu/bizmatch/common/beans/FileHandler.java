@@ -157,7 +157,6 @@ public class FileHandler {
 		try {
 			resource = new InputStreamResource(new FileInputStream(downloadFile));
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 			throw new IllegalArgumentException("파일이 존재하지 않습니다.");
 		}
 

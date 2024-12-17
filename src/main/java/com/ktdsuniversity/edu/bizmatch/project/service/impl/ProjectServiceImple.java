@@ -13,11 +13,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ktdsuniversity.edu.bizmatch.common.beans.FileHandler;
+import com.ktdsuniversity.edu.bizmatch.common.exceptions.common.IndustryException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.file.CreateNewProjectFileException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.file.FileUploadFailedException;
+import com.ktdsuniversity.edu.bizmatch.common.exceptions.member.MemberNotFoundException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.payment.PaymentException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.project.ProjectApplyFailException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.project.ProjectDeleteException;
+import com.ktdsuniversity.edu.bizmatch.common.exceptions.project.ProjectNotFoundException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.project.ProjectScrapException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.project.ProjectUpdateFailException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.project.ProjectWriteFailException;
@@ -79,16 +82,15 @@ public class ProjectServiceImple implements ProjectService {
 
 		try {
 			if (!this.verifyPrjectDate(projectDateVO)) {
-				throw new ProjectWriteFailException("날짜 정보가 유효하지 않습니다.", writeProjectVO);
+				throw new ProjectWriteFailException("날짜 정보가 유효하지 않습니다.");
 			}
 		} catch (ParseException e) {
-			throw new ProjectWriteFailException("에외 ", writeProjectVO);
+			throw new ProjectWriteFailException("에외");
 		}
 
 		int insertCount = this.projectDao.insertOneProject(writeProjectVO);
 		if (insertCount == 0) {
-			// TODO
-			throw new IllegalArgumentException("예외 잡아");
+			throw new ProjectWriteFailException("예외 잡아");
 		}
 
 		String pjId = writeProjectVO.getPjId();
@@ -126,7 +128,7 @@ public class ProjectServiceImple implements ProjectService {
 			int insertFileCnt = this.fileDao.insertProjectFile(projectFileVO);
 
 			if (insertFileCnt == 0) {
-				throw new ProjectWriteFailException("시스템 오류로 파일 처리가 불가능합니다. 다시 시도해 주세요.", writeProjectVO);
+				throw new ProjectWriteFailException("시스템 오류로 파일 처리가 불가능합니다. 다시 시도해 주세요.");
 			}
 			totalInsertedFiles++;
 		}
@@ -138,7 +140,7 @@ public class ProjectServiceImple implements ProjectService {
 			projectSkillVO.setPrmStkId(id);
 			int insertedCnt = this.projectDao.insertProjectSkills(projectSkillVO);
 			if (insertedCnt == 0) {
-				throw new IllegalArgumentException("프로젝트 주요 기술들을 서버에 저장하는 도중 오류가 발생했습니다.");
+				throw new IndustryException("프로젝트 주요 기술들을 서버에 저장하는 도중 오류가 발생했습니다.");
 			}
 		}
 
@@ -343,7 +345,7 @@ public class ProjectServiceImple implements ProjectService {
 		
 
 		if (updateCnt == 0 ) {
-			throw new ProjectUpdateFailException("서버상의 이유로 정보 수정이 불가능합니다.", modifyProjectVO);
+			throw new ProjectUpdateFailException("서버상의 이유로 정보 수정이 불가능합니다.");
 		}
 		return true;
 	}
@@ -373,7 +375,7 @@ public class ProjectServiceImple implements ProjectService {
 				// 파일을 insert함.
 				boolean insertFileCnt = this.fileDao.insertApplyProjectFile(projectApplyFileVO)>0;
 				if(!insertFileCnt) {
-					throw new IllegalArgumentException("파일 저장 중 에러");
+					throw new FileUploadFailedException("파일 저장 중 에러");
 				}
 			}
 		}
@@ -396,8 +398,7 @@ public class ProjectServiceImple implements ProjectService {
 //		 throw new IllegalArgumentException("정보가 일치하지 않습니다.");
 //		 }
 		if (!(projectVO.getObtnId() == null)) {
-			// TODO 지원자 선정 완료 오류 고쳐야함.
-			throw new IllegalArgumentException("지원자 선정을 완료하였습니다.");
+			throw new MemberNotFoundException("지원자 선정을 완료하였습니다.");
 		}
 
 		return this.projectDao.selectAllApplyMember(pjId);
@@ -415,13 +416,13 @@ public class ProjectServiceImple implements ProjectService {
 		selectApplyMemberVO.setEmilAddr(applyProjectVO.getEmilAddr());
 
 		if (!projectVO.getOrdrId().equals(memberVO.getEmilAddr())) {
-			throw new IllegalArgumentException("정보가 일치하지 않습니다.");
+			throw new MemberNotFoundException("정보가 일치하지 않습니다.");
 		}
 		if (projectVO.getObtnId() != null) {
-			throw new IllegalArgumentException("지원자 선정을 완료하였습니다.");
+			throw new MemberNotFoundException("지원자 선정을 완료하였습니다.");
 		}
 		if(!(this.projectDao.deleteApplyByPjId(projectVO.getPjId())>0)) {
-			throw new IllegalArgumentException("잠시 후 다시 시도해주세요");
+			throw new ProjectNotFoundException ("잠시 후 다시 시도해주세요");
 		}
 
 		return this.projectDao.updateProjectApplyMember(selectApplyMemberVO) > 0;
@@ -522,7 +523,7 @@ public class ProjectServiceImple implements ProjectService {
 	public List<ProjectVO> readAllMyOrderProjectList(String email) {
 		MemberVO memberVO = this.memberDao.selectOneMember(email);
 		if (memberVO == null) {
-			throw new IllegalArgumentException("해당 회원이 존재하지 않습니다.");
+			throw new MemberNotFoundException("해당 회원이 존재하지 않습니다.");
 		}
 		List<ProjectVO> projectList = this.projectDao.selectAllMyOrderProjectList(memberVO.getCmpId());
 		return projectList;
