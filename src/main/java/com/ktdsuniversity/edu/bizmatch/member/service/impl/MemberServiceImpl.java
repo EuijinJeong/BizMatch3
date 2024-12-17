@@ -174,6 +174,7 @@ public class MemberServiceImpl implements MemberService {
 		memberCompanySignUpVO.setPwd(sha.getEncrypt(memberCompanySignUpVO.getPwd(), salt));
 		String brn = memberCompanySignUpVO.getCmpnyBrn();
 		
+		// 개인형 사업자인지 기업형 사업자인지 검사하는 코드.
 		if(brn.indexOf(4)=='8') {
 			memberCompanySignUpVO.setCmpnyBizCtgry("0");
 		} else {
@@ -184,10 +185,18 @@ public class MemberServiceImpl implements MemberService {
 
 		// selectOneCompany 존재하는지 먼저 확인
 		CompanyVO companyVO = this.memberDao.selectOneCompany(memberCompanySignUpVO.getCmpnyBrn());
+		
 		if (companyVO == null) {
 			// 회사가 존재하지 않는다면 회사 정보 또한 새로 등록한다.
 			memberCompanySignUpVO.setCmpnyRp(1); //기업 대표자로 등록
 			int insertedCompanyInfo = this.memberDao.insertOneMemberCompany(memberCompanySignUpVO);
+			// 그 회사의 관심 산업군을 등록한다.
+			CategoryVO categoryVO = memberCompanySignUpVO.getCmpnyIntrstdIndstrId();
+			categoryVO.setEmilAddr(memberCompanySignUpVO.getEmilAddr());
+			int insertedIndustryIdCnt = this.memberDao.insertOneIndustryInfo(categoryVO);
+			if(insertedIndustryIdCnt == 0) {
+				throw new IndustryException("서버상의 이유로 산업군 등록이 불가능합니다.");
+			}
 			if (insertedCompanyInfo == 0) {
 				throw new SignUpCompanyException("회원가입 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.", memberCompanySignUpVO);
 			}

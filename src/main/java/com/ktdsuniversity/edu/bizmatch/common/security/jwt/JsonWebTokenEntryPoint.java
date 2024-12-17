@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -55,6 +54,10 @@ public class JsonWebTokenEntryPoint {
 			return errorResponse;
 		}
 		
+		// 사용자가 활성화 상태인지 검사.
+		if(memberVO.getMbrStt() == 0) {
+			// 수락 전이라면
+		}
 		// 토큰 만들어서 돌려준다.
 		String jwt = this.jsonWebTokenProvider.generateJwt(Duration.ofHours(8), memberVO);
 		return new ApiResponse(jwt);
