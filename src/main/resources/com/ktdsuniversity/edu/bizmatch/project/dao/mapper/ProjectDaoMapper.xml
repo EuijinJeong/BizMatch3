@@ -1070,6 +1070,7 @@
 			 WHERE P.ORDR_ID IN (SELECT EMIL_ADDR 
 								   FROM MBR_INFO MI
 								  WHERE MI.CMP_ID = #{_parameter})
+			  AND P.IS_DLT NOT IN (1)
    </select>
    
    <update id="updateProject" 

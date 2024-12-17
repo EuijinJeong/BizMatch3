@@ -123,6 +123,7 @@ public class ProjectController {
 	public ApiResponse postDeleteProject(@PathVariable String id) {
 		
 		boolean result =this.projectService.deleteOneProject(id);
+		System.out.println(result);
 		return new ApiResponse(result);
 		
 	}
