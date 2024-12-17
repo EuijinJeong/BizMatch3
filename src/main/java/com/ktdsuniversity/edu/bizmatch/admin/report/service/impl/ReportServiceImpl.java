@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.ktdsuniversity.edu.bizmatch.admin.report.dao.ReportDao;
 import com.ktdsuniversity.edu.bizmatch.admin.report.service.ReportService;
+import com.ktdsuniversity.edu.bizmatch.common.exceptions.admin.AdminException;
 import com.ktdsuniversity.edu.bizmatch.project.review.vo.ReviewVO;
 import com.ktdsuniversity.edu.bizmatch.report.vo.ReviewReportVO;
 
@@ -27,12 +28,12 @@ public class ReportServiceImpl implements ReportService{
 		List<ReviewReportVO> reviewReportVO = this.reportDao.selectOneReviewReport(rprtId);
 		
 		if(!(this.reportDao.deleteReportReview(rprtId)>0)) {
-			throw new IllegalArgumentException("신고정보 처리 중 예외 발생");
+			throw new AdminException("신고정보 처리 중 예외 발생");
 		}
 		
 		for(ReviewReportVO tmp : reviewReportVO) {
 			if(!(this.reportDao.updateReviewReportCnt(tmp.getCmmntId())>0)){
-				throw new IllegalArgumentException("신고정보 처리 중 예외 발생");
+				throw new AdminException("신고정보 처리 중 예외 발생");
 			};
 		}
 		return true;

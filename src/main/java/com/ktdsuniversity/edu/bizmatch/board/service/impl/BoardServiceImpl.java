@@ -16,6 +16,7 @@ import com.ktdsuniversity.edu.bizmatch.board.vo.BoardModifyVO;
 import com.ktdsuniversity.edu.bizmatch.board.vo.BoardVO;
 import com.ktdsuniversity.edu.bizmatch.board.vo.BoardWriteVO;
 import com.ktdsuniversity.edu.bizmatch.comment.web.CommentController;
+import com.ktdsuniversity.edu.bizmatch.common.exceptions.board.BoardException;
 
 @Service
 public class BoardServiceImpl implements BoardService {
@@ -34,8 +35,7 @@ public class BoardServiceImpl implements BoardService {
 	public BoardVO getOneBoard(String id) {
 		BoardVO result = boardDao.selectOneBoard(id);
 		if(result == null) {
-			// TODO 아래 예외 바꿔야함.
-			throw new IllegalArgumentException("서버상의 이유로 해당 게시글의 정보를 불러올 수 없습니다.");
+			throw new BoardException("서버상의 이유로 해당 게시글의 정보를 불러올 수 없습니다.");
 		}
 		
 		List<BoardCommentVO> commentList = this.boardDao.selectAllBoardComment(id);
@@ -64,39 +64,12 @@ public class BoardServiceImpl implements BoardService {
 		return boardDao.updateDeletePost(id)>0;
 	}
 
-//	@Override
-//	public List<BoardVO> getForPagination(BoardPaginationVO boardPaginationVO,BoardSearchVO BoardsearchVO) {
-//		List<BoardVO> result ;
-//
-//		if(boardPaginationVO == null) {
-//			result = boardDao.selectBoardList(BoardsearchVO);
-//		}
-//		else {
-//			result = boardDao.selectForPagination(boardPaginationVO);
-//		}
-//		
-//		return result;
-//	}
-
 	// 이하 댓글 관련 서비스
 	@Override
 	public List<BoardCommentVO> getAllBoardComment(String id) {
 		List<BoardCommentVO> result = boardDao.selectAllBoardComment(id);
 		return result;
 	}
-
-//	@Override
-//	public List<BoardCommentVO> getPaginationComment(BoardCommentPaginationVO boardCommentPaginationVO, String id) {
-//		List<BoardCommentVO> result;
-//		if(boardCommentPaginationVO == null) {
-//			result = boardDao.selectAllBoardComment(id);
-//		}
-//		else {
-//			result = boardDao.selectPaginationComment(boardCommentPaginationVO);
-//		}
-//		
-//		return result;
-//	}
 
 	@Override
 	public boolean createBoardComment(BoardCommentWriteVO boardCommentWriteVO) {

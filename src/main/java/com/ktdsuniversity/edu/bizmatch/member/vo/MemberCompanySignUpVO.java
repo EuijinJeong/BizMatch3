@@ -17,7 +17,7 @@ public class MemberCompanySignUpVO {
 	private Integer cmpnyEmplyCnt; // 직원 수.
 	private String cmpnyNm; // 회사 이름.
 	private String mbrPhnNum; //이용자 전화번호 
-	private Address address;
+	private String cmpnyAddr;
 	private String cmpnyPhnNum; // 회사 전화번호.
 	private String cmpnySiteUrl; // 회사 사이트 주소.
 	private String cmpnyBizCtgry; // 개인사업자(1) / 법인사업자(0)
@@ -86,12 +86,6 @@ public class MemberCompanySignUpVO {
 	}
 	public void setMbrPhnNum(String mbrPhnNum) {
 		this.mbrPhnNum = mbrPhnNum;
-	}
-	public Address getAddress() {
-		return address;
-	}
-	public void setAddress(Address address) {
-		this.address = address;
 	}
 	public String getCmpnyPhnNum() {
 		return cmpnyPhnNum;
@@ -195,5 +189,11 @@ public class MemberCompanySignUpVO {
 	}
 	public void setCmpId(String cmpId) {
 		this.cmpId = cmpId;
+	}
+	public String getCmpnyAddr() {
+		return cmpnyAddr;
+	}
+	public void setCmpnyAddr(String cmpnyAddr) {
+		this.cmpnyAddr = cmpnyAddr;
 	}
 }

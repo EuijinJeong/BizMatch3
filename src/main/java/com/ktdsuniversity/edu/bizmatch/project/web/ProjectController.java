@@ -137,33 +137,33 @@ public class ProjectController {
 		// 유효성 검사들.
 		// 프로젝트 제목
 		if (writeProjectVO.getPjTtl() == null) {
-			throw new ProjectWriteFailException("프로젝트 제목은 필수 입력 사항입니다.", writeProjectVO);
+			throw new ProjectWriteFailException("프로젝트 제목은 필수 입력 사항입니다.");
 		}
 		// 프로젝트 일정
 		if (writeProjectVO.getStrtDt() == null || writeProjectVO.getEndDt() == null) {
-			throw new ProjectWriteFailException("프로젝트 일정은 필수 입력 사항입니다.", writeProjectVO);
+			throw new ProjectWriteFailException("프로젝트 일정은 필수 입력 사항입니다.");
 		}
 		// 지원 내용
 		if (writeProjectVO.getPjDesc() == null) {
-			throw new ProjectWriteFailException("프로젝트 상세 설명은 필수 입력 사항입니다.", writeProjectVO);
+			throw new ProjectWriteFailException("프로젝트 상세 설명은 필수 입력 사항입니다.");
 		}
 
 		if (writeProjectVO.getCntrctAccnt() == null) {
-			throw new ProjectWriteFailException("프로젝트 입찰가격은 필수 입력사항입니다.", writeProjectVO);
+			throw new ProjectWriteFailException("프로젝트 입찰가격은 필수 입력사항입니다.");
 		}
 
 		// 프로젝트 입찰가격
 		if (writeProjectVO.getCntrctAccnt() < 0) {
-			throw new ProjectWriteFailException("프로젝트 입찰가격은 1,000,000원 이상입니다.", writeProjectVO);
+			throw new ProjectWriteFailException("프로젝트 입찰가격은 1,000,000원 이상입니다.");
 		}
 
 		if (writeProjectVO.getCntrctAccnt() == 0) {
-			throw new ProjectWriteFailException("프로젝트 입찰가격은 필수 입력사항입니다.", writeProjectVO);
+			throw new ProjectWriteFailException("프로젝트 입찰가격은 필수 입력사항입니다.");
 		}
 
 		// 프로젝트 모집일
 		if (writeProjectVO.getPjRcrutStrtDt() == null || writeProjectVO.getPjRcrutEndDt() == null) {
-			throw new ProjectWriteFailException("프로젝트 모집일은 필수 입력 사항입니다.", writeProjectVO);
+			throw new ProjectWriteFailException("프로젝트 모집일은 필수 입력 사항입니다.");
 		}
 
 		// 날짜 문자열을 LocalDate로 변환
@@ -175,17 +175,17 @@ public class ProjectController {
 
 		// 모집 기간 최소 7일 체크
 		if (daysBetween < 7) {
-			throw new ProjectWriteFailException("프로젝트 모집기간은 최소 7일 이상이어야 합니다.", writeProjectVO);
+			throw new ProjectWriteFailException("프로젝트 모집기간은 최소 7일 이상이어야 합니다.");
 		}
 
 		// 종료일이 시작일보다 이전인 경우 체크
 		if (daysBetween < 0) {
-			throw new ProjectWriteFailException("종료일은 시작일 이후여야 합니다.", writeProjectVO);
+			throw new ProjectWriteFailException("종료일은 시작일 이후여야 합니다.");
 		}
 
 		// 프로젝트 인원
 		if (writeProjectVO.getPjRcrutCnt() <= 0) {
-			throw new ProjectWriteFailException("프로젝트 모집 인원은 필수 입력 사항입니다.", writeProjectVO);
+			throw new ProjectWriteFailException("프로젝트 모집 인원은 필수 입력 사항입니다.");
 		}
 		MemberVO loginMemberVO = (MemberVO)memberVO.getPrincipal();
 		writeProjectVO.setOrdrId(loginMemberVO.getEmilAddr());
