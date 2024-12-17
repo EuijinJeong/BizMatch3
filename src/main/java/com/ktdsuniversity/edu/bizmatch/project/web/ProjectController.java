@@ -33,6 +33,7 @@ import com.ktdsuniversity.edu.bizmatch.member.vo.PrmStkVO;
 import com.ktdsuniversity.edu.bizmatch.payment.service.PaymentService;
 import com.ktdsuniversity.edu.bizmatch.project.service.ProjectService;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ApplyProjectVO;
+import com.ktdsuniversity.edu.bizmatch.project.vo.ModifyProjectVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectApplyAttVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentModifyVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentVO;
@@ -40,7 +41,6 @@ import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentWriteVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectSkillVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.SearchApplyVO;
-import com.ktdsuniversity.edu.bizmatch.project.vo.SelectApplyMemberVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.WriteProjectVO;
 
 @RestController
@@ -280,20 +280,55 @@ public class ProjectController {
 //		return null;
 //	}
 //
+	/**
+	 * 프로젝트 수정 요청을 보내는 컨트롤러.
+	 * 
+	 * @param modifyProjectVO
+	 * @return
+	 */
+	@PostMapping("/project/update/content/{pjId}")
+	public ApiResponse UpdateProjectInfo(@PathVariable String pjId, ModifyProjectVO modifyProjectVO) {
+		boolean isUpdated = this.projectService.updateOneProject(modifyProjectVO);
+		modifyProjectVO.setPjId(pjId);
+		System.out.println(isUpdated);
+		return new ApiResponse(isUpdated);
+	}
+	
+	
+	
+
+	/**
+<<<<<<< HEAD
+	 * 추가모집 3일 추가
+=======
+	 * 프로젝트 추가모집 수정 페이지를 로드하는 컨트롤러.
+	 * 
+	 * @param memberVO
+	 * @param projectVO
+	 * @return
+	 */
+//	@GetMapping("/project/update/addrecurit/")
+//	public String loadAddRecuritPage(@SessionAttribute(value = "_LOGIN_USER_") MemberVO memberVO, ProjectVO projectVO) {
+//
+//		return null;
+//	}
+//
 //	/**
-//	 * 프로젝트 수정 요청을 보내는 컨트롤러.
+//	 * 추가모집 정보를 서버에 업로드하는 컨트롤러.
 //	 * 
 //	 * @param modifyProjectVO
 //	 * @return
 //	 */
-//	@PostMapping("/project/update/content/{pjId}")
-//	public String UpdateProjectInfo(ModifyProjectVO modifyProjectVO) {
-//		boolean isUpdated = this.projectService.updateOneProject(modifyProjectVO);
+//	@PostMapping("/project/update/addrecurit/")
+//	public String createRecuritInfo(ModifyProjectVO modifyProjectVO) {
+//		boolean isUpdated = this.projectService.updateAddtionalRecruitment(modifyProjectVO);
+//
 //		return null;
 //	}
 
 	/**
-	 * 추가모집 3일 추가
+	 * 추가모집 
+>>>>>>> jcy
 	 * @param memberVO
 	 * @param pjId
 	 * @return
@@ -339,12 +374,12 @@ public class ProjectController {
 	 * @param pjId
 	 * @return
 	 */
-	@PostMapping("/project/delete/{pjId}")
-	public String deleteProject(@RequestParam String pjId
+	@PostMapping("/project/delete")
+	public ApiResponse deleteProject(@RequestParam String pjId
 							, Authentication memberVO) {
 		
 		boolean isDeleted = this.projectService.deleteOneProject(pjId);
-		return null;
+		return new ApiResponse(isDeleted);
 	}
 
 	/**
@@ -430,12 +465,23 @@ public class ProjectController {
 	 * @return
 	 */
 	@PostMapping("/project/apply/delete")
-	public ApiResponse deleteApplyContent(Authentication memberVO
-									, @RequestParam String pjApplyId) {
+	public ApiResponse deleteApplyContent(@RequestParam String pjApplyId) {
 
 		this.projectService.deleteProjectApply(pjApplyId);
 
 		return new ApiResponse(true);
+	}
+	/**
+	 * 프로젝트 지원을 선정하는 컨트롤러
+	 * @param pjApplyId 지원서 아이디로 검색해서 ordrId에다가 지원서를 작성한 사람의 이메일 넣어줌
+	 * @return
+	 */
+	@PostMapping("/project/apply/accept")
+	public ApiResponse acceptAppltContent(@RequestParam String pjApplyId, Authentication memberVO) {
+		MemberVO loginMemberVO = (MemberVO)memberVO.getPrincipal();
+		boolean isSuccess = this.projectService.updateApplyMember(pjApplyId, loginMemberVO);
+		System.out.println(isSuccess);
+		return new ApiResponse(isSuccess);
 	}
 
 	/**
@@ -490,21 +536,6 @@ public class ProjectController {
 		return new ApiResponse(skills);
 	}
 
-	/**
-	 * 지원기업 선택하기
-	 * @param pjId
-	 * @param memberVO
-	 * @param selectApplyMemberVO
-	 * @return
-	 */
-	@PostMapping("/project/apply/member/{pjId}")
-	public ApiResponse doChoiceApplyMember(@PathVariable String pjId
-									, Authentication memberVO
-									, SelectApplyMemberVO selectApplyMemberVO) {
-		boolean isUpdated = this.projectService.updateApplyMember(selectApplyMemberVO, memberVO.getName());
-		
-		return new ApiResponse(isUpdated);
-	}
 
 	/**
 	 * 

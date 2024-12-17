@@ -153,10 +153,11 @@ public class ProjectServiceImple implements ProjectService {
 		return this.projectDao.insertNewIndustryGroup(projectIndustryVO) > 0;
 	}
 
+	@Transactional
 	@Override
 	public boolean updateOneProject(ModifyProjectVO modifyProjectVO) {
 		int updateCount = this.projectDao.updateOneProject(modifyProjectVO);
-		int updateIndustryCount = this.projectDao.updateProjectIndustry(modifyProjectVO.getProjectIndustryVO());
+		int updateIndustryCount = this.projectDao.updateProjectIndustry(modifyProjectVO);
 
 //		if(updateCount == 0 || updateIndustryCount == 0) {
 //			throw new ProjectWriteFailException("서버상의 문제로 정보 수정이 불가능합니다.", modifyProjectVO);
@@ -339,10 +340,9 @@ public class ProjectServiceImple implements ProjectService {
 	public boolean updateAddtionalRecruitment(ModifyProjectVO modifyProjectVO) {
 		// 기본적인 정보 수정.
 		int updateCnt = this.projectDao.updateAddtionalRecruitment(modifyProjectVO);
-		// 산업정보 수정.
-		int updateIndustryCnt = this.projectDao.updateProjectIndustry(modifyProjectVO.getProjectIndustryVO());
+		
 
-		if (updateCnt == 0 || updateIndustryCnt == 0) {
+		if (updateCnt == 0 ) {
 			throw new ProjectUpdateFailException("서버상의 이유로 정보 수정이 불가능합니다.", modifyProjectVO);
 		}
 		return true;
@@ -386,9 +386,6 @@ public class ProjectServiceImple implements ProjectService {
 		if(!(this.projectDao.deleteProjectApply(pjApplyId)>0)) {
 			throw new ProjectDeleteException("지원서를 삭제하는 중 서버상의 이유로 오류가 발생했습니다.", pjApplyId);
 		}
-		if(!(this.projectDao.deleteApplyAtt(pjApplyId) > 0)) {
-			throw new ProjectDeleteException("지원서를 삭제하는 중 서버상의 이유로 오류가 발생했습니다.", pjApplyId);
-		};
 	}
 
 	@Override
@@ -406,16 +403,25 @@ public class ProjectServiceImple implements ProjectService {
 		return this.projectDao.selectAllApplyMember(pjId);
 	}
 
+	@Transactional
 	@Override
-	public boolean updateApplyMember(SelectApplyMemberVO selectApplyMemberVO, String email) {
-		MemberVO memberVO = memberDao.selectOneMember(email);
-		ProjectVO projectVO = this.projectDao.selectProjectInfo(selectApplyMemberVO.getPjId());
+	public boolean updateApplyMember(String pjApplyId, MemberVO memberVO) {
+		ApplyProjectVO applyProjectVO= this.projectDao.selectOneApplyInfo(pjApplyId);
+		
+		ProjectVO projectVO = this.projectDao.selectProjectInfo(applyProjectVO.getPjId());
+		
+		SelectApplyMemberVO selectApplyMemberVO = new SelectApplyMemberVO();
+		selectApplyMemberVO.setPjId(applyProjectVO.getPjId());
+		selectApplyMemberVO.setEmilAddr(applyProjectVO.getEmilAddr());
 
 		if (!projectVO.getOrdrId().equals(memberVO.getEmilAddr())) {
 			throw new IllegalArgumentException("정보가 일치하지 않습니다.");
 		}
 		if (projectVO.getObtnId() != null) {
 			throw new IllegalArgumentException("지원자 선정을 완료하였습니다.");
+		}
+		if(!(this.projectDao.deleteApplyByPjId(projectVO.getPjId())>0)) {
+			throw new IllegalArgumentException("잠시 후 다시 시도해주세요");
 		}
 
 		return this.projectDao.updateProjectApplyMember(selectApplyMemberVO) > 0;

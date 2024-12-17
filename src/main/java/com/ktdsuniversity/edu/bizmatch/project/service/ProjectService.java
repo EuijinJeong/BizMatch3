@@ -132,7 +132,7 @@ public interface ProjectService {
 	 * @param memberVO
 	 * @return
 	 */
-	public boolean updateApplyMember(SelectApplyMemberVO selectApplyMemberVO, String email);
+	public boolean updateApplyMember(String pjApplyId, MemberVO memberVO);
 	
 	/**
 	 * 특정 프로젝트의 필요한 모든 주요 기술들을 조회하는 메서드.

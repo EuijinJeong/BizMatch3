@@ -116,7 +116,7 @@ public interface ProjectDao {
 	 * @param projectIndustryVO : 프로젝트 수정 정보를 담은 객체.
 	 * @return : 수정된 쿼리문의 개수.
 	 */
-	public int updateProjectIndustry(ProjectIndustryVO projectIndustryVO);
+	public int updateProjectIndustry(ModifyProjectVO modifyProjectVO);
 	
 	/**
 	 * 프로젝트 추가모집시 수정하는 쿼리문을 호출하는 메서드.
@@ -264,6 +264,7 @@ public interface ProjectDao {
 	 */
 	public ApplyProjectVO selectOneApplyInfo(String pjApplyId);
 	
+
 	
 	/**
 	 * 특정 프로젝트 첨부자료를 전부 지우는 쿼리문을 호출하는 메서드.
@@ -271,6 +272,14 @@ public interface ProjectDao {
 	 * @return
 	 */
 	public int deleteAllProjectAtt(String pjId);
+
+	/**
+	 * 프로젝트 지원서 첨부자료 지우는 메서드
+	 * @param pjApplyId
+	 * @return
+	 */
 	public int deleteApplyAtt(String pjApplyId);
+	
+	public int deleteApplyByPjId(String pjId);
 }
 

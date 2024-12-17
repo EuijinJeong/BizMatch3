@@ -263,7 +263,8 @@
 		JOIN INDSTR_INFO II
 		ON II.INDSTR_ID = PN.SMJR_ID 
 		WHERE P.OBTN_ID IS NULL 
-		<if test="_parameter != null">
+		ORDER BY P.RGSTR_DT DESC
+		<!-- <if test="_parameter != null">
 			<include
 				refid="selectAllProjectCodition" />
 		</if>
@@ -272,8 +273,8 @@
 			<when test="orderBy == 'latest'">P.RGSTR_DT DESC</when>
 			<when test="orderBy == 'deadline'">P.PJ_RCRUT_END_DT ASC</when>
 			<when test="orderBy == 'amount'">P.CNTRCT_ACCNT DESC</when>
-			<otherwise>P.RGSTR_DT DESC</otherwise> <!-- 기본 정렬 기준 -->
-		</choose>
+			<otherwise>P.RGSTR_DT DESC</otherwise> 기본 정렬 기준
+		</choose> -->
 
 	</select>
 	
@@ -544,7 +545,7 @@
 		CNTRCT_ACCNT=#{cntrctAccnt},
 		PJ_DESC=#{pjDesc},
 		LST_MOD_DT=SYSDATE,
-		PJ_RCRUT_CNT=#{pjRcrutCnt},
+		PJ_RCRUT_CNT=#{pjRcrutCnt}
 		WHERE PJ_ID=#{pjId}
 	</update>
 
@@ -557,9 +558,10 @@
 
 	<!-- 프로젝트의 산업군 정보를 업데이트하는 쿼리문. -->
 	<update id="updateProjectIndustry"
-		parameterType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectIndustryVO">
+		parameterType="com.ktdsuniversity.edu.bizmatch.project.vo.ModifyProjectVO">
 		UPDATE PJ_INDSTR
-		SET INDSTR_ID = #{indstrId}
+		SET MJR_ID = #{mjrId},
+		   SMJR_ID = #{smjrId}
 		WHERE PJ_ID = #{pjId}
 	</update>
 
@@ -629,8 +631,7 @@
 		UPDATE PJ_INFO
 		SET OBTN_ID = #{emilAddr},
 		PJ_STT = 2
-		WHERE PJ_ID =
-		#{pjId}
+		WHERE PJ_ID = #{pjId}
 	</update>
 	
 	<!-- 한 프로젝트에 지원한 모든 지원자 정보를 조회하는 쿼리문. -->
@@ -1013,6 +1014,7 @@
 			     ON PA.PJ_ID = P.PJ_ID 
 			 WHERE P.OBTN_ID IS NULL
 			  AND P.PJ_STT IN (0,3)
+			  ORDER BY P.RGSTR_DT DESC
 			 <!-- <if test="mbrCtgry == 0">
 			 	AND P.ORDR_ID NOT IN (SELECT EMIL_ADDR FROM MBR_INFO WHERE CMP_ID = #{cmpId})
 			 </if> -->
@@ -1098,5 +1100,9 @@
    <delete id="deleteOneApplyAtt" parameterType="string">
   DELETE FROM PJ_APPLY_ATT 
    WHERE PJ_APPLY_ID= #{_parameter}
+   </delete>
+   <delete id="deleteApplyByPjId" parameterType="string">
+   DELETE FROM PJ_APPLY 
+   WHERE PJ_ID= #{_parameter}
    </delete>
 </mapper>
