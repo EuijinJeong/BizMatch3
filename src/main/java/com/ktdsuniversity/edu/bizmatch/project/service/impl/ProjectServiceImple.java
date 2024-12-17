@@ -425,7 +425,7 @@ public class ProjectServiceImple implements ProjectService {
 		if (projectVO.getObtnId() != null) {
 			throw new IllegalArgumentException("지원자 선정을 완료하였습니다.");
 		}
-		if(this.projectDao.deleteApplyByPjId(projectVO.getPjId())>0) {
+		if(!(this.projectDao.deleteApplyByPjId(projectVO.getPjId())>0)) {
 			throw new IllegalArgumentException("잠시 후 다시 시도해주세요");
 		}
 

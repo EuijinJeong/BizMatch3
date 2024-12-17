@@ -370,12 +370,12 @@ public class ProjectController {
 	 * @param pjId
 	 * @return
 	 */
-	@PostMapping("/project/delete/{pjId}")
-	public String deleteProject(@RequestParam String pjId
+	@PostMapping("/project/delete")
+	public ApiResponse deleteProject(@RequestParam String pjId
 							, Authentication memberVO) {
 		
 		boolean isDeleted = this.projectService.deleteOneProject(pjId);
-		return null;
+		return new ApiResponse(isDeleted);
 	}
 
 	/**
@@ -476,6 +476,7 @@ public class ProjectController {
 	public ApiResponse acceptAppltContent(@RequestParam String pjApplyId, Authentication memberVO) {
 		MemberVO loginMemberVO = (MemberVO)memberVO.getPrincipal();
 		boolean isSuccess = this.projectService.updateApplyMember(pjApplyId, loginMemberVO);
+		System.out.println(isSuccess);
 		return new ApiResponse(isSuccess);
 	}
 
