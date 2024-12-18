@@ -42,6 +42,7 @@ public class WebConfig implements WebMvcConfigurer, WebSocketConfigurer{
 	@Value("${app.interceptor.accesslog.excludepath}")
 	List<String> excludeAccessLogPathpatternsList;
 	
+	
 	@Bean
 	Sha createInstance() {
 		Sha sha = new Sha();
@@ -95,7 +96,7 @@ public class WebConfig implements WebMvcConfigurer, WebSocketConfigurer{
 	@Override
 	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
 		registry.addHandler(this.textWebSocketHandler, "/ws")
-				.setAllowedOrigins("http://localhost:3000") // 모든 도메인(URL)에서 /ws 로 접근할 수 있도록 설정
+				.setAllowedOrigins("http://3.34.180.91","http://localhost:3000") // 모든 도메인(URL)에서 /ws 로 접근할 수 있도록 설정
 				.withSockJS(); // /ws URL에 접근할 수 있는 JS라이브러리를 sock.js 로 제한
 	}
 }

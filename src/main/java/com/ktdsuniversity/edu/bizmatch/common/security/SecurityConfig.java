@@ -33,7 +33,7 @@ public class SecurityConfig {
 	@Autowired
 	private MemberDao memberDao;
 	
-	@Value("${app.cors.acceptpath:http://3.34.180.91:3000}")
+	@Value("${app.cors.acceptpath:http://3.34.180.91}")
 	private List<String> corsAcceptPath;
 	
 	// 1. SecurityUserDetailsService bean등록.
