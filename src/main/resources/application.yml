@@ -98,7 +98,7 @@ spring:
 # prod profile 전용 설정.
 app:
   multipart:
-    base-dir: /usr/local/src/uploadfiles
+    base-dir: /usr/local/src/tomcat-connectors-1.2.50-src/uploadfiles/
   cors:
     acceptpath:
       http://3.34.180.91
