@@ -114,15 +114,7 @@ public class PaymentController {
 	 * @return
 	 */
 	@GetMapping("/payment/details")
-	public ApiResponse getPaymentDetails(Authentication memberVO
-									, @RequestParam String emilAddr
-									, @RequestParam String startDate
-									, @RequestParam String paymentType) {
-		
-		PaymentSearchVO paymentSearchVO = new PaymentSearchVO();
-		paymentSearchVO.setEmilAddr(emilAddr);
-		paymentSearchVO.setStartDate(startDate);
-		paymentSearchVO.setPaymentType(paymentType);
+	public ApiResponse getPaymentDetails(Authentication memberVO, PaymentSearchVO paymentSearchVO) {
 		List<PaymentHistoryVO> paymentHistoryList = this.paymentService.readPaymentDetails(paymentSearchVO);
 		return new ApiResponse(paymentHistoryList);
 	}
