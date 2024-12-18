@@ -116,8 +116,8 @@ public class ProjectController {
 	public ApiResponse getProjectList(Authentication loginMemberVO) {
 		MemberVO memberVO = (MemberVO)loginMemberVO.getPrincipal();
 		List<ProjectVO> projectList = this.projectService.readAllProjectList(memberVO);
-//		return new ApiResponse(projectList);
-		return new ApiResponse(HttpStatus.BAD_REQUEST, "예외");
+		return new ApiResponse(projectList);
+//		return new ApiResponse(HttpStatus.BAD_REQUEST, "예외");
 	}
 	@PostMapping("/project/delete/{id}")
 	public ApiResponse postDeleteProject(@PathVariable String id) {
