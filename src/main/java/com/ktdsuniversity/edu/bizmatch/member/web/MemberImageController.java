@@ -19,9 +19,11 @@ public class MemberImageController {
 	@Value("${app.multipart.base-dir}")
 	private String baseDirPrefix;
 	
+//	http://3.34.180.91:8080/images/portfolio/img/a69df74d-5337-496e-bdaf-9760f8e55458/
+	
 	@GetMapping("/images/portfolio/img/{imgUrl}/")
 	public ResponseEntity<byte[]> showImage(@PathVariable String imgUrl){
-		String savePath = baseDirPrefix+imgUrl;
+		String savePath = baseDirPrefix+"/"+imgUrl;
 		File file = new File(savePath);
 		byte[] result=null;
 		ResponseEntity<byte[]> entity=null;
