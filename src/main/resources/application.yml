@@ -98,7 +98,7 @@ spring:
 # prod profile 전용 설정.
 app:
   multipart:
-    base-dir: /usr/local/imges/uploadfiles
+    base-dir: /usr/local/src/uploadfiles
   cors:
     acceptpath:
       http://3.34.180.91
