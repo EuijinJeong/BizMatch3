@@ -3,6 +3,7 @@ package com.ktdsuniversity.edu.bizmatch.common.security;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -31,6 +32,9 @@ public class SecurityConfig {
 	
 	@Autowired
 	private MemberDao memberDao;
+	
+	@Value("${app.cors.acceptpath:http://3.34.180.91:3000}")
+	private List<String> corsAcceptPath;
 	
 	// 1. SecurityUserDetailsService bean등록.
 	@Bean
@@ -95,7 +99,7 @@ public class SecurityConfig {
 				CorsConfiguration corsConfiguration = new CorsConfiguration();
 				
 				// 허용을 할 도메인의 목록
-				corsConfiguration.setAllowedOrigins(List.of("http://localhost:3000"));
+				corsConfiguration.setAllowedOrigins(corsAcceptPath);
 				
 				// 허용을 할 메서드의 목록
 				corsConfiguration.setAllowedMethods(List.of("POST", "GET", "PUT", "DELETE", "OPTION"));
@@ -111,6 +115,7 @@ public class SecurityConfig {
 		http.authorizeHttpRequests(httpRequest->
 									 httpRequest.requestMatchers("/").permitAll()
 									 			.requestMatchers("/kakao/**").permitAll()
+									 			.requestMatchers("/images/**").permitAll()
 									 			.requestMatchers("/api/**").permitAll()
 												.requestMatchers("/member/signup/**").permitAll()
 												.requestMatchers("/bizno/api/ask/**").permitAll()
@@ -120,8 +125,8 @@ public class SecurityConfig {
 												.requestMatchers("/api/member/signup/email/available/").permitAll()
 												.requestMatchers("/ws/**").permitAll()
 												.requestMatchers("/api/board").permitAll()
-												.requestMatchers("/api//board/view/**").permitAll()
-												.requestMatchers("/api//board/comment/view/**").permitAll());
+												.requestMatchers("/api/board/view/**").permitAll()
+												.requestMatchers("/api/board/comment/view/**").permitAll());
 		
 		http.addFilterAfter(this.jsonWebTokenAuthenticationFilter, BasicAuthenticationFilter.class);
 		

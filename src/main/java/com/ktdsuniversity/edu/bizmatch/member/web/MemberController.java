@@ -77,7 +77,7 @@ public class MemberController {
 	}
 	
 	/**
-	 * 비밀번호 재설정 요청을 처리하는 컨트롤러.
+	 * 비밀번호 재설정 요청을 위해 이메일을 보내는 요청을 받는 컨트롤러.
 	 * @param email
 	 * @return
 	 */
@@ -111,7 +111,8 @@ public class MemberController {
 	 * @param memberCompanySignUpVO
 	 * @return
 	 */
-	@PostMapping(value = "/member/signup/company", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@PostMapping(value = "/member/signup/company"
+				, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ApiResponse signUpCompanyMember(@ModelAttribute MemberCompanySignUpVO memberCompanySignUpVO) {
 		
 //		 사용자가 입력한 값 유효성 검사.
@@ -177,7 +178,7 @@ public class MemberController {
 	@GetMapping("/bizno/api/ask")
 	public Map handleBiznoApi(@RequestParam String cmpnyBrn) {
 		Map<String, Object> request = new HashMap<>();
-		// TODO 사업자 번호 - 이거 뜯을 수 있나?
+		// TODO 사업자 번호 - 이거 뜯을 수 있나? - 의진 -
 		request.put("key", "amVqMDAxMjI4QGdtYWlsLmNvbSAg");
 		request.put("gb", "1");
 		request.put("q", cmpnyBrn);
@@ -243,7 +244,7 @@ public class MemberController {
 	}
 	
 	/**
-	 * 
+	 * 내 정보를 가져오는 요청을 받는 컨트롤러.
 	 * @param authentication
 	 * @return
 	 */
@@ -433,11 +434,14 @@ public class MemberController {
 										,@PathVariable String cmpnyId) {
 		
 		CompanyVO companyVO =  this.memberService.selectOneCompanyByEmilAddr(cmpnyId);
-		
 		// 보유기술 리스트 조회
 		List<MbrPrmStkVO> mbrPrmStkList = memberService.selectMbrPrmStkCmpnyList(cmpnyId);
 		
-		return new ApiResponse();
+		Map<String, Object> resultMap = new HashMap<>();
+		resultMap.put("companyVO", companyVO);
+		resultMap.put("mbrPrmStkList", mbrPrmStkList);
+		
+		return new ApiResponse(resultMap);
 	}
 	
 	/**
@@ -450,7 +454,6 @@ public class MemberController {
 	public Map<String, Object> doCompanyMyPageEdit(@RequestBody MemberCompanyModifyVO memberCompanyModifyVO 
 												, Authentication memberVO) {
 		
-		System.out.println(memberCompanyModifyVO);
 		if (memberCompanyModifyVO.getCmpnyNm() == null || memberCompanyModifyVO.getCmpnyAddr() == null || memberCompanyModifyVO.getCmpnyAccuntNum() == null) {
 			return Map.of("response",
 					false,
@@ -474,35 +477,27 @@ public class MemberController {
 		return Map.of("response", isSuccess, "data", memberCompanyModifyVO);
 	}
 	
-//	/**
-//	 * 프리랜서 마이페이지 수정 페이지
-//	 * @return
-//	 */
-//	@GetMapping("/member/mypage/freelancer/edit/{email}")
-//	public String viewFreelancerMyPageEdit(Authentication loginMemberVO
-//										, @PathVariable String email, Model model) {
-//		
-//		int ctgry = loginMemberVO.getMbrCtgry();
-//		if(ctgry == 0) {
-//			return "redirect:/member/mypage/company/edit/"+loginMemberVO.getCmpId();
-//		}
-//		
-//		// 보유기술 리스트 조회
-//		List<MbrPrmStkVO> mbrPrmStkList = memberService.selectMbrPrmStkList(loginMemberVO.getEmilAddr());
-//		model.addAttribute("mbrPrmStkList", mbrPrmStkList);
-//		
-//		// 소속 산업군명 조회
-//		MemberMyPageIndsryVO memberMyPageIndsryVO = memberService.selectIndstrNmByEmilAddr(loginMemberVO.getEmilAddr());
-//		model.addAttribute("memberMyPageIndsryVO", memberMyPageIndsryVO);
-//		
-//		MemberVO memberVO = memberService.selectOneMemberVO(loginMemberVO.getEmilAddr());
-//		model.addAttribute("memberVO", memberVO);
-//
-//		return "member/mypagefreelanceredit";
-//	}
+	/**
+	 * 프리랜서 마이페이지 수정 페이지
+	 * @return
+	 */
+	@GetMapping("/member/mypage/freelancer/edit/{email}")
+	public ApiResponse viewFreelancerMyPageEdit(Authentication loginMemberVO
+										, @PathVariable String email) {
+		
+		// 보유기술 리스트 조회
+		List<MbrPrmStkVO> mbrPrmStkList = memberService.selectMbrPrmStkList(email);
+		
+		// 소속 산업군명 조회
+		MemberMyPageIndsryVO memberMyPageIndsryVO = memberService.selectIndstrNmByEmilAddr(email);
+		
+		MemberVO memberVO = memberService.selectOneMemberVO(email);
+
+		return new ApiResponse(memberVO);
+	}
 	
 	/**
-	 * 
+	 * 프리랜서 마이페이지 정보를 수정하는 컨트롤러.
 	 * @param memberVO
 	 * @param memberFreelancerModifyVO
 	 * @return
@@ -515,10 +510,6 @@ public class MemberController {
 		return new ApiResponse(isSuccess);
 	}
 	
-//	@GetMapping("/member/newportfolio")
-//	public String loadWriteNewPortfolioPage() {
-//		return "/portfolio/portfolio_write";
-//	}
 	/**
 	 * 새로운 포트폴리오를 등록하는 요청을 보내는 컨트롤러이다.
 	 * @param memberPortfolioVO : 사용자가 입력한 포트폴리오 정보.
@@ -537,16 +528,6 @@ public class MemberController {
 		return new ApiResponse(isCreated);
 	}
 	
-//	/**
-//	 * 프리랜서 포트폴리오 페이지를 로드하는 컨트롤러.
-//	 * @param loginMemberVO
-//	 * @return
-//	 */
-//	@GetMapping("/member/mypage/freelancer/portfolio/{email}")
-//	public String loadPortfolioListPageFL(@PathVariable String email,
-//										Authentication loginMemberVO) {
-//		return "portfolio/portfoliolist";
-//	}
 
 	/**
 	 * 회사
@@ -560,7 +541,7 @@ public class MemberController {
 		return new ApiResponse(memberPortfolioVO);
 	}
 	
-	@GetMapping("/portfolio/img/{imgUrl}")
+	@GetMapping("/portfolio/img/{imgUrl}/")
 	public ResponseEntity<byte[]> showImage(@PathVariable String imgUrl){
 		String savePath = baseDirPrefix+imgUrl;
 		File file = new File(savePath);
@@ -668,15 +649,6 @@ public class MemberController {
 		return new ApiResponse(memberPortfolioVO);
 	}
 	
-//	/**
-//	 * 
-//	 * @return
-//	 */
-//	@GetMapping("/view/portfolio/view/detail/{mbrPrtflId}")
-//	public String loadDataPortfolioDetailsOne() {
-//		return "/portfolio/portfoliolist";
-//	}
-	
 	/**
 	 * 하나의 포트폴리오 정보를 제거하는 메소드.
 	 * @param mbrPrtflId
@@ -702,13 +674,11 @@ public class MemberController {
 		return new ApiResponse(isUpdated);
 	}
 	
-//	@GetMapping("/member/company/
-//	public ApiResponse getCmpIdByEmail(Authentication memberVO) {
-//		String email = memberVO.getName();
-//		
-//		return new ApiResponse();
-//	}
-	
+	/**
+	 * 로그아웃 요청을 받는 컨트롤러.
+	 * @param memberVO
+	 * @return
+	 */
 	@GetMapping("/member/logout")
 	public ApiResponse doLogout(Authentication memberVO) {
 		return new ApiResponse();

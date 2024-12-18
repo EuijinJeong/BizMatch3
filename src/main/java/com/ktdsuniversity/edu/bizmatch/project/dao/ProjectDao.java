@@ -11,6 +11,7 @@ import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentPaginationVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentWriteVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectIndustryVO;
+import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectScrapDeleteVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectScrapVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectSkillVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectVO;
@@ -116,7 +117,7 @@ public interface ProjectDao {
 	 * @param projectIndustryVO : 프로젝트 수정 정보를 담은 객체.
 	 * @return : 수정된 쿼리문의 개수.
 	 */
-	public int updateProjectIndustry(ProjectIndustryVO projectIndustryVO);
+	public int updateProjectIndustry(ModifyProjectVO modifyProjectVO);
 	
 	/**
 	 * 프로젝트 추가모집시 수정하는 쿼리문을 호출하는 메서드.
@@ -137,7 +138,7 @@ public interface ProjectDao {
 	 * @param applyProjectVO
 	 * @return
 	 */
-	public int deleteProjectApply(ApplyProjectVO applyProjectVO);
+	public int deleteProjectApply(String pjApplyId);
 	
 	/**
 	 * 해당 프로젝트에 지원자 들을 찾는 메소드
@@ -205,8 +206,6 @@ public interface ProjectDao {
 	
 	public int insertNewIndustryGroup(ProjectIndustryVO projectIndustryVO);
 
-
-	
 	/**
 	 * 특정 프로젝트의 특정 지원서의 정보를 가져오는 쿼리문을 호출하는 메서드.
 	 * @param applyProjectVO
@@ -265,5 +264,37 @@ public interface ProjectDao {
 	 * @return
 	 */
 	public ApplyProjectVO selectOneApplyInfo(String pjApplyId);
+	
+
+	
+	/**
+	 * 특정 프로젝트 첨부자료를 전부 지우는 쿼리문을 호출하는 메서드.
+	 * @param pjId
+	 * @return
+	 */
+	public int deleteAllProjectAtt(String pjId);
+
+	/**
+	 * 프로젝트 지원서 첨부자료 지우는 메서드
+	 * @param pjApplyId
+	 * @return
+	 */
+	public int deleteApplyAtt(String pjApplyId);
+	
+	public int deleteApplyByPjId(String pjId);
+
+	/**
+	 * 즐겨찾기한 프로젝트 리스트를 받아오는 메소드
+	 * @param email
+	 * @return
+	 */
+	public List<ProjectVO> selectAllScrapList(String email);
+
+	/**
+	 * 즐겨찾기한거 하나 제거하는 메소드
+	 * @param pjScrpId
+	 * @return
+	 */
+	public int deleteScrapProject(ProjectScrapDeleteVO projectScrapDeleteVO);
 }
 

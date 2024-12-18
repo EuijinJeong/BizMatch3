@@ -3,7 +3,7 @@ package com.ktdsuniversity.edu.bizmatch.common.exceptions.handler;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.ui.Model;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -12,9 +12,11 @@ import com.ktdsuniversity.edu.bizmatch.common.exceptions.board.BoardApproachExce
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.board.BoardException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.comment.ReviewFailException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.comment.ReviewReportFailException;
+import com.ktdsuniversity.edu.bizmatch.common.exceptions.common.IndustryException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.file.CreateNewProjectFileException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.file.FileUploadFailedException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.member.LoginFailException;
+import com.ktdsuniversity.edu.bizmatch.common.exceptions.member.MemberNotFoundException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.member.MemberPortfolioException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.member.ResetPassword;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.member.SessionNotFoundException;
@@ -26,11 +28,10 @@ import com.ktdsuniversity.edu.bizmatch.common.exceptions.payment.PaymentExceptio
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.payment.PaymentServerSaveException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.project.ProjectApplyFailException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.project.ProjectDeleteException;
+import com.ktdsuniversity.edu.bizmatch.common.exceptions.project.ProjectNotFoundException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.project.ProjectScrapException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.project.ProjectWriteFailException;
-import com.ktdsuniversity.edu.bizmatch.project.vo.ApplyProjectVO;
-import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectScrapVO;
-import com.ktdsuniversity.edu.bizmatch.project.vo.WriteProjectVO;
+import com.ktdsuniversity.edu.bizmatch.common.vo.ApiResponse;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -45,7 +46,6 @@ public class GlobalExceptionHandler {
     public Map handleBoardException(BoardException be) {
     	Map<String, Object> errorResponse = new HashMap<>();
     	errorResponse.put("error", be.getMessage());
-    	errorResponse.put("boardWirteVO", be.getBoardWriteVO());
         return errorResponse;
     }
     
@@ -56,9 +56,9 @@ public class GlobalExceptionHandler {
      * @return
      */
     @ExceptionHandler(BoardApproachException.class)
-    public String handleBoardApproachException(BoardApproachException bae, Model model) {
-    	model.addAttribute("error", bae.getMessage());
-    	return "redirect:/";
+    @ResponseBody
+    public ApiResponse handleBoardApproachException(BoardApproachException bae) {
+    	return new ApiResponse(HttpStatus.BAD_REQUEST, bae.getMessage());
     }
     
     @ExceptionHandler(MemberPortfolioException.class)
@@ -81,18 +81,28 @@ public class GlobalExceptionHandler {
         return errorResponse;
     }
 
+    /**
+     * 회원가입 실패 예외처리.
+     * @param sufe
+     * @param model
+     * @return
+     */
     @ExceptionHandler(SignUpFailException.class)
-    public String handleSignUpFailException(SignUpFailException sufe, Model model) {
-    	model.addAttribute("error", sufe.getMessage());
-    	model.addAttribute("memberSignUpVO", sufe.getMemberSignUpVO());
-        return "member/signup_freelancer";
+    @ResponseBody
+    public ApiResponse handleSignUpFailException(SignUpFailException sufe) {
+    	return new ApiResponse(HttpStatus.BAD_REQUEST, sufe.getMessage());
     }
     
+    /**
+     * 기업형 회원가입 예외처리.
+     * @param suce
+     * @param model
+     * @return
+     */
     @ExceptionHandler(SignUpCompanyException.class)
-    public String handleSignUpCompanyException(SignUpCompanyException suce, Model model) {
-    	model.addAttribute("memberCompanySignUpVO", suce.getMemberCompanySignUpVO());
-    	model.addAttribute("error", suce.getMessage());
-    	return "member/signup_company";
+    @ResponseBody
+    public ApiResponse handleSignUpCompanyException(SignUpCompanyException suce) {
+    	return new ApiResponse(HttpStatus.BAD_REQUEST, suce.getMessage());
     }
     
     /**
@@ -101,22 +111,29 @@ public class GlobalExceptionHandler {
      * @return
      */
     @ExceptionHandler(LoginFailException.class)
-    public String handleLoginFailException(LoginFailException lfe, Model model){
-    	
-        model.addAttribute("error", lfe.getMessage());
-        
-        return "main/mainpage";
+    @ResponseBody
+    public ApiResponse handleLoginFailException(LoginFailException lfe){
+    	return new ApiResponse(HttpStatus.BAD_REQUEST, lfe);
     }
     
+    /**
+     * 리뷰 등록 실패 예외처리.
+     * @param rfe
+     * @return
+     */
     @ExceptionHandler(ReviewFailException.class)
     @ResponseBody
     public Map<String, Object> handleReviewFailException(ReviewFailException rfe) {
-        Map<String, Object> errorResponse = new HashMap<>();
+    	Map<String, Object> errorResponse = new HashMap<>();
         errorResponse.put("error", rfe.getMessage());
-        
         return errorResponse;
     }
     
+    /**
+     * 리뷰 신고 실패 예외처리.
+     * @param rrfe
+     * @return
+     */
     @ExceptionHandler(ReviewReportFailException.class)
     @ResponseBody
     public Map<String, Object> handleReviewReportFailException(ReviewReportFailException rrfe) {
@@ -128,27 +145,26 @@ public class GlobalExceptionHandler {
     }
     
     /**
-     * 
+     * 회원가입 승낙 아직 안되어있을 때 발생하는 예외처리.
      * @param snae
      * @param model
      * @return
      */
     @ExceptionHandler(SignUpNotApprovedException.class)
-    public String handleSignUpNotApprovedException(SignUpNotApprovedException snae, Model model) {
-    	model.addAttribute("error", snae.getMessage());
-    	return "main/mainpage";
+    @ResponseBody
+    public ApiResponse handleSignUpNotApprovedException(SignUpNotApprovedException snae) {
+    	return new ApiResponse(HttpStatus.UNAUTHORIZED, snae);
     }
     
     /**
-     * 
+     * 파일 업로드 실패 요청 예외처리.
      * @param fufe
      * @return
      */
     @ExceptionHandler(FileUploadFailedException.class)
-    public String handleFileUploadFailedException(FileUploadFailedException fufe, Model model) {
-    	model.addAttribute("error", fufe.getMessage());
-    	
-    	return "redirect:/project/apply/{pjId}";
+    @ResponseBody
+    public ApiResponse handleFileUploadFailedException(FileUploadFailedException fufe) {
+    	return new ApiResponse(HttpStatus.BAD_REQUEST, fufe);
     }
     
     /**
@@ -158,22 +174,9 @@ public class GlobalExceptionHandler {
      * @return : 작성하고 있던 페이지에 정보를 담아서 돌려줌.
      */
     @ExceptionHandler(CreateNewProjectFileException.class)
-    public String handleProjectFailException(CreateNewProjectFileException cnpfe
-    										, WriteProjectVO writeProjectVO
-    										, Model model) {
-    	// 모델에 담아주기.
-    	model.addAttribute("strtDt", writeProjectVO.getStrtDt());
-    	model.addAttribute("endDt", writeProjectVO.getEndDt());
-    	model.addAttribute("pjRcrutStrtDt", writeProjectVO.getPjRcrutStrtDt());
-    	model.addAttribute("pjRcrutEndDt", writeProjectVO.getPjRcrutEndDt());
-    	model.addAttribute("indstrNm", writeProjectVO.getIndstrNm());
-    	model.addAttribute("pjTtl", writeProjectVO.getPjTtl());
-    	model.addAttribute("pjDesc", writeProjectVO.getPjDesc());
-    	model.addAttribute("cntrctAccnt", writeProjectVO.getCntrctAccnt());
-    	model.addAttribute("pjRcrutCnt", writeProjectVO.getPjRcrutCnt());
-    	model.addAttribute("error", cnpfe.getMessage());
-    	
-    	return "redirect:/project/regist";
+    @ResponseBody
+    public ApiResponse handleProjectFailException(CreateNewProjectFileException cnpfe) {
+    	return new ApiResponse(HttpStatus.BAD_REQUEST, cnpfe);
     }
     
     /**
@@ -184,15 +187,9 @@ public class GlobalExceptionHandler {
      * @return : 원래 작성하고 있던 페이지로 돌려줌.
      */
     @ExceptionHandler(ProjectApplyFailException.class)
-    public String handleProjectApplyFailException(ProjectApplyFailException pafe
-    											, ApplyProjectVO applyProjectVO
-    											, Model model) {
-    	
-    	// 모델에 담아주기.
-    	model.addAttribute("pjApplyTtl", applyProjectVO.getPjApplyTtl());
-    	model.addAttribute("pjApplyDesc", applyProjectVO.getPjApplyDesc());
-    	
-    	return "redirect:/project/apply/" + applyProjectVO.getPjId();
+    @ResponseBody
+    public ApiResponse handleProjectApplyFailException(ProjectApplyFailException pafe) {
+    	return new ApiResponse(HttpStatus.BAD_REQUEST, pafe);
     }
     
     /**
@@ -208,7 +205,6 @@ public class GlobalExceptionHandler {
     	Map<String, Object> errorMap=new HashMap<>();
     	
     	errorMap.put("error", pwfe.getMessage());
-    	errorMap.put("writeProjectVO", pwfe.getWriteProjectVO());
     	return errorMap;
     }
     
@@ -220,11 +216,9 @@ public class GlobalExceptionHandler {
      * @return
      */
     @ExceptionHandler(ProjectDeleteException.class)
-    public String handleProjectDeleteException(ProjectDeleteException pde
-    										, String pjId
-    										, Model model) {
-    	model.addAttribute("error", pde.getMessage());
-    	return "redirect:/project/info/" + pjId;
+    @ResponseBody
+    public ApiResponse handleProjectDeleteException(ProjectDeleteException pde) {
+    	return new ApiResponse(HttpStatus.BAD_REQUEST, pde);
     }
     
     /**
@@ -235,12 +229,9 @@ public class GlobalExceptionHandler {
      * @return
      */
     @ExceptionHandler(ProjectScrapException.class)
-    public String handleProjectScrapException(ProjectScrapException pse
-    										, ProjectScrapVO projectScrapVO
-    										, Model model) {
-    	
-    	model.addAttribute("error", pse.getMessage());
-    	return "redirect:/project/info/" + projectScrapVO.getPjId();
+    @ResponseBody
+    public ApiResponse handleProjectScrapException(ProjectScrapException pse) {
+    	return new ApiResponse(HttpStatus.BAD_REQUEST, pse);
     }
     
     /**
@@ -250,9 +241,9 @@ public class GlobalExceptionHandler {
      * @return
      */
     @ExceptionHandler(PaymentServerSaveException.class)
-    public String handlePaymentServerSaveException(PaymentServerSaveException psse) {
-    	// 여기서 아임포트 결제 취소 요청 보내야함.
-    	return "/error/payment_error";
+    @ResponseBody
+    public ApiResponse handlePaymentServerSaveException(PaymentServerSaveException psse) {
+    	return new ApiResponse(HttpStatus.BAD_REQUEST, psse);
     }
     
     /**
@@ -262,8 +253,9 @@ public class GlobalExceptionHandler {
      * @return : 결제 예외페이지를 돌려준다.
      */
     @ExceptionHandler(CreateDownPaymentException.class)
-    public String handleCreateDownPaymentException(CreateDownPaymentException cdpe) {
-    	return "/error/payment_error";
+    @ResponseBody
+    public ApiResponse handleCreateDownPaymentException(CreateDownPaymentException cdpe) {
+    	return new ApiResponse(HttpStatus.BAD_REQUEST, cdpe);
     }
     
     /**
@@ -272,9 +264,9 @@ public class GlobalExceptionHandler {
      * @return
      */
     @ExceptionHandler(SessionNotFoundException.class)
-    public String SessionNotFoundException(SessionNotFoundException snfe, Model model) {
-    	model.addAttribute("error", snfe.getMessage());
-    	return "redirect:/";
+    @ResponseBody
+    public ApiResponse SessionNotFoundException(SessionNotFoundException snfe) {
+    	return new ApiResponse(HttpStatus.FORBIDDEN, snfe);
     }
     
     /**
@@ -284,8 +276,37 @@ public class GlobalExceptionHandler {
      * @return
      */
     @ExceptionHandler(PaymentException.class)
-    public String handlePaymentException(PaymentException pe) {
-    	return "/error/payment_error";
+    @ResponseBody
+    public ApiResponse handlePaymentException(PaymentException pe) {
+    	return new ApiResponse(HttpStatus.BAD_REQUEST, pe);
+    }
+    
+    /**
+     * 산업군 관련한 예외처리.
+     * @param ie
+     * @return
+     */
+    @ExceptionHandler(IndustryException.class)
+    @ResponseBody
+    public ApiResponse handleIndustryException(IndustryException ie) {
+    	return new ApiResponse(HttpStatus.BAD_REQUEST, ie);
+    }
+    
+    /**
+     * 특정 회원을 찾을 수 없을 때 발생하는 예외를 처리.
+     * @param infe
+     * @return
+     */
+    @ExceptionHandler(MemberNotFoundException.class)
+    @ResponseBody
+    public ApiResponse handleMemberNotFoundException(MemberNotFoundException infe) {
+    	return new ApiResponse(HttpStatus.BAD_REQUEST, infe);
+    }
+    
+    @ExceptionHandler(ProjectNotFoundException.class)
+    @ResponseBody
+    public ApiResponse handleProjectNotFoundException(ProjectNotFoundException pnfe) {
+    	return new ApiResponse(HttpStatus.BAD_REQUEST, pnfe);
     }
     
 //    @ExceptionHandler(RuntimeException.class)

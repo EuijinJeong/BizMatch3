@@ -59,12 +59,8 @@ public class BizmatchWebSocketHandler extends TextWebSocketHandler{
 				// --> payload 를 Map 으로 변환.
 				//    --> Gson Library 필요
 				Map<String, String> payloadMap = new HashMap<>();
-				try {
-					payloadMap = gson.fromJson(payload, Map.class);
-				}
-				catch(JsonSyntaxException e) {
-					System.err.println("잘못된 JSON 형식: " + e.getMessage());
-				}
+				payloadMap = gson.fromJson(payload, Map.class);
+				
 				
 				String action = payloadMap.get("action");
 				String receiveMessage = payloadMap.get("message");

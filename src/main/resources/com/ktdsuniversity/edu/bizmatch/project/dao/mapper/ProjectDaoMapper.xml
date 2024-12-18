@@ -263,7 +263,8 @@
 		JOIN INDSTR_INFO II
 		ON II.INDSTR_ID = PN.SMJR_ID 
 		WHERE P.OBTN_ID IS NULL 
-		<if test="_parameter != null">
+		ORDER BY P.RGSTR_DT DESC
+		<!-- <if test="_parameter != null">
 			<include
 				refid="selectAllProjectCodition" />
 		</if>
@@ -272,8 +273,8 @@
 			<when test="orderBy == 'latest'">P.RGSTR_DT DESC</when>
 			<when test="orderBy == 'deadline'">P.PJ_RCRUT_END_DT ASC</when>
 			<when test="orderBy == 'amount'">P.CNTRCT_ACCNT DESC</when>
-			<otherwise>P.RGSTR_DT DESC</otherwise> <!-- 기본 정렬 기준 -->
-		</choose>
+			<otherwise>P.RGSTR_DT DESC</otherwise> 기본 정렬 기준
+		</choose> -->
 
 	</select>
 	
@@ -333,6 +334,10 @@
 			, PY.IMP_UID 
 			, PY.DPST_RFND_AMNT 
 			, PY.DPST_RFND_DT
+			, PA.PJ_ATT_ID
+			, PA.PJ_ID
+			, PA.PJ_ATT_URL
+			, PA.PJ_ATT_URL_NONREAD
 	     FROM PJ_INFO P
 			LEFT JOIN PJ_INDSTR PI
 			     ON P.PJ_ID = PI.PJ_ID 
@@ -346,8 +351,9 @@
 			     ON PA.PJ_ID = P.PJ_ID 
 			LEFT JOIN PYMNT_INFO PY
 			  ON PY.PJ_ID = P.PJ_ID 
+			LEFT JOIN PJ_ATT PA
+			  ON PA.PJ_ID = P.PJ_ID
 		   WHERE P.PJ_ID = #{_parameter}
-		 <!--TODO LEFT JOIN -> JOIN  -->
 	</select>
 
 	<select id="selectForPagination"
@@ -539,7 +545,7 @@
 		CNTRCT_ACCNT=#{cntrctAccnt},
 		PJ_DESC=#{pjDesc},
 		LST_MOD_DT=SYSDATE,
-		PJ_RCRUT_CNT=#{pjRcrutCnt},
+		PJ_RCRUT_CNT=#{pjRcrutCnt}
 		WHERE PJ_ID=#{pjId}
 	</update>
 
@@ -552,9 +558,10 @@
 
 	<!-- 프로젝트의 산업군 정보를 업데이트하는 쿼리문. -->
 	<update id="updateProjectIndustry"
-		parameterType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectIndustryVO">
+		parameterType="com.ktdsuniversity.edu.bizmatch.project.vo.ModifyProjectVO">
 		UPDATE PJ_INDSTR
-		SET INDSTR_ID = #{indstrId}
+		SET MJR_ID = #{mjrId},
+		   SMJR_ID = #{smjrId}
 		WHERE PJ_ID = #{pjId}
 	</update>
 
@@ -597,10 +604,10 @@
 	</update>
 
 	<delete id="deleteProjectApply"
-		parameterType="com.ktdsuniversity.edu.bizmatch.project.vo.ApplyProjectVO">
+		parameterType="string">
 		DELETE
 		FROM PJ_APPLY
-		WHERE PJ_APPLY_ID = #{pjApplyId}
+		WHERE PJ_APPLY_ID = #{_parameter}
 	</delete>
 
 	<resultMap
@@ -624,8 +631,7 @@
 		UPDATE PJ_INFO
 		SET OBTN_ID = #{emilAddr},
 		PJ_STT = 2
-		WHERE PJ_ID =
-		#{pjId}
+		WHERE PJ_ID = #{pjId}
 	</update>
 	
 	<!-- 한 프로젝트에 지원한 모든 지원자 정보를 조회하는 쿼리문. -->
@@ -767,7 +773,7 @@
 		FROM PJ_APPLY PA
 		JOIN PJ_INFO PI ON PA.PJ_ID = PI.PJ_ID
 		JOIN PJ_INDSTR P ON PI.PJ_ID = P.PJ_ID
-		JOIN PJ_APPLY_ATT PAA ON PAA.PJ_APPLY_ID = PA.PJ_APPLY_ID
+		LEFT JOIN PJ_APPLY_ATT PAA ON PAA.PJ_APPLY_ID = PA.PJ_APPLY_ID
 		JOIN INDSTR_INFO II ON II.INDSTR_ID = P.SMJR_ID
 		JOIN PJ_PRM_STK PPS ON PPS.PJ_ID = P.PJ_ID
 		JOIN PRM_STK PRM ON PRM.PRM_STK_ID = PPS.PRM_STK_ID
@@ -959,6 +965,9 @@
 			<id column="PJ_APPLY_ID" property="pjApplyId"></id>
 			<result column="APPLY_EMIL_ADDR" property="emilAddr"/>
 		</collection>
+		<collection property="projectAtt" ofType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectAttachmentVO" autoMapping="true">
+			<id column="PJ_ATT_ID" property="pjAttId"></id>
+		</collection>
 	</resultMap>
 	<select id="selectProjectList" 
 			parameterType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO" 
@@ -1005,6 +1014,8 @@
 			     ON PA.PJ_ID = P.PJ_ID 
 			 WHERE P.OBTN_ID IS NULL
 			  AND P.PJ_STT IN (0,3)
+			  AND P.IS_DLT = 0
+			  ORDER BY P.RGSTR_DT DESC
 			 <!-- <if test="mbrCtgry == 0">
 			 	AND P.ORDR_ID NOT IN (SELECT EMIL_ADDR FROM MBR_INFO WHERE CMP_ID = #{cmpId})
 			 </if> -->
@@ -1040,18 +1051,26 @@
 			, II.UPPR_INDSTR_ID
 			, PRM.PRM_STK_ID
 			, PRM.PRM_STK
+			, PYI.PYMNT_ID 
+			, PYI.GRNT_AMT 
+			, TO_CHAR(PYI.GRNT_PD_DT, 'YYYY-MM-DD') GRNT_PD_DT
+			, PYI.CNTRCT_AMT 
+			, TO_CHAR(PYI.CNTRCT_PD_DT, 'YYYY-MM-DD') CNTRCT_PD_DT
 			  FROM PJ_INFO P
 			  JOIN PJ_INDSTR PI
 			    ON P.PJ_ID = PI.PJ_ID 
 			  JOIN INDSTR_INFO II
 			    ON II.INDSTR_ID = PI.SMJR_ID
-			LEFT JOIN PJ_PRM_STK PPS
+		      LEFT JOIN PJ_PRM_STK PPS
 			    ON PPS.PJ_ID = P.PJ_ID 
-			LEFT JOIN PRM_STK PRM
+			  LEFT JOIN PRM_STK PRM
 			    ON PRM.PRM_STK_ID = PPS.PRM_STK_ID
+			  LEFT JOIN PYMNT_INFO PYI
+			    ON P.PJ_ID = PYI.PJ_ID 
 			 WHERE P.ORDR_ID IN (SELECT EMIL_ADDR 
 								   FROM MBR_INFO MI
 								  WHERE MI.CMP_ID = #{_parameter})
+			  AND P.IS_DLT NOT IN (1)
    </select>
    
    <update id="updateProject" 
@@ -1076,9 +1095,105 @@
 		 , PT.PJ_APPLY_ATT_URL
 		 , PT.PJ_APPLY_ATT_URL_NONREAD
 	  FROM PJ_APPLY PY
-	  JOIN PJ_APPLY_ATT PT
+	 LEFT JOIN PJ_APPLY_ATT PT
 	    ON PT.PJ_APPLY_ID = PY.PJ_APPLY_ID
 	 WHERE PY.PJ_APPLY_ID = #{_parameter}
    </select>
+   <delete id="deleteOneApplyAtt" parameterType="string">
+  DELETE FROM PJ_APPLY_ATT 
+   WHERE PJ_APPLY_ID= #{_parameter}
+   </delete>
+   <delete id="deleteApplyByPjId" parameterType="string">
+   DELETE FROM PJ_APPLY 
+   WHERE PJ_ID= #{_parameter}
+   </delete>
    
+   <resultMap type="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectScrapVO" id="projectScrapVOMap" autoMapping="true">
+   		<id column="PJ_SCRP_ID" property="pjScrpId"></id>
+   		<association property="projectVO" javaType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectVO" autoMapping="true">
+   			<id column="PJ_ID" property="pjId"></id>
+   		<association property="projectIndustryVO"
+					 javaType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectIndustryVO"
+					 autoMapping="true">
+			<id column="PJ_INDSTR_ID" property="pjIndstrId"/>
+			<association property="indstrInfoVO"
+						 javaType="com.ktdsuniversity.edu.bizmatch.common.vo.IndstrInfoVO"
+						 autoMapping="true">
+				<id column="INDSTR_ID" property="indstrId"/>
+			</association>
+		</association>
+		<association property="paymentVO" javaType="com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentVO" autoMapping="true">
+         <id column="PYMNT_ID" property="pymntId"/>
+      	</association>
+		<collection property="projectSkillList"
+					 ofType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectSkillVO"
+					 autoMapping="true">
+			<id column="PJ_PRM_STK_ID" property="pjPrmStkId"/>
+			<association property="prmStkVO"
+						 javaType="com.ktdsuniversity.edu.bizmatch.member.vo.PrmStkVO"
+						 autoMapping="true">
+				<id column="PRM_STK_ID" property="prmStkId"/>
+			</association>
+		</collection>
+		<collection property="applyProjectVOList" ofType="com.ktdsuniversity.edu.bizmatch.project.vo.ApplyProjectVO" autoMapping="true">
+			<id column="PJ_APPLY_ID" property="pjApplyId"></id>
+			<result column="APPLY_EMIL_ADDR" property="emilAddr"/>
+		</collection>
+		<collection property="projectAtt" ofType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectAttachmentVO" autoMapping="true">
+			<id column="PJ_ATT_ID" property="pjAttId"></id>
+		</collection>
+   		
+   		</association>
+   </resultMap>
+   <select id="selectAllScrapList" parameterType="string" resultMap="projectScrapVOMap">
+   		SELECT PS.PJ_SCRP_ID 
+   			, PS.EMIL_ADDR
+		   	, P.PJ_ID
+			, P.ORDR_ID
+			, P.OBTN_ID
+			, P.PJ_TTL
+			, TO_CHAR(P.RGSTR_DT,'YYYY-MM-DD') RGSTR_DT 
+			, TO_CHAR(P.STRT_DT, 'YYYY-MM-DD') STRT_DT 
+			, TO_CHAR(P.END_DT, 'YYYY-MM-DD') END_DT
+			, P.CNTRCT_ACCNT
+			, P.PJ_DESC
+			, P.IS_DLT
+			, TO_CHAR(P.DLT_DT, 'YYYY-MM-DD') DLT_DT
+			, P.LST_MOD_DT
+			, P.IS_RCRUT_ADD
+			, P.PJ_STT
+			, P.VIEW_CNT
+			, P.PJ_RCRUT_CNT
+			, TO_CHAR(P.PJ_RCRUT_STRT_DT, 'YYYY-MM-DD') PJ_RCRUT_STRT_DT
+			, TO_CHAR(P.PJ_RCRUT_END_DT,'YYYY-MM-DD') PJ_RCRUT_END_DT
+			, PI.PJ_INDSTR_ID
+			, PI.MJR_ID
+			, PI.SMJR_ID
+			, PPS.PJ_PRM_STK_ID 
+			, II.INDSTR_ID
+			, II.INDSTR_NM
+			, II.UPPR_INDSTR_ID
+			, PRM.PRM_STK_ID
+			, PRM.PRM_STK
+		  FROM PJ_SCRP PS
+		  JOIN PJ_INFO P
+		    ON P.PJ_ID = PS.PJ_ID 
+		    LEFT JOIN PJ_INDSTR PI
+		     ON PS.PJ_ID = PI.PJ_ID 
+		LEFT JOIN INDSTR_INFO II
+		     ON II.INDSTR_ID = PI.SMJR_ID
+		LEFT JOIN PJ_PRM_STK PPS
+		     ON PPS.PJ_ID = PS.PJ_ID 
+		LEFT JOIN PRM_STK PRM
+			ON PRM.PRM_STK_ID = PPS.PRM_STK_ID
+		  WHERE PS.EMIL_ADDR = #{_parameter}
+		    AND P.PJ_STT IN (0,3)
+		  ORDER BY P.RGSTR_DT DESC
+   </select>
+   <delete id="deleteScrapProject" parameterType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectScrapDeleteVO">
+   		DELETE
+   		  FROM PJ_SCRP
+   		 WHERE EMIL_ADDR = #{email}
+   		   AND PJ_ID = #{pjId}
+   </delete>
 </mapper>

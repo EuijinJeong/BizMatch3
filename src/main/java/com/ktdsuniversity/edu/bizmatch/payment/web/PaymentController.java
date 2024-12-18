@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ktdsuniversity.edu.bizmatch.common.vo.ApiResponse;
+import com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO;
 import com.ktdsuniversity.edu.bizmatch.payment.service.PaymentService;
 import com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentHistoryVO;
 import com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentRequestVO;
@@ -34,7 +35,18 @@ public class PaymentController {
 	
 	@Autowired
 	private ProjectService projectService;
-	
+
+	/**
+	 * 보증금 결제 정보를 가져오는 컨트롤러.
+	 * @param pjId
+	 * @param model
+	 * @return
+	 */
+	@GetMapping("/bizmatch/payment/ask/deposit/{pjId}")
+	public ApiResponse paymentDepositPage(@PathVariable String pjId) {
+		ProjectVO projectVO = this.projectService.readOneProjectInfo(pjId);
+		return new ApiResponse(projectVO);
+	}
 	
 	/**
 	 * 계약금 결제 정보를 가져오는 컨트롤러.
@@ -49,15 +61,21 @@ public class PaymentController {
 	}
 	
 	/**
-	 * 보증금 결제 정보를 가져오는 컨트롤러.
-	 * @param pjId
-	 * @param model
+	 * 보증금 결제 요청을 하는 컨트롤러.
+	 * @param depositPaymentRequestVO
 	 * @return
 	 */
-	@GetMapping("/bizmatch/payment/ask/deposit/{pjId}")
-	public ApiResponse paymentDepositPage(@PathVariable String pjId) {
-		ProjectVO projectVO = this.projectService.readOneProjectInfo(pjId);
-		return new ApiResponse(projectVO);
+	@PostMapping("/bizmatch/payment/ask/deposit")
+	public ApiResponse doPaymentDeposit(@RequestBody PaymentRequestVO depositPaymentRequestVO
+									, Authentication memberVO) {
+		
+		// 결제 타입 0-> 보증금 결제.
+		depositPaymentRequestVO.setPaymentType(0);
+		MemberVO member = (MemberVO) memberVO.getPrincipal();
+		depositPaymentRequestVO.setEmilAddr(member.getEmilAddr());
+		
+		boolean isSuccess = this.paymentService.createDepositPay(depositPaymentRequestVO);
+		return new ApiResponse(isSuccess);
 	}
 	
 	/**
@@ -66,65 +84,48 @@ public class PaymentController {
 	 * @return
 	 */
 	@PostMapping("/bizmatch/payment/ask/downpayment")
-	public ApiResponse askDownPayment(PaymentRequestVO paymentRequestVO) {
-		paymentRequestVO.toString();
-		paymentRequestVO.setPaymentType(1);
-		boolean isSuccess = this.paymentService.createDownPayment(paymentRequestVO);
+	public ApiResponse askDownPayment(@RequestBody PaymentRequestVO paymentRequestVO
+									, Authentication memberVO) {
 		
+		// 결제 타입 1 -> 계약금 결제.
+		paymentRequestVO.setPaymentType(1);
+		MemberVO member = (MemberVO) memberVO.getPrincipal();
+		paymentRequestVO.setEmilAddr(member.getEmilAddr());
+		
+		boolean isSuccess = this.paymentService.createDownPayment(paymentRequestVO);
 		return new ApiResponse(isSuccess);
 	}
 	
 	/**
-	 * 보증금 결제 요청을 하는 컨트롤러.
-	 * @param depositPaymentRequestVO
+	 * 결제 내역을 가지고 오는 컨트롤러.
+	 * @param memberVO
 	 * @return
 	 */
-	@PostMapping("/bizmatch/payment/ask/deposit")
-	public ApiResponse doPaymentDeposit(PaymentRequestVO depositPaymentRequestVO) {
-		
-		// 결제 타입 0-> 보증금 결제.
-		depositPaymentRequestVO.setPaymentType(0);
-		depositPaymentRequestVO.toString();
-		
-		boolean isSuccess = this.paymentService.createDepositPay(depositPaymentRequestVO);
-		return new ApiResponse(isSuccess);
-	}
-	
-	
 	@GetMapping("/get/paymentlist")
 	public ApiResponse getPaymentList(Authentication memberVO) {
 		List<PaymentVO> paymentList = this.paymentService.readAllPaymentInfo(memberVO.getName());
 		return new ApiResponse(paymentList);
 	}
 
-	
+	/**
+	 * 결제 내역 상세 정보를 가져오는 컨트롤러.
+	 * @param memberVO
+	 * @param paymentSearchVO
+	 * @return
+	 */
 	@GetMapping("/payment/details")
-	public ApiResponse getPaymentDetails(Authentication memberVO, PaymentSearchVO paymentSearchVO) {
+	public ApiResponse getPaymentDetails(Authentication memberVO
+									, @RequestParam String emilAddr
+									, @RequestParam String startDate
+									, @RequestParam String paymentType) {
+		
+		PaymentSearchVO paymentSearchVO = new PaymentSearchVO();
+		paymentSearchVO.setEmilAddr(emilAddr);
+		paymentSearchVO.setStartDate(startDate);
+		paymentSearchVO.setPaymentType(paymentType);
 		List<PaymentHistoryVO> paymentHistoryList = this.paymentService.readPaymentDetails(paymentSearchVO);
 		return new ApiResponse(paymentHistoryList);
 	}
 	
-	
-	
 }
-//@GetMapping("/bizmatch/payment/ask/downpayment/error/500")
-//public String viewDownPaymentErrorPage() {
-//	return "/error/payment_error";
-//}
-///**
-// * 결제 오류 페이지를 보여주는 컨트롤러.
-// * @return
-// */
-//@GetMapping("/bizmatch/payment/ask/deposit/error/500")
-//public String viewPaymentErrorPage() {
-//	return "/error/payment_error";
-//}
 
-///**
-// * 사용자가 단숨 변심으로 결제 취소를 하면 그냥 메인페이지 보여줘야함.
-// * @return 메인페이지 Url
-// */
-//@GetMapping("/bizmatch/payment/usercancel/")
-//public String viewMainPage() {
-//	return "redirect:/";
-//}

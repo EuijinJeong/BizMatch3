@@ -43,7 +43,7 @@ app:
     apiKey: 7126540884433771
     apiSecret: gLYIyTzw9aGbZZcObqGfd4EpZ4WKxoeL3QaIDxXKKMquhtJDHt6tH44d4JS9jGBTEyZoVyPTKUBTXOO8
   multipart:
-    base-dir: C:\uploadfiles/
+    base-dir: C:/uploadfiles/
     obfuscation:
       enable: true
       hide-ext:
@@ -54,8 +54,16 @@ app:
       /api/member/signin,
       /ws/**,
       /api/board,
-      /api//board/view/**,
-      /api//board/comment/view/**
+      /api/board/view/**,
+      /api/board/comment/view/**,
+      /api/member/findpwd,
+      /api/email/check/,
+      /api/email/authnum/samecheck,
+      /api/bizno/api/ask,
+      /api/member/signup/cmpnycheck,
+      /api/member/signup/company,
+      /api/member/signup/freelaner,
+      /api/member/resetpwd,
   interceptor:
     accesslog:
       addpathpatterns: /**
@@ -76,6 +84,9 @@ app:
         /mailhtml/**,
         /bizno/**,
         /email/**
+  cors:
+    acceptpath:
+      http://localhost:3000
 # Profile 분리
 ---
 spring:
@@ -87,3 +98,6 @@ spring:
 app:
   multipart:
     base-dir: /usr/local/src/tomcat/apache-tomcat-10.1.31-second/uploadfiles/
+  cors:
+    acceptpath:
+      http://3.34.180.91:3000

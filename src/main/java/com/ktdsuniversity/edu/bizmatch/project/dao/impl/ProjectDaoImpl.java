@@ -17,6 +17,7 @@ import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentPaginationVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentWriteVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectIndustryVO;
+import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectScrapDeleteVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectScrapVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectSkillVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectVO;
@@ -130,8 +131,8 @@ public class ProjectDaoImpl extends SqlSessionDaoSupport implements ProjectDao{
 	}
 	
 	@Override
-	public int updateProjectIndustry(ProjectIndustryVO projectIndustryVO) {
-		return this.getSqlSession().update(NAMESPACE + ".updateProjectIndustry", projectIndustryVO);
+	public int updateProjectIndustry(ModifyProjectVO modifyProjectVO) {
+		return this.getSqlSession().update(NAMESPACE + ".updateProjectIndustry", modifyProjectVO);
 	}
 	
 	@Override
@@ -145,8 +146,8 @@ public class ProjectDaoImpl extends SqlSessionDaoSupport implements ProjectDao{
 	}
 	
 	@Override
-	public int deleteProjectApply(ApplyProjectVO applyProjectVO) {
-		return this.getSqlSession().delete(NAMESPACE + ".deleteProjectApply", applyProjectVO);
+	public int deleteProjectApply(String pjApplyId) {
+		return this.getSqlSession().delete(NAMESPACE + ".deleteProjectApply", pjApplyId);
 	}
 
 	@Override
@@ -233,19 +234,42 @@ public class ProjectDaoImpl extends SqlSessionDaoSupport implements ProjectDao{
 
 	@Override
 	public ApplyProjectVO selectOneApplyViewInfo(SearchApplyVO searchApplyVO) {
-		
 		return this.getSqlSession().selectOne(NAMESPACE + ".selectOneApplyViewInfo" , searchApplyVO);
 	}
 
 	@Override
 	public int updateProject(ProjectVO projectVO) {
 		return this.getSqlSession().update(NAMESPACE + ".updateProject",projectVO);
-				
-		
 	}
 
 	@Override
 	public ApplyProjectVO selectOneApplyInfo(String pjApplyId) {
 		return this.getSqlSession().selectOne(NAMESPACE+".selectOneApplyInfo", pjApplyId);
 	}
+
+	@Override
+	public int deleteApplyAtt(String pjApplyId) {
+		return this.getSqlSession().delete(NAMESPACE+".deleteOneApplyAtt", pjApplyId);
+	}
+
+	@Override
+	public int deleteAllProjectAtt(String pjId) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public int deleteApplyByPjId(String pjId) {
+		return this.getSqlSession().delete(NAMESPACE+".deleteApplyByPjId", pjId);
+	}
+
+	@Override
+	public List<ProjectVO> selectAllScrapList(String email) {
+		return this.getSqlSession().selectList(NAMESPACE+".selectAllScrapList", email);
+	}
+
+	@Override
+	public int deleteScrapProject(ProjectScrapDeleteVO projectScrapDeleteVO) {
+		return this.getSqlSession().delete(NAMESPACE+".deleteScrapProject", projectScrapDeleteVO);
+	}
+
 }

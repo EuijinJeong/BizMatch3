@@ -13,6 +13,7 @@ import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentPaginationVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentWriteVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectListVO;
+import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectScrapDeleteVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectScrapVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectSkillVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectVO;
@@ -29,7 +30,7 @@ public interface ProjectService {
 	 * @return
 	 * @throws ParseException 
 	 */
-	public boolean createNewProject(WriteProjectVO writeProjectVO) throws ParseException;
+	public boolean createNewProject(WriteProjectVO writeProjectVO, List<String> skillList) throws ParseException;
 	
 	/**
 	 * 하나의 프로젝트 정보를 수정하는 메서드.
@@ -85,7 +86,7 @@ public interface ProjectService {
 	 * @param id
 	 * @return
 	 */
-	public boolean updateDeleteState(String id);
+	public boolean updateDeleteCommentState(String id);
 	public List<ProjectCommentVO> getPaginationComment(ProjectCommentPaginationVO projectCommentPaginationVO,String id);
 	public boolean createNewComment(ProjectCommentWriteVO projectCommentWriteVO);
 	public boolean modifyComment(ProjectCommentModifyVO projectCommentModifyVO);
@@ -116,7 +117,7 @@ public interface ProjectService {
 	 * @param applyProjectVO
 	 * @return
 	 */
-	public void deleteProjectApply(ApplyProjectVO applyProjectVO);
+	public void deleteProjectApply(String pjApplyId);
 	
 	/**
 	 * 지원자 모두를 불러오는 메소드
@@ -132,7 +133,7 @@ public interface ProjectService {
 	 * @param memberVO
 	 * @return
 	 */
-	public boolean updateApplyMember(SelectApplyMemberVO selectApplyMemberVO, String email);
+	public boolean updateApplyMember(String pjApplyId, MemberVO memberVO);
 	
 	/**
 	 * 특정 프로젝트의 필요한 모든 주요 기술들을 조회하는 메서드.
@@ -160,7 +161,7 @@ public interface ProjectService {
 	 * 새로운 프로젝트 스크랩 정보를 추가하는 메서드.
 	 * @param projectScrapVO : 스크랩하는 프로젝트의 정보를 담은 객체.
 	 */
-	public void insertProjectScrap(ProjectScrapVO projectScrapVO);
+	public boolean insertProjectScrap(ProjectScrapVO projectScrapVO);
 	
 	/**
 	 * 한 프로젝트에 대한 특정한 지원서의 정보를 조회하는 메서드이다.
@@ -211,4 +212,20 @@ public interface ProjectService {
 	 * @return
 	 */
 	public ApplyProjectVO selectOneApplyInfo(String pjApplyId);
+
+	/**
+	 * 즐겨찾기 한 프로젝트 리스트 받아오는 메소드
+	 * @param email
+	 * @return
+	 */
+	public List<ProjectVO> readAllScrap(String email);
+
+	/**
+	 * 즐겨찾기 없애는 메소드
+	 * @param pjScrpId
+	 * @return
+	 */
+	public boolean deleteScrap(ProjectScrapDeleteVO projectScrapDeleteVO);
+	
+	
 }

@@ -6,7 +6,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,7 +18,9 @@ import com.ktdsuniversity.edu.bizmatch.common.beans.Sha;
 import com.ktdsuniversity.edu.bizmatch.common.category.vo.CategoryVO;
 import com.ktdsuniversity.edu.bizmatch.common.email.service.EmailService;
 import com.ktdsuniversity.edu.bizmatch.common.email.vo.UserEmailAuthNumVO;
+import com.ktdsuniversity.edu.bizmatch.common.exceptions.common.IndustryException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.member.LoginFailException;
+import com.ktdsuniversity.edu.bizmatch.common.exceptions.member.MemberNotFoundException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.member.MemberPortfolioException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.member.SignUpCompanyException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.member.SignUpFailException;
@@ -173,6 +174,7 @@ public class MemberServiceImpl implements MemberService {
 		memberCompanySignUpVO.setPwd(sha.getEncrypt(memberCompanySignUpVO.getPwd(), salt));
 		String brn = memberCompanySignUpVO.getCmpnyBrn();
 		
+		// 개인형 사업자인지 기업형 사업자인지 검사하는 코드.
 		if(brn.indexOf(4)=='8') {
 			memberCompanySignUpVO.setCmpnyBizCtgry("0");
 		} else {
@@ -183,10 +185,18 @@ public class MemberServiceImpl implements MemberService {
 
 		// selectOneCompany 존재하는지 먼저 확인
 		CompanyVO companyVO = this.memberDao.selectOneCompany(memberCompanySignUpVO.getCmpnyBrn());
+		
 		if (companyVO == null) {
 			// 회사가 존재하지 않는다면 회사 정보 또한 새로 등록한다.
 			memberCompanySignUpVO.setCmpnyRp(1); //기업 대표자로 등록
 			int insertedCompanyInfo = this.memberDao.insertOneMemberCompany(memberCompanySignUpVO);
+			// 그 회사의 관심 산업군을 등록한다.
+			CategoryVO categoryVO = memberCompanySignUpVO.getCmpnyIntrstdIndstrId();
+			categoryVO.setEmilAddr(memberCompanySignUpVO.getEmilAddr());
+			int insertedIndustryIdCnt = this.memberDao.insertOneIndustryInfo(categoryVO);
+			if(insertedIndustryIdCnt == 0) {
+				throw new IndustryException("서버상의 이유로 산업군 등록이 불가능합니다.");
+			}
 			if (insertedCompanyInfo == 0) {
 				throw new SignUpCompanyException("회원가입 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.", memberCompanySignUpVO);
 			}
@@ -303,7 +313,9 @@ public class MemberServiceImpl implements MemberService {
 	public boolean sendFindPwdEmail(String email) {
 		// 사용자가 입력한 이메일이 우리 회원 데베에 있는지 먼저 조회
 		MemberVO memberVO =  this.memberDao.selectOneMember(email);
-		
+		if(memberVO == null) {
+			throw new MemberNotFoundException("찾으시는 회원이 존재하지 않습니다.");
+		}
 		String findEmail = memberVO.getEmilAddr();
 		
 		// 사용자가 입력한 이메일에 해당하는 회원 정보가 존재하지 않는 경우.
@@ -321,7 +333,7 @@ public class MemberServiceImpl implements MemberService {
 	public boolean deactivateMember(String email) {
 		int rows = this.memberDao.updateMemberDeactivate(email);
 		if (rows < 1) {
-			throw new IllegalArgumentException("비활성화 상태");
+			throw new SignUpNotApprovedException("비활성화 상태");
 		}
 		return true;
 	}
@@ -357,7 +369,7 @@ public class MemberServiceImpl implements MemberService {
 					tempMbrPrmStkVO.setPrmStkId(prmStkId);
 					int insertCnt = this.mbrPrmStkDao.insertMbrSkill(mbrPrmStkVO);
 					if(insertCnt == 0) {
-						throw new IllegalArgumentException("서버상의 이유로 새로운 기술 스킬을 저장할 수 없습니다.");
+						throw new IndustryException("서버상의 이유로 새로운 기술 스킬을 저장할 수 없습니다.");
 					}
 				}
 			}
@@ -389,6 +401,7 @@ public class MemberServiceImpl implements MemberService {
 		}
 		return portfolioList;
 	}
+	
 	@Override
 	public List<MemberPortfolioVO> selectAllCmpnyPortfolios(String cmpId){
 		List<MemberPortfolioVO> portfolioList = new ArrayList<>();
@@ -473,7 +486,7 @@ public class MemberServiceImpl implements MemberService {
 		CompanyVO companyVO = this.memberDao.selectOneCompanyByEmilAddr(cmpId);
 		if(companyVO == null) {
 			// TODO 아래 예외처리하기.
-			throw new IllegalArgumentException("서버상의 이유로 정보를 조회할 수 없습니다.");
+			throw new MemberNotFoundException("서버상의 이유로 정보를 조회할 수 없습니다.");
 		}
 		return companyVO;
 	}
@@ -519,7 +532,7 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public boolean updateCompanyMemberMyPage(MemberCompanyModifyVO memberCompanyModifyVO, MemberVO memberVO) {
 		//회원이 기업 회원인지 -> 기업회원이라면 해당 회사의 수정권한을 가졌는지
-		// TODO 이거 실제 배포할 땐 아래 주석 살려야함.
+		
 //		if(memberVO.getCmpnyRp()!=1) {
 //			throw new IllegalArgumentException("수정할 권한이 없음");
 //		}
@@ -528,11 +541,13 @@ public class MemberServiceImpl implements MemberService {
 //		}
 		
 		// 관심 산업군 업데이트하는 dao 호출.
+		// 어떤 개인 회원의 관심 산업군을 업데이트 하는 쿼리문을 호출함.
 		int isSuccess = this.memberDao.updateCmpnyLkIndstr(memberCompanyModifyVO);
 		if(isSuccess <= 0) {
-			throw new IllegalArgumentException("에외");
+			throw new IndustryException("에외");
 		}
 		
+		// 기업의 관심 산업군 정보를 업데이트 하는 쿼리문을 호출한다.
 		return this.memberDao.updateMemberCompanyMyPage(memberCompanyModifyVO)>0;
 	}
 
@@ -586,10 +601,8 @@ public class MemberServiceImpl implements MemberService {
 			return false;
 		}
 		
-		
 		if(isPossible) {
 			this.emailService.deleteTempEmailAuthNum(memberModifyVO.getNewEmilAddr());
-			
 			return this.memberDao.updateMyInfoMember(memberModifyVO) > 0;
 		}
 		return false;
@@ -599,10 +612,10 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public boolean updateFreelancerMemberMypage(MemberFreelancerModifyVO memberFreelancerModifyVO) {
 		
-		boolean isSuccess = updateMbrSkills(memberFreelancerModifyVO.getMbrPrmStkList(), memberFreelancerModifyVO.getEmilAddr());
-		if(!isSuccess) {
-			throw new IllegalArgumentException("에외");
-		}
+//		boolean isSuccess = updateMbrSkills(memberFreelancerModifyVO.getMbrPrmStkList(), memberFreelancerModifyVO.getEmilAddr());
+//		if(!isSuccess) {
+//			throw new IllegalArgumentException("에외");
+//		}
 		return this.memberDao.updateFrreelancerMemberMypage(memberFreelancerModifyVO)>0;
 		
 	}
