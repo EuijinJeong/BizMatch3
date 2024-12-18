@@ -198,11 +198,12 @@
 	  JOIN PJ_INFO PJ
 	    ON PY.PJ_ID = PJ.PJ_ID 
 	 WHERE PJ.ORDR_ID = #{emilAddr}
-	   AND PY.PYMNT_TYP = #{paymentType}
 	   <if test="paymentType==0 and startDate!=null">
+	   	   AND PY.GRNT_PD_DT IS NOT NULL
 	   	   AND PY.GRNT_PD_DT > TO_DATE(#{startDate}, 'YYYY-MM-DD')
 	   </if>
 	   <if test="paymentType==1 and startDate!=null">
+	   	   AND PY.CNTRCT_PD_DT IS NOT NULL
 	   	   AND PY.CNTRCT_PD_DT > TO_DATE(#{startDate}, 'YYYY-MM-DD')
 	   </if>
 	</select>

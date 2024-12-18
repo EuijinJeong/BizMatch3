@@ -86,7 +86,8 @@ app:
         /email/**
   cors:
     acceptpath:
-      http://localhost:3000
+      http://3.34.180.91,
+      http://localhost:3000,
 # Profile 분리
 ---
 spring:
@@ -97,7 +98,7 @@ spring:
 # prod profile 전용 설정.
 app:
   multipart:
-    base-dir: /usr/local/src/tomcat/apache-tomcat-10.1.31-second/uploadfiles/
+    base-dir: /usr/local/imges/uploadfiles
   cors:
     acceptpath:
       http://3.34.180.91
