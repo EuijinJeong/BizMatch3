@@ -129,7 +129,6 @@ public class EmailServiceImpl implements EmailService{
 			UserEmailAuthNumVO userEmailAuthNumVO = new UserEmailAuthNumVO();
 			userEmailAuthNumVO.setEmilAddrCnfrmNmbr(randomNum);
 			userEmailAuthNumVO.setEmilAddr(email);
-			System.out.println("인증번호 데베에 저장함.");
 			// 데이터베이스에 인증정보를 insert한다.
 			this.insertTempEmailAuthNum(userEmailAuthNumVO);
 			

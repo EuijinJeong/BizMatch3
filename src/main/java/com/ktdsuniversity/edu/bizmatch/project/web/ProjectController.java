@@ -123,7 +123,6 @@ public class ProjectController {
 	public ApiResponse postDeleteProject(@PathVariable String id) {
 		
 		boolean result =this.projectService.deleteOneProject(id);
-		System.out.println(result);
 		return new ApiResponse(result);
 		
 	}
@@ -201,7 +200,6 @@ public class ProjectController {
 		// 이제 수정된 호출
 		List<String> skillList = new ArrayList<>(prmStkIdList);
 		
-		System.out.println("Received prmStkId List: " + skillList);
 
 		boolean isSuccessed = this.projectService.createNewProject(writeProjectVO,skillList);
 
@@ -262,7 +260,6 @@ public class ProjectController {
 	public ApiResponse UpdateProjectInfo(@PathVariable String pjId, ModifyProjectVO modifyProjectVO) {
 		boolean isUpdated = this.projectService.updateOneProject(modifyProjectVO);
 		modifyProjectVO.setPjId(pjId);
-		System.out.println(isUpdated);
 		return new ApiResponse(isUpdated);
 	}
 	
@@ -419,7 +416,6 @@ public class ProjectController {
 	public ApiResponse acceptAppltContent(@RequestParam String pjApplyId, Authentication memberVO) {
 		MemberVO loginMemberVO = (MemberVO)memberVO.getPrincipal();
 		boolean isSuccess = this.projectService.updateApplyMember(pjApplyId, loginMemberVO);
-		System.out.println(isSuccess);
 		return new ApiResponse(isSuccess);
 	}
 

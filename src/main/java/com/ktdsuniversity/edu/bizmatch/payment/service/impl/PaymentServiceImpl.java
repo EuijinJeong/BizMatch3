@@ -257,7 +257,6 @@ public class PaymentServiceImpl implements PaymentService {
 		HttpEntity<Map<String, Object>> entity = new HttpEntity<>(request, headers);
 		
 		ResponseEntity<Map> response = this.restTemplate.postForEntity(tokenUrl, entity, Map.class);
-		System.out.println("토큰 결과" + response);
 		logger.debug(response.toString());
 				
 		return (Map)(response.getBody().get("response"));
