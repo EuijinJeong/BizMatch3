@@ -524,6 +524,7 @@ public class MemberController {
 		
 		// 서비스 호출하여 포트폴리오 등록 처리
 		boolean isCreated = this.memberService.createNewPortfolio(memberPortfolioVO);
+		System.out.println(isCreated);
 
 		return new ApiResponse(isCreated);
 	}
@@ -539,27 +540,6 @@ public class MemberController {
 	public ApiResponse viewCompanyPortfolioListPage(@RequestParam String cmpId) {
 		List<MemberPortfolioVO> memberPortfolioVO= this.memberService.selectAllCmpnyPortfolios(cmpId);
 		return new ApiResponse(memberPortfolioVO);
-	}
-	
-	@GetMapping("/portfolio/img/{imgUrl}/")
-	public ResponseEntity<byte[]> showImage(@PathVariable String imgUrl){
-		String savePath = baseDirPrefix+imgUrl;
-		File file = new File(savePath);
-		byte[] result=null;
-		ResponseEntity<byte[]> entity=null;
-		
-		try {
-			result = FileCopyUtils.copyToByteArray(file);
-			
-			HttpHeaders header = new HttpHeaders();
-			header.add("Content-type",Files.probeContentType(file.toPath())); 	
-			
-			entity = new ResponseEntity<>(result,header,HttpStatus.OK);
-		} catch (IOException e) {
-			return null;
-		}
-		
-		return entity;
 	}
 	
 	/**

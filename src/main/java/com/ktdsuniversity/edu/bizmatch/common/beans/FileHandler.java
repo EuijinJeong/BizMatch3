@@ -88,6 +88,7 @@ public class FileHandler {
 	 * @return List<StoreResultVO>: 저장된 원본이름과 난독화된 이름의 리스트를 반환.
 	 */
 	public List<StoreResultVO> storeListFile(List<MultipartFile> fileList) {
+		System.out.println(baseDirectory);
 		if(fileList == null) {
 			// 사용자가 전달한 파일리스트가 비어있으면 반환값 없음
 		}
@@ -97,14 +98,17 @@ public class FileHandler {
 		for(MultipartFile file : fileList) {
 			//MultipartFile 이 들어있는 fileList를 하나씩 돌아가면서 저장
 			if (file != null && !file.isEmpty()) {
+				System.out.println("1");
 				String obfuscatedFileName = file.getOriginalFilename();
 
 				if (this.enableObfuscation) {
+					System.out.println("2");
 					String ext = obfuscatedFileName.substring(obfuscatedFileName.lastIndexOf("."));
 
 					obfuscatedFileName = UUID.randomUUID().toString();
 
 					if (!this.enableHideExtention) {
+						System.out.println("3");
 						obfuscatedFileName += ext;
 					}
 				}
@@ -112,12 +116,15 @@ public class FileHandler {
 				File uploadFile = new File(this.baseDirectory, obfuscatedFileName);
 				
 				if (!uploadFile.getParentFile().exists()) {
+					System.out.println("4");
 					uploadFile.getParentFile().mkdirs();
 				}
 
 				try {
+					System.out.println("5");
 					file.transferTo(uploadFile);
 				} catch (IllegalStateException | IOException e) {
+					System.out.println("6");
 					throw new FileUploadFailedException("예기치 못한 이유로 업로드에 실패했습니다. 잠시 후 다시 시도해주세요.");
 				}
 				storeFileList.add(new StoreResultVO(file.getOriginalFilename(), obfuscatedFileName));
