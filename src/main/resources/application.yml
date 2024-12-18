@@ -86,7 +86,8 @@ app:
         /email/**
   cors:
     acceptpath:
-      http://localhost:3000
+      http://3.34.180.91,
+      http://localhost:3000,
 # Profile 분리
 ---
 spring:
