@@ -35,6 +35,7 @@ public class MemberVO {
 	private List<MbrPrmStkVO> mbrPrmStkList;
 	private MbrPrmStkVO mbrPrmStkVO;
 	private ProjectVO projectVO;
+	private MbrLkIndstrVO mbrLkIndstrVO;
 	
 	
 	public int getLgnFailCnt() {
@@ -270,6 +271,14 @@ public class MemberVO {
 
 	public void setProjectVO(ProjectVO projectVO) {
 		this.projectVO = projectVO;
+	}
+
+	public MbrLkIndstrVO getMbrLkIndstrVO() {
+		return mbrLkIndstrVO;
+	}
+
+	public void setMbrLkIndstrVO(MbrLkIndstrVO mbrLkIndstrVO) {
+		this.mbrLkIndstrVO = mbrLkIndstrVO;
 	}
 
 }
