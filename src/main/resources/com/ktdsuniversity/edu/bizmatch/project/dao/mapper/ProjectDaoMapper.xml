@@ -1196,4 +1196,12 @@
    		 WHERE EMIL_ADDR = #{email}
    		   AND PJ_ID = #{pjId}
    </delete>
+   
+   
+   <delete id = "deleteProjectFiles" parameterType = "string">
+   DELETE
+   From	PJ_ATT
+   WHERE PJ_ID = #{_parameter}
+   </delete>
+   
 </mapper>

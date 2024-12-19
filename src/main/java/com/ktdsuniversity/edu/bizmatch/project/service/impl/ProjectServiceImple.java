@@ -562,4 +562,10 @@ public class ProjectServiceImple implements ProjectService {
 	public boolean deleteScrap(ProjectScrapDeleteVO projectScrapDeleteVO) {
 		return this.projectDao.deleteScrapProject(projectScrapDeleteVO)>0;
 	}
+
+	@Override
+	public boolean deleteProjectFiles(String pjId) {
+		
+		return this.projectDao.deleteProjectFiles(pjId)>0;
+	}
 }

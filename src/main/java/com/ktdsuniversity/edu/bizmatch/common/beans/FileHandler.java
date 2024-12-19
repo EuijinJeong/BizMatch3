@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -136,43 +137,45 @@ public class FileHandler {
 	 * @return
 	 */
 	public ResponseEntity<Resource> downloadFile(String fileName, String originFileName) {
-		// 2. 다운로드 할 파일의 정보를 가지고 있는 File인스턴스를 생성한다.
-		File downloadFile = new File(this.baseDirectory, fileName);
+	    // 1. 파일이 존재하는지 확인
+	    File downloadFile = new File(this.baseDirectory, fileName);
+	    
+	    if (!downloadFile.exists()) {
+	        // 파일이 없으면 404 반환
+	        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	    }
 
-		// 3. HTTP Header에 파일 다운로드 정보를 설정한다.
-		HttpHeaders header = new HttpHeaders();
+	    // 2. 파일 이름 인코딩 처리
+	    try {
+	        originFileName = new String(originFileName.getBytes("UTF-8"), "ISO-8859-1");
+	    } catch (UnsupportedEncodingException e) {
+	        // 인코딩 예외를 로깅하고, 500 서버 에러 반환
+	        
+	        return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	    }
 
-		// 다운로드시킬 파일 이름의 인코딩을 변경한다.
-		try {
-			originFileName = new String(originFileName.getBytes("UTF-8"), "ISO-8859-1");
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
-		}
-		// HTTP 리스폰스에 파일을 첨부해서 보낼건데 파일의 이름은 ~~~이야.
-		header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + originFileName);
+	    System.out.println("오리지널 파일 네임: " + originFileName);
+	    
+	    HttpHeaders header = new HttpHeaders();
+	    header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + originFileName + "\"");
 
-		// 4. 브라우저에게 파일을 전송한다.
-		InputStreamResource resource = null;
+	    InputStreamResource resource = null;
 
-		try {
-			resource = new InputStreamResource(new FileInputStream(downloadFile));
-		} catch (FileNotFoundException e) {
-			throw new IllegalArgumentException("파일이 존재하지 않습니다.");
-		}
+	    try {
+	        resource = new InputStreamResource(new FileInputStream(downloadFile));
+	    } catch (FileNotFoundException e) {
+	        // 파일을 찾을 수 없는 경우 처리
+	       
+	        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+	    }
 
-		// 브라우저에게 보낼 응답 데이터를 생성한다.
-		return ResponseEntity.ok()
-				// 응답 데이터에 http header 정보를 셋팅한다. (파일다운로드 정보)
-				.headers(header)
-				// 다운로드시킬 파일의 크기를 전달한다. - 브라우저가 파일 다운로드 진행 상태를 관리하기 위해서.
-				.contentLength(downloadFile.length())
-				// 다운로드 시킬 파일의 타입을 지정한다.
-				// 보통 png 파일이라면 image/png 이렇게 지정하는데
-				// 타입과 관계없이 강제 다운로드를 시킬려면 "application/octet-stream"을 이용한다.
-				.contentType(MediaType.parseMediaType("application/octet-stream"))
-				// 파일을 응답데잍터에 전달한다.
-				.body(resource);
+	    return ResponseEntity.ok()
+	            .headers(header)
+	            .contentLength(downloadFile.length())
+	            .contentType(MediaType.parseMediaType("application/octet-stream"))
+	            .body(resource);
 	}
+
 
 	/**
 	 * 

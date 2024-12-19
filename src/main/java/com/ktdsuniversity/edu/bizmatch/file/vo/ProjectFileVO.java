@@ -2,7 +2,7 @@ package com.ktdsuniversity.edu.bizmatch.file.vo;
 
 public class ProjectFileVO {
 	
-private String emilAddr; // 회원 이메일
+	private String emilAddr; // 회원 이메일
 	
 	private String pjAddId; // 프로젝트 등록 첨부자료 아이디
 	
