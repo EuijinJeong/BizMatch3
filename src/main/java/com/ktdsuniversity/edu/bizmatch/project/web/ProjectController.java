@@ -203,6 +203,8 @@ public class ProjectController {
 
 		boolean isSuccessed = this.projectService.createNewProjectApply(applyProjectVO);
 		
+		System.out.println(isSuccessed);
+		
 		return new ApiResponse(isSuccessed);
 	}
 
