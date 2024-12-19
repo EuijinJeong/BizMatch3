@@ -1,5 +1,9 @@
 package com.ktdsuniversity.edu.bizmatch.member.vo;
 
+import java.util.List;
+
+import com.ktdsuniversity.edu.bizmatch.common.skills.vo.MbrPrmStkVO;
+
 public class MemberCompanyModifyVO {
 	private String cmpnyId; // 회사 아이디.
 	private String cmpnyNm; // 회사 이름.
@@ -10,7 +14,16 @@ public class MemberCompanyModifyVO {
 	private String mjrId; // 관심 산업군 대분류 아이디.
 	private String smjrId; // 관심 산업군 중분류 아이디.
 	private String emilAddr; // 회원의 이메일 주소.
-//	private List<MbrPrmStkVO> mbrPrmStkList; // 회사 주요 스킬 리스트.
+	private List<MbrPrmStkVO> mbrPrmStkList; // 회사 주요 스킬 리스트.
+
+	
+	public List<MbrPrmStkVO> getMbrPrmStkList() {
+		return mbrPrmStkList;
+	}
+
+	public void setMbrPrmStkList(List<MbrPrmStkVO> mbrPrmStkList) {
+		this.mbrPrmStkList = mbrPrmStkList;
+	}
 
 	public String getCmpnyIntr() {
 		return cmpnyIntr;

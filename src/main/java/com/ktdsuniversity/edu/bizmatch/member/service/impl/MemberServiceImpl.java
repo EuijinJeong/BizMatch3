@@ -22,6 +22,7 @@ import com.ktdsuniversity.edu.bizmatch.common.exceptions.common.IndustryExceptio
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.member.LoginFailException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.member.MemberNotFoundException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.member.MemberPortfolioException;
+import com.ktdsuniversity.edu.bizmatch.common.exceptions.member.MypageEditFailException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.member.SignUpCompanyException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.member.SignUpFailException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.member.SignUpNotApprovedException;
@@ -612,10 +613,10 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public boolean updateFreelancerMemberMypage(MemberFreelancerModifyVO memberFreelancerModifyVO) {
 		
-//		boolean isSuccess = updateMbrSkills(memberFreelancerModifyVO.getMbrPrmStkList(), memberFreelancerModifyVO.getEmilAddr());
-//		if(!isSuccess) {
-//			throw new IllegalArgumentException("에외");
-//		}
+		boolean isSuccess = updateMbrSkills(memberFreelancerModifyVO.getMbrPrmStkList(), memberFreelancerModifyVO.getEmilAddr());
+		if(!isSuccess) {
+			throw new MypageEditFailException("서버상의 이유로 보유기술 업데이트가 불가능합니다.");
+		}
 		return this.memberDao.updateFrreelancerMemberMypage(memberFreelancerModifyVO)>0;
 		
 	}
