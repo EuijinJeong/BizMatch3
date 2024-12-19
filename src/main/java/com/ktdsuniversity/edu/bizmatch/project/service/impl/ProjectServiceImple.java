@@ -71,6 +71,7 @@ public class ProjectServiceImple implements ProjectService {
 	@Autowired
 	private FileHandler fileHandler;
 
+	@Transactional
 	@Override
 	public boolean createNewProject(WriteProjectVO writeProjectVO, List<String> skillList) throws ParseException {
 

@@ -145,7 +145,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(FileUploadFailedException.class)
     @ResponseBody
     public ApiResponse handleFileUploadFailedException(FileUploadFailedException fufe) {
-    	return new ApiResponse(HttpStatus.BAD_REQUEST, fufe);
+    	return new ApiResponse(HttpStatus.BAD_REQUEST, fufe.getMessage());
     }
     
     /**
