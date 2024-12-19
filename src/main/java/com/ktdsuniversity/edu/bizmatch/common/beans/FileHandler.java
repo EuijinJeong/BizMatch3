@@ -89,7 +89,6 @@ public class FileHandler {
 	 * @return List<StoreResultVO>: 저장된 원본이름과 난독화된 이름의 리스트를 반환.
 	 */
 	public List<StoreResultVO> storeListFile(List<MultipartFile> fileList) {
-		System.out.println(baseDirectory);
 		if(fileList == null) {
 			// 사용자가 전달한 파일리스트가 비어있으면 반환값 없음
 		}
