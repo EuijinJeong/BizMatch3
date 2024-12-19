@@ -56,44 +56,6 @@ public class ProjectController {
 	private PaymentService paymentService;
 
 	/**
-	 * 프로젝트 등록 페이지를 로드하는 컨트롤러.
-	 * 
-	 * @return
-	 */
-//	@GetMapping("/project/regist")
-//	public String viewProjectRegistPage(@SessionAttribute(value = "_LOGIN_USER_") MemberVO memberVO) {
-//		// 만약 회원 유형이 프리랜서 유형이라면 접근 못하게 막아야한다.
-//		if (memberVO.getMbrCtgry() == 1) {
-//			// TODO: 기업 회원만 접근 가능하다고 알려줘야한다.
-//			return "redirect:/";
-//		}
-//		CompanyVO companyVO = this.memberService.selectOneCompanyByEmilAddr(memberVO.getCmpId());
-//		// TODO: 만약 회원이 계좌인증을 안했으면 접근 못하게 막아야한다.
-//		if (companyVO.getCmpnyAccuuntNum() == null) {
-//			// 또한, 계좌인증을 해달라고 클라이언트에게 메세지를 전달해야한다.
-//			return "redirect:/";
-//		}
-//		return "project/project_register";
-//	}
-
-	/**
-	 * 프로젝트 지원페이지를 로드하는 컨트롤러.
-	 * 
-	 * @param pjId
-	 * @param model
-	 * @param memberVO
-	 * @return
-	 */
-//	@GetMapping("/project/apply/{pjId}")
-//	public String viewApplyPage(@PathVariable String pjId, Model model,
-//			@SessionAttribute(value = "_LOGIN_USER_", required = false) MemberVO memberVO) {
-//		if (memberVO == null) {
-//			return "redirect:/";
-//		}
-//		return "project/project_apply";
-//	}
-
-	/**
 	 * 프로젝트 상세보기 페이지.
 	 * 
 	 * @param pjId
@@ -117,8 +79,8 @@ public class ProjectController {
 		MemberVO memberVO = (MemberVO)loginMemberVO.getPrincipal();
 		List<ProjectVO> projectList = this.projectService.readAllProjectList(memberVO);
 		return new ApiResponse(projectList);
-		
 	}
+	
 	@PostMapping("/project/delete/{id}")
 	public ApiResponse postDeleteProject(@PathVariable String id) {
 		
@@ -215,8 +177,9 @@ public class ProjectController {
 	 * @return
 	 */
 	@PostMapping("/project/apply/{pjId}")
-	public ApiResponse doApplyProject(ApplyProjectVO applyProjectVO, @PathVariable String pjId,
-			Authentication memberVO) {
+	public ApiResponse doApplyProject(ApplyProjectVO applyProjectVO
+									, @PathVariable String pjId
+									, Authentication memberVO) {
 		
 		MemberVO loginMemberVO = (MemberVO)memberVO.getPrincipal();
 		applyProjectVO.setPjId(pjId);
@@ -224,7 +187,7 @@ public class ProjectController {
 		applyProjectVO.setEmilAddr(loginMemberVO.getEmilAddr());
 
 		if (ParameterCheck.parameterCodeValid(applyProjectVO.getPjApplyDesc(), 0)) {
-			throw new ProjectApplyFailException("pjApplyDesc를 입력해주세요", applyProjectVO);
+			throw new ProjectApplyFailException("pjApplyDesc를 입력해주세요");
 		}
 
 		boolean isSuccessed = this.projectService.createNewProjectApply(applyProjectVO);

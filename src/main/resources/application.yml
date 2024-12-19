@@ -95,7 +95,7 @@ spring:
     activate:
       on-profile: prod
 
-# prod profile 전용 설정.
+# prod profile 전용 설정
 app:
   multipart:
     base-dir: /usr/local/src/tomcat/apache-tomcat-10.1.33/uploadfiles

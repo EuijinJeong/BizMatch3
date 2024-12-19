@@ -71,6 +71,7 @@ public class ProjectServiceImple implements ProjectService {
 	@Autowired
 	private FileHandler fileHandler;
 
+	@Transactional
 	@Override
 	public boolean createNewProject(WriteProjectVO writeProjectVO, List<String> skillList) throws ParseException {
 
@@ -208,8 +209,18 @@ public class ProjectServiceImple implements ProjectService {
 	}
 
 	@Override
+	@Transactional
 	public boolean createNewProjectApply(ApplyProjectVO applyProjectVO) {
 
+		// 먼저 이 사람이 지원을 이미 한 지원자인지 검사해야 한다.
+		List<ApplyProjectVO> applicantList = this.projectDao.selectAllApplyMember(applyProjectVO.getPjId());
+		
+		for (ApplyProjectVO applyProjectVO2 : applicantList) {
+			if(applyProjectVO2.getEmilAddr() == applyProjectVO.getEmilAddr()) {
+				throw new ProjectApplyFailException("이미 지원 한 프로젝트 입니다.");
+			}
+		}
+		
 		int insertCount = this.projectDao.insertOneProjectApply(applyProjectVO);
 		// 파일 업로드 처리
 		List<MultipartFile> fileList = applyProjectVO.getFileList(); // 사용자가 입력한 파일 리스트 가져옴.
@@ -355,7 +366,7 @@ public class ProjectServiceImple implements ProjectService {
 	public boolean updateProjectApply(@ModelAttribute ApplyProjectVO applyProjectVO) {
 		int updateCnt = this.projectDao.updateProjectApply(applyProjectVO);
 		if (updateCnt == 0) {
-			throw new ProjectApplyFailException("프로젝트 지원서를 수정하는 중 서버에서 오류가 발생했습니다.", applyProjectVO);
+			throw new ProjectApplyFailException("프로젝트 지원서를 수정하는 중 서버에서 오류가 발생했습니다.");
 		}
 		
 		List<MultipartFile> fileList = applyProjectVO.getFileList();

@@ -118,6 +118,7 @@ public class FileHandler {
 				try {
 					file.transferTo(uploadFile);
 				} catch (IllegalStateException | IOException e) {
+
 					throw new FileUploadFailedException("예기치 못한 이유로 업로드에 실패했습니다. 잠시 후 다시 시도해주세요.");
 				}
 				storeFileList.add(new StoreResultVO(file.getOriginalFilename(), obfuscatedFileName));

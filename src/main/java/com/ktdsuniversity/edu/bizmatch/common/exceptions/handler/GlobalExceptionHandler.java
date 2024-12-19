@@ -1,8 +1,5 @@
 package com.ktdsuniversity.edu.bizmatch.common.exceptions.handler;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -43,10 +40,8 @@ public class GlobalExceptionHandler {
 	 */
     @ExceptionHandler(BoardException.class)
     @ResponseBody
-    public Map handleBoardException(BoardException be) {
-    	Map<String, Object> errorResponse = new HashMap<>();
-    	errorResponse.put("error", be.getMessage());
-        return errorResponse;
+    public ApiResponse handleBoardException(BoardException be) {
+    	return new ApiResponse(HttpStatus.BAD_REQUEST, be);
     }
     
     /**
@@ -63,22 +58,14 @@ public class GlobalExceptionHandler {
     
     @ExceptionHandler(MemberPortfolioException.class)
     @ResponseBody
-    public Map<String, Object> handleMemberPortfolioException(MemberPortfolioException mpe) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("error", "포트폴리오 관련하여 오류가 발생했습니다.");
-        errorResponse.put("message", mpe.getMessage());
-
-        return errorResponse;
+    public ApiResponse handleMemberPortfolioException(MemberPortfolioException mpe) {
+    	return new ApiResponse(HttpStatus.BAD_REQUEST, mpe);
     }
     
     @ExceptionHandler(ResetPassword.class)
     @ResponseBody
-    public Map<String, Object> handleResetPassword(ResetPassword rp) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("error", "비밀번호 재설정에 실패했습니다.");
-        errorResponse.put("message", rp.getMessage());
-        
-        return errorResponse;
+    public ApiResponse handleResetPassword(ResetPassword rp) {
+        return new ApiResponse(HttpStatus.BAD_REQUEST, rp);
     }
 
     /**
@@ -123,10 +110,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(ReviewFailException.class)
     @ResponseBody
-    public Map<String, Object> handleReviewFailException(ReviewFailException rfe) {
-    	Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("error", rfe.getMessage());
-        return errorResponse;
+    public ApiResponse handleReviewFailException(ReviewFailException rfe) {
+        return new ApiResponse(HttpStatus.BAD_REQUEST, rfe);
     }
     
     /**
@@ -136,12 +121,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(ReviewReportFailException.class)
     @ResponseBody
-    public Map<String, Object> handleReviewReportFailException(ReviewReportFailException rrfe) {
-        Map<String, Object> errorResponse = new HashMap<>();
-        errorResponse.put("error", "리뷰 신고 처리 중 에러가 발생했습니다");
-        errorResponse.put("message", rrfe.getMessage());
-        
-        return errorResponse;
+    public ApiResponse handleReviewReportFailException(ReviewReportFailException rrfe) {
+        return new ApiResponse(HttpStatus.BAD_REQUEST, rrfe);
     }
     
     /**
@@ -157,14 +138,14 @@ public class GlobalExceptionHandler {
     }
     
     /**
-     * 파일 업로드 실패 요청 예외처리.
+     * 파일 업로드 실패 요청 예외처리
      * @param fufe
      * @return
      */
     @ExceptionHandler(FileUploadFailedException.class)
     @ResponseBody
     public ApiResponse handleFileUploadFailedException(FileUploadFailedException fufe) {
-    	return new ApiResponse(HttpStatus.BAD_REQUEST, fufe);
+    	return new ApiResponse(HttpStatus.BAD_REQUEST, fufe.getMessage());
     }
     
     /**
@@ -201,11 +182,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(ProjectWriteFailException.class)
     @ResponseBody
-    public Map<String, Object> handleProjectWriteFailException(ProjectWriteFailException pwfe) {
-    	Map<String, Object> errorMap=new HashMap<>();
-    	
-    	errorMap.put("error", pwfe.getMessage());
-    	return errorMap;
+    public ApiResponse handleProjectWriteFailException(ProjectWriteFailException pwfe) {
+    	return new ApiResponse(HttpStatus.BAD_REQUEST, pwfe);
     }
     
     /**
@@ -308,14 +286,4 @@ public class GlobalExceptionHandler {
     public ApiResponse handleProjectNotFoundException(ProjectNotFoundException pnfe) {
     	return new ApiResponse(HttpStatus.BAD_REQUEST, pnfe);
     }
-    
-//    @ExceptionHandler(RuntimeException.class)
-//    public String handleRuntimeException(RuntimeException re) {
-//    	return "/error/runtime_exception";
-//    }
-//    
-//    @ExceptionHandler(IllegalArgumentException.class)
-//    public String handleIllegalArgumentException(IllegalArgumentException iae) {
-//    	return "/error/runtime_exception";
-//    }
 }

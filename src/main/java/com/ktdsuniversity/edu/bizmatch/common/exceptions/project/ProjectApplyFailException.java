@@ -8,7 +8,7 @@ public class ProjectApplyFailException extends RuntimeException {
 
 	private static final long serialVersionUID = 4957251086330914808L;
 
-	public ProjectApplyFailException(String message, Object object) {
+	public ProjectApplyFailException(String message) {
 		super(message);
 	}
 }
