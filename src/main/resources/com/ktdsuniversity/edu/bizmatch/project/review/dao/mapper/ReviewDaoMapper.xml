@@ -7,7 +7,7 @@
 	<!-- 마이페이지 리뷰 리스트 조회 쿼리문 -->
  	<resultMap type="com.ktdsuniversity.edu.bizmatch.project.review.vo.ReviewVO" 
  			   id="reviewVOMap" 
- 			   autoMapping="true">
+ 		   autoMapping="true">
  		<id column="RVW_ID" property="rvwId" />
  	</resultMap>
 

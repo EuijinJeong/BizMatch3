@@ -79,8 +79,8 @@ public class ProjectController {
 		MemberVO memberVO = (MemberVO)loginMemberVO.getPrincipal();
 		List<ProjectVO> projectList = this.projectService.readAllProjectList(memberVO);
 		return new ApiResponse(projectList);
-//		return new ApiResponse(HttpStatus.BAD_REQUEST, "예외");
 	}
+	
 	@PostMapping("/project/delete/{id}")
 	public ApiResponse postDeleteProject(@PathVariable String id) {
 		
@@ -177,8 +177,9 @@ public class ProjectController {
 	 * @return
 	 */
 	@PostMapping("/project/apply/{pjId}")
-	public ApiResponse doApplyProject(ApplyProjectVO applyProjectVO, @PathVariable String pjId,
-			Authentication memberVO) {
+	public ApiResponse doApplyProject(ApplyProjectVO applyProjectVO
+									, @PathVariable String pjId
+									, Authentication memberVO) {
 		
 		MemberVO loginMemberVO = (MemberVO)memberVO.getPrincipal();
 		applyProjectVO.setPjId(pjId);
@@ -186,7 +187,7 @@ public class ProjectController {
 		applyProjectVO.setEmilAddr(loginMemberVO.getEmilAddr());
 
 		if (ParameterCheck.parameterCodeValid(applyProjectVO.getPjApplyDesc(), 0)) {
-			throw new ProjectApplyFailException("pjApplyDesc를 입력해주세요", applyProjectVO);
+			throw new ProjectApplyFailException("pjApplyDesc를 입력해주세요");
 		}
 
 		boolean isSuccessed = this.projectService.createNewProjectApply(applyProjectVO);
