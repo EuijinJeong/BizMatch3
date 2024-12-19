@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -151,7 +152,7 @@ public class FileHandler {
 			e.printStackTrace();
 		}
 		// HTTP 리스폰스에 파일을 첨부해서 보낼건데 파일의 이름은 ~~~이야.
-		header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + originFileName);
+		header.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + originFileName + "\"");
 
 		// 4. 브라우저에게 파일을 전송한다.
 		InputStreamResource resource = null;

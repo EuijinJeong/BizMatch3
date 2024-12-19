@@ -284,17 +284,26 @@ public interface ProjectDao {
 	public int deleteApplyByPjId(String pjId);
 
 	/**
-	 * 즐겨찾기한 프로젝트 리스트를 받아오는 메소드
+	 * 즐겨찾기한 프로젝트 리스트를 받아오는 메이플
 	 * @param email
 	 * @return
 	 */
 	public List<ProjectVO> selectAllScrapList(String email);
 
 	/**
-	 * 즐겨찾기한거 하나 제거하는 메소드
+	 * 즐겨찾기한거 하나 제거하는 메시
 	 * @param pjScrpId
 	 * @return
 	 */
 	public int deleteScrapProject(ProjectScrapDeleteVO projectScrapDeleteVO);
+	
+	/**
+	 * 프로젝트 첨부파일을 날리는 매머드
+	 * @param pjId
+	 * @return
+	 */
+	public int deleteProjectFiles(String pjId);
+	
+	
 }
 

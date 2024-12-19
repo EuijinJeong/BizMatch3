@@ -103,4 +103,16 @@
 		  FROM PJ_APPLY_ATT 
 		 WHERE PJ_APPLY_ID = #{_parameter}
 	</select>
+	
+	<select id="selectProjectFileById" 
+		    parameterType="string" 
+		    resultType="com.ktdsuniversity.edu.bizmatch.file.vo.ProjectFileVO">
+	SELECT PJ_ATT_ID,
+		   PJ_ID,
+		   PJ_ATT_URL,
+		   PJ_ATT_URL_NONREAD
+	  FROM PJ_ATT
+	 WHERE PJ_ATT_ID =#{_parameter}
+	</select>
+	
 </mapper>

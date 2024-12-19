@@ -227,5 +227,7 @@ public interface ProjectService {
 	 */
 	public boolean deleteScrap(ProjectScrapDeleteVO projectScrapDeleteVO);
 	
-	
+
+	public boolean deleteProjectFiles(String pjId);
+
 }

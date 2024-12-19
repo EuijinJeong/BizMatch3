@@ -80,13 +80,24 @@ public class ProjectController {
 		List<ProjectVO> projectList = this.projectService.readAllProjectList(memberVO);
 		return new ApiResponse(projectList);
 	}
-	
-	@PostMapping("/project/delete/{id}")
-	public ApiResponse postDeleteProject(@PathVariable String id) {
-		
-		boolean result =this.projectService.deleteOneProject(id);
-		return new ApiResponse(result);
-		
+
+
+	/**
+	 * 프로젝트 삭제를 처리하는 컨트롤러. -TODO-
+	 * 
+	 * @param memberVO
+	 * @param pjId
+	 * @return
+	 */
+	@PostMapping("/project/delete/{pjId}")
+	public ApiResponse deleteProject(@PathVariable String pjId
+							, Authentication memberVO) {
+		System.out.println("인덱스" +pjId);
+		boolean isProjectDeleted = this.projectService.deleteOneProject(pjId);
+		boolean isFileDeleted =false;
+		if(isProjectDeleted) {
+		isFileDeleted = this.projectService.deleteProjectFiles(pjId);}
+		return new ApiResponse(isFileDeleted);
 	}
 
 	/**
@@ -266,20 +277,6 @@ public class ProjectController {
 		}
 	}
 
-	/**
-	 * 프로젝트 삭제를 처리하는 컨트롤러. -TODO-
-	 * 
-	 * @param memberVO
-	 * @param pjId
-	 * @return
-	 */
-	@PostMapping("/project/delete")
-	public ApiResponse deleteProject(@RequestParam String pjId
-							, Authentication memberVO) {
-		
-		boolean isDeleted = this.projectService.deleteOneProject(pjId);
-		return new ApiResponse(isDeleted);
-	}
 
 	/**
 	 * 지원서 수정페이지를 로드하는 컨트롤러.

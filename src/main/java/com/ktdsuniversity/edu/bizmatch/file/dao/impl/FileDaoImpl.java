@@ -66,4 +66,10 @@ public class FileDaoImpl extends SqlSessionDaoSupport implements FileDao{
 	public List<ProjectApplyAttVO> selectAllProjectApplyAtt(String pjApplyId) {
 		return this.getSqlSession().selectList(NAMESPACE + ".selectAllProjectApplyAtt", pjApplyId);
 	}
+
+	@Override
+	public ProjectFileVO selectProjectFileById(String id) {
+		
+		return this.getSqlSession().selectOne(NAMESPACE + ".selectProjectFileById", id);
+	}
 }
