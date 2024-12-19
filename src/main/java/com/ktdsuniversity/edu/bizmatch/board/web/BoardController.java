@@ -87,10 +87,10 @@ public class BoardController {
 									, Authentication memberVO) {
 		
 		if(ParameterCheck.parameterCodeValid(boardWirteVO.getPstNm(), 0)) {
-			throw new BoardException("제목은 필수 입력입니다.", boardWirteVO);
+			throw new BoardException("제목은 필수 입력입니다.");
 		}
 		if(ParameterCheck.parameterCodeValid(boardWirteVO.getPstCntnt(), 0)) {
-			throw new BoardException("내용을 입력해주세요", boardWirteVO);
+			throw new BoardException("내용을 입력해주세요");
 		}
 		boolean result = boardService.createNewPost(boardWirteVO);
 		

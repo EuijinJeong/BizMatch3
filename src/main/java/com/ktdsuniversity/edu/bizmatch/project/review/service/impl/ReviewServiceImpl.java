@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ktdsuniversity.edu.bizmatch.common.exceptions.comment.ReviewFailException;
+import com.ktdsuniversity.edu.bizmatch.common.exceptions.project.ProjectUpdateFailException;
 import com.ktdsuniversity.edu.bizmatch.project.dao.ProjectDao;
 import com.ktdsuniversity.edu.bizmatch.project.review.dao.ReviewDao;
 import com.ktdsuniversity.edu.bizmatch.project.review.service.ReviewService;
@@ -38,7 +40,7 @@ public class ReviewServiceImpl implements ReviewService{
 	public boolean insertOneReview(WriteReviewVO writeReviewVO) {
 		int insertCount = this.reviewDao.insertOneReview(writeReviewVO);
 		if(insertCount == 0) {
-			throw new IllegalArgumentException("리뷰 등록이 서버상의 이유로 실패했습니다.");
+			throw new ReviewFailException("리뷰 등록이 서버상의 이유로 실패했습니다.");
 		}
 		// 리뷰 작성하고 프로젝트 상태 업데이트 되어야 하는거 아닌가...?
 		UpdateProjectSttVO updateProjectSttVO = new UpdateProjectSttVO();
@@ -47,7 +49,7 @@ public class ReviewServiceImpl implements ReviewService{
 		int updatedCnt = this.projectDao.updateOneProjectStt(updateProjectSttVO);
 		
 		if(updatedCnt == 0) {
-			throw new IllegalArgumentException("서버상의 이유로 프로젝트 상태 업데이트에 실패했습니다.");
+			throw new ProjectUpdateFailException("서버상의 이유로 프로젝트 상태 업데이트에 실패했습니다.");
 		}
 		return insertCount > 0;
 	}

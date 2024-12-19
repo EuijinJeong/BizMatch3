@@ -43,7 +43,7 @@ app:
     apiKey: 7126540884433771
     apiSecret: gLYIyTzw9aGbZZcObqGfd4EpZ4WKxoeL3QaIDxXKKMquhtJDHt6tH44d4JS9jGBTEyZoVyPTKUBTXOO8
   multipart:
-    base-dir: C:/uploadfiles/
+    base-dir: C:/uploadfiles
     obfuscation:
       enable: true
       hide-ext:
@@ -84,6 +84,10 @@ app:
         /mailhtml/**,
         /bizno/**,
         /email/**
+  cors:
+    acceptpath:
+      http://3.34.180.91,
+      http://localhost:3000,
 # Profile 분리
 ---
 spring:
@@ -91,7 +95,10 @@ spring:
     activate:
       on-profile: prod
 
-# prod profile 전용 설정.
+# prod profile 전용 설정
 app:
   multipart:
-    base-dir: /usr/local/src/tomcat/apache-tomcat-10.1.31-second/uploadfiles/
+    base-dir: /usr/local/src/tomcat/apache-tomcat-10.1.33/uploadfiles
+  cors:
+    acceptpath:
+      http://3.34.180.91

@@ -3,6 +3,8 @@ package com.ktdsuniversity.edu.bizmatch.admin.member.web;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,7 +28,7 @@ public class AdminMemberController {
 	 * @return
 	 */
 	@PostMapping("/update/memberstt")
-	public ApiResponse postMemberStt(@RequestBody List<String> email) {
+	public ApiResponse postMemberStt(Authentication authentication, @RequestBody List<String> email) {
 		boolean isUpdated = this.adminMemberService.updateMemberSignupStt(email); 
 		return new ApiResponse(isUpdated);
 	}
@@ -37,26 +39,50 @@ public class AdminMemberController {
 	 * @return
 	 */
 	@PostMapping("/delete/memberstt")
-	public ApiResponse postMemberDeleteStt(@RequestBody List<String> email) {
+	public ApiResponse postMemberDeleteStt(Authentication authentication, @RequestBody List<String> email) {
+		MemberVO loginMemberVO = (MemberVO)authentication.getPrincipal();
+		int mbrCtgry = loginMemberVO.getMbrCtgry();
+		if(mbrCtgry != 2) {
+			return new ApiResponse(HttpStatus.FORBIDDEN, "관리자만 접속이 가능합니다.");
+		}
 		boolean isDeleted = this.adminMemberService.updateMemberSignupSttToRefuse(email);
 		return new ApiResponse(isDeleted);
 	}
 	
 	@GetMapping("/memberlist")
-	public ApiResponse getMemberList() {
+	public ApiResponse getMemberList(Authentication authentication) {
+		MemberVO loginMemberVO = (MemberVO)authentication.getPrincipal();
+		int mbrCtgry = loginMemberVO.getMbrCtgry();
+		if(mbrCtgry != 2) {
+			return new ApiResponse(HttpStatus.FORBIDDEN, "관리자만 접속이 가능합니다.");
+		}
 		List<MemberVO> memberList = this.adminMemberService.readAllMemberList();
 		return new ApiResponse(memberList);
 	}
 	
 	@PostMapping("/update/member/penalty")
-	public ApiResponse updateMemberPenalty(@RequestBody List<String> email) {
+	public ApiResponse updateMemberPenalty(Authentication authentication, @RequestBody List<String> email) {
+		MemberVO loginMemberVO = (MemberVO)authentication.getPrincipal();
+		int mbrCtgry = loginMemberVO.getMbrCtgry();
+		
+		if(mbrCtgry != 2) {
+			return new ApiResponse(HttpStatus.FORBIDDEN, "관리자만 접속이 가능합니다.");
+		}
+		
 		boolean isSuccess = this.adminMemberService.updateMemberPnlty(email);
 		
 		return new ApiResponse(isSuccess);
 	}
 	
 	@PostMapping("/update/member/isqt")
-	public ApiResponse updateMemberIsqt(@RequestBody List<String> email) {
+	public ApiResponse updateMemberIsqt(Authentication authentication, @RequestBody List<String> email) {
+		MemberVO loginMemberVO = (MemberVO)authentication.getPrincipal();
+		int mbrCtgry = loginMemberVO.getMbrCtgry();
+		
+		if(mbrCtgry != 2) {
+			return new ApiResponse(HttpStatus.FORBIDDEN, "관리자만 접속이 가능합니다.");
+		}
+		
 		boolean isSuccess = this.adminMemberService.updateMemberIsqt(email);
 		
 		return new ApiResponse(isSuccess);

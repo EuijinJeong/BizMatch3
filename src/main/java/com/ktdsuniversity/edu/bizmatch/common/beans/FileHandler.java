@@ -88,6 +88,7 @@ public class FileHandler {
 	 * @return List<StoreResultVO>: 저장된 원본이름과 난독화된 이름의 리스트를 반환.
 	 */
 	public List<StoreResultVO> storeListFile(List<MultipartFile> fileList) {
+		System.out.println(baseDirectory);
 		if(fileList == null) {
 			// 사용자가 전달한 파일리스트가 비어있으면 반환값 없음
 		}
@@ -118,6 +119,7 @@ public class FileHandler {
 				try {
 					file.transferTo(uploadFile);
 				} catch (IllegalStateException | IOException e) {
+
 					throw new FileUploadFailedException("예기치 못한 이유로 업로드에 실패했습니다. 잠시 후 다시 시도해주세요.");
 				}
 				storeFileList.add(new StoreResultVO(file.getOriginalFilename(), obfuscatedFileName));
@@ -157,7 +159,6 @@ public class FileHandler {
 		try {
 			resource = new InputStreamResource(new FileInputStream(downloadFile));
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 			throw new IllegalArgumentException("파일이 존재하지 않습니다.");
 		}
 

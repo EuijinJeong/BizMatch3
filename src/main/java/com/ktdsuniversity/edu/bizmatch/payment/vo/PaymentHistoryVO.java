@@ -10,7 +10,7 @@ public class PaymentHistoryVO {
 	private String grntPdDt;
 	private String cntrctPdDt;
 	private String accntNm;
-	private int pymntTyp;
+	private int pymntTyp; // 결제 타입. (0 : 보증금, 1: 계약금)
 	private String impUid;
 	private int dpstRfndAmnt;
 	private String dpstRfndDt;

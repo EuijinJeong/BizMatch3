@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.comment.ReviewReportFailException;
+import com.ktdsuniversity.edu.bizmatch.common.vo.ApiResponse;
 import com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO;
 import com.ktdsuniversity.edu.bizmatch.project.review.service.ReviewService;
 import com.ktdsuniversity.edu.bizmatch.project.review.vo.ReviewVO;
@@ -64,7 +65,7 @@ public class ReviewReportController {
 	 * @return
 	 */
 	@PostMapping("/review/{cmmntId}/reviewreport")
-	public Map<String, Object> doInsertNewReport(@PathVariable String cmmntId
+	public ApiResponse doInsertNewReport(@PathVariable String cmmntId
 											, @RequestBody WriteReviewReportVO writeReviewReportVO
 											, Authentication memberVO) {
 		
@@ -80,9 +81,6 @@ public class ReviewReportController {
 		
 		boolean isSuccess = reviewReportService.insertOneReviewReport(writeReviewReportVO);
 		
-		Map<String, Object> resultMap = new HashMap<>();
-		resultMap.put("result", isSuccess);
-		
-		return resultMap;
+		return new ApiResponse(isSuccess);
 	}
 }

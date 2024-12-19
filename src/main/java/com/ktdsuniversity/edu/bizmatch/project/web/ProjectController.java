@@ -38,6 +38,8 @@ import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectApplyAttVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentModifyVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectCommentWriteVO;
+import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectScrapDeleteVO;
+import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectScrapVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectSkillVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.ProjectVO;
 import com.ktdsuniversity.edu.bizmatch.project.vo.SearchApplyVO;
@@ -52,44 +54,6 @@ public class ProjectController {
 
 	@Autowired
 	private PaymentService paymentService;
-
-	/**
-	 * 프로젝트 등록 페이지를 로드하는 컨트롤러.
-	 * 
-	 * @return
-	 */
-//	@GetMapping("/project/regist")
-//	public String viewProjectRegistPage(@SessionAttribute(value = "_LOGIN_USER_") MemberVO memberVO) {
-//		// 만약 회원 유형이 프리랜서 유형이라면 접근 못하게 막아야한다.
-//		if (memberVO.getMbrCtgry() == 1) {
-//			// TODO: 기업 회원만 접근 가능하다고 알려줘야한다.
-//			return "redirect:/";
-//		}
-//		CompanyVO companyVO = this.memberService.selectOneCompanyByEmilAddr(memberVO.getCmpId());
-//		// TODO: 만약 회원이 계좌인증을 안했으면 접근 못하게 막아야한다.
-//		if (companyVO.getCmpnyAccuuntNum() == null) {
-//			// 또한, 계좌인증을 해달라고 클라이언트에게 메세지를 전달해야한다.
-//			return "redirect:/";
-//		}
-//		return "project/project_register";
-//	}
-
-	/**
-	 * 프로젝트 지원페이지를 로드하는 컨트롤러.
-	 * 
-	 * @param pjId
-	 * @param model
-	 * @param memberVO
-	 * @return
-	 */
-//	@GetMapping("/project/apply/{pjId}")
-//	public String viewApplyPage(@PathVariable String pjId, Model model,
-//			@SessionAttribute(value = "_LOGIN_USER_", required = false) MemberVO memberVO) {
-//		if (memberVO == null) {
-//			return "redirect:/";
-//		}
-//		return "project/project_apply";
-//	}
 
 	/**
 	 * 프로젝트 상세보기 페이지.
@@ -108,31 +72,6 @@ public class ProjectController {
 	}
 
 	/**
-	 * 프로젝트 문의 페이지. temp
-	 * 
-	 * @return
-	 */
-//	@GetMapping("/project/inquiry")
-//	public String viewProjectInquiryPage() {
-//		return "project/project_inquiry_page";
-//	}
-
-	/**
-	 * 프로젝트 찾기 페이지를 반환하는 컨트롤러이다.
-	 * 
-	 * @param memberVO
-	 * @return
-	 */
-//	@GetMapping("/project/findpage")
-//	public String viewProjectFindPage(@SessionAttribute(value = "_LOGIN_USER_", required = false) MemberVO memberVO) {
-//
-//		if (memberVO == null) {
-//			return "redirect:/";
-//		}
-//		return "project/project_find";
-//	}
-
-	/**
 	 * 모든 프로젝트 리스트의 정보를 반환하는 컨트롤러.
 	 */
 	@GetMapping("/project/find")
@@ -140,6 +79,13 @@ public class ProjectController {
 		MemberVO memberVO = (MemberVO)loginMemberVO.getPrincipal();
 		List<ProjectVO> projectList = this.projectService.readAllProjectList(memberVO);
 		return new ApiResponse(projectList);
+	}
+	
+	@PostMapping("/project/delete/{id}")
+	public ApiResponse postDeleteProject(@PathVariable String id) {
+		
+		boolean result =this.projectService.deleteOneProject(id);
+		return new ApiResponse(result);
 		
 	}
 
@@ -160,33 +106,33 @@ public class ProjectController {
 		// 유효성 검사들.
 		// 프로젝트 제목
 		if (writeProjectVO.getPjTtl() == null) {
-			throw new ProjectWriteFailException("프로젝트 제목은 필수 입력 사항입니다.", writeProjectVO);
+			throw new ProjectWriteFailException("프로젝트 제목은 필수 입력 사항입니다.");
 		}
 		// 프로젝트 일정
 		if (writeProjectVO.getStrtDt() == null || writeProjectVO.getEndDt() == null) {
-			throw new ProjectWriteFailException("프로젝트 일정은 필수 입력 사항입니다.", writeProjectVO);
+			throw new ProjectWriteFailException("프로젝트 일정은 필수 입력 사항입니다.");
 		}
 		// 지원 내용
 		if (writeProjectVO.getPjDesc() == null) {
-			throw new ProjectWriteFailException("프로젝트 상세 설명은 필수 입력 사항입니다.", writeProjectVO);
+			throw new ProjectWriteFailException("프로젝트 상세 설명은 필수 입력 사항입니다.");
 		}
 
 		if (writeProjectVO.getCntrctAccnt() == null) {
-			throw new ProjectWriteFailException("프로젝트 입찰가격은 필수 입력사항입니다.", writeProjectVO);
+			throw new ProjectWriteFailException("프로젝트 입찰가격은 필수 입력사항입니다.");
 		}
 
 		// 프로젝트 입찰가격
 		if (writeProjectVO.getCntrctAccnt() < 0) {
-			throw new ProjectWriteFailException("프로젝트 입찰가격은 1,000,000원 이상입니다.", writeProjectVO);
+			throw new ProjectWriteFailException("프로젝트 입찰가격은 1,000,000원 이상입니다.");
 		}
 
 		if (writeProjectVO.getCntrctAccnt() == 0) {
-			throw new ProjectWriteFailException("프로젝트 입찰가격은 필수 입력사항입니다.", writeProjectVO);
+			throw new ProjectWriteFailException("프로젝트 입찰가격은 필수 입력사항입니다.");
 		}
 
 		// 프로젝트 모집일
 		if (writeProjectVO.getPjRcrutStrtDt() == null || writeProjectVO.getPjRcrutEndDt() == null) {
-			throw new ProjectWriteFailException("프로젝트 모집일은 필수 입력 사항입니다.", writeProjectVO);
+			throw new ProjectWriteFailException("프로젝트 모집일은 필수 입력 사항입니다.");
 		}
 
 		// 날짜 문자열을 LocalDate로 변환
@@ -198,17 +144,17 @@ public class ProjectController {
 
 		// 모집 기간 최소 7일 체크
 		if (daysBetween < 7) {
-			throw new ProjectWriteFailException("프로젝트 모집기간은 최소 7일 이상이어야 합니다.", writeProjectVO);
+			throw new ProjectWriteFailException("프로젝트 모집기간은 최소 7일 이상이어야 합니다.");
 		}
 
 		// 종료일이 시작일보다 이전인 경우 체크
 		if (daysBetween < 0) {
-			throw new ProjectWriteFailException("종료일은 시작일 이후여야 합니다.", writeProjectVO);
+			throw new ProjectWriteFailException("종료일은 시작일 이후여야 합니다.");
 		}
 
 		// 프로젝트 인원
 		if (writeProjectVO.getPjRcrutCnt() <= 0) {
-			throw new ProjectWriteFailException("프로젝트 모집 인원은 필수 입력 사항입니다.", writeProjectVO);
+			throw new ProjectWriteFailException("프로젝트 모집 인원은 필수 입력 사항입니다.");
 		}
 		MemberVO loginMemberVO = (MemberVO)memberVO.getPrincipal();
 		writeProjectVO.setOrdrId(loginMemberVO.getEmilAddr());
@@ -216,7 +162,6 @@ public class ProjectController {
 		// 이제 수정된 호출
 		List<String> skillList = new ArrayList<>(prmStkIdList);
 		
-		System.out.println("Received prmStkId List: " + skillList);
 
 		boolean isSuccessed = this.projectService.createNewProject(writeProjectVO,skillList);
 
@@ -232,8 +177,9 @@ public class ProjectController {
 	 * @return
 	 */
 	@PostMapping("/project/apply/{pjId}")
-	public ApiResponse doApplyProject(ApplyProjectVO applyProjectVO, @PathVariable String pjId,
-			Authentication memberVO) {
+	public ApiResponse doApplyProject(ApplyProjectVO applyProjectVO
+									, @PathVariable String pjId
+									, Authentication memberVO) {
 		
 		MemberVO loginMemberVO = (MemberVO)memberVO.getPrincipal();
 		applyProjectVO.setPjId(pjId);
@@ -241,7 +187,7 @@ public class ProjectController {
 		applyProjectVO.setEmilAddr(loginMemberVO.getEmilAddr());
 
 		if (ParameterCheck.parameterCodeValid(applyProjectVO.getPjApplyDesc(), 0)) {
-			throw new ProjectApplyFailException("pjApplyDesc를 입력해주세요", applyProjectVO);
+			throw new ProjectApplyFailException("pjApplyDesc를 입력해주세요");
 		}
 
 		boolean isSuccessed = this.projectService.createNewProjectApply(applyProjectVO);
@@ -267,19 +213,6 @@ public class ProjectController {
 		return resultMap;
 	}
 
-//	/**
-//	 * 특정 프로젝트 수정페이지를 로드하는 컨트롤러. -TODO-
-//	 * 
-//	 * @param memberVO
-//	 * @param pjId
-//	 * @return
-//	 */
-//	@GetMapping("/project/update/content/{pjId}")
-//	public String loadUpdateProjectPage(@SessionAttribute(value = "_LOGIN_USER_") MemberVO memberVO,
-//			@PathVariable String pjId) {
-//		return null;
-//	}
-//
 	/**
 	 * 프로젝트 수정 요청을 보내는 컨트롤러.
 	 * 
@@ -290,45 +223,11 @@ public class ProjectController {
 	public ApiResponse UpdateProjectInfo(@PathVariable String pjId, ModifyProjectVO modifyProjectVO) {
 		boolean isUpdated = this.projectService.updateOneProject(modifyProjectVO);
 		modifyProjectVO.setPjId(pjId);
-		System.out.println(isUpdated);
 		return new ApiResponse(isUpdated);
 	}
 	
-	
-	
-
-	/**
-<<<<<<< HEAD
-	 * 추가모집 3일 추가
-=======
-	 * 프로젝트 추가모집 수정 페이지를 로드하는 컨트롤러.
-	 * 
-	 * @param memberVO
-	 * @param projectVO
-	 * @return
-	 */
-//	@GetMapping("/project/update/addrecurit/")
-//	public String loadAddRecuritPage(@SessionAttribute(value = "_LOGIN_USER_") MemberVO memberVO, ProjectVO projectVO) {
-//
-//		return null;
-//	}
-//
-//	/**
-//	 * 추가모집 정보를 서버에 업로드하는 컨트롤러.
-//	 * 
-//	 * @param modifyProjectVO
-//	 * @return
-//	 */
-//	@PostMapping("/project/update/addrecurit/")
-//	public String createRecuritInfo(ModifyProjectVO modifyProjectVO) {
-//		boolean isUpdated = this.projectService.updateAddtionalRecruitment(modifyProjectVO);
-//
-//		return null;
-//	}
-
 	/**
 	 * 추가모집 
->>>>>>> jcy
 	 * @param memberVO
 	 * @param pjId
 	 * @return
@@ -480,7 +379,6 @@ public class ProjectController {
 	public ApiResponse acceptAppltContent(@RequestParam String pjApplyId, Authentication memberVO) {
 		MemberVO loginMemberVO = (MemberVO)memberVO.getPrincipal();
 		boolean isSuccess = this.projectService.updateApplyMember(pjApplyId, loginMemberVO);
-		System.out.println(isSuccess);
 		return new ApiResponse(isSuccess);
 	}
 
@@ -559,27 +457,43 @@ public class ProjectController {
 		return new ApiResponse(applyProjectVOList);
 	}
 
-//	/*
-//	 * 프로젝트 스크랩을 요청하는 컨트롤러.
-//	 * 
-//	 * @param pjId
-//	 * 
-//	 * @param memberVO
-//	 * 
-//	 * @return
-//	 */
-//	@PostMapping("/project/scrap/{pjId}")
-//	public ApiResponse doScrapProject(@PathVariable String pjId, Authentication memberVO) {
-//		ProjectScrapVO projectScrapVO = new ProjectScrapVO();
-//
-//		projectScrapVO.setEmilAddr(memberVO.getName());
-//		projectScrapVO.setPjId(pjId);
-//
-//		this.projectService.insertProjectScrap(projectScrapVO);
-//
-//		return "redirect:/project/info/{pjId}";
-//	}
-//	
+	/*
+	 * 프로젝트 스크랩을 요청하는 컨트롤러.
+	 * 
+	 * @param pjId
+	 * @param memberVO
+	 * @return
+	 */
+	@PostMapping("/project/scrap/{pjId}")
+	public ApiResponse doScrapProject(@PathVariable String pjId, Authentication memberVO) {
+		ProjectScrapVO projectScrapVO = new ProjectScrapVO();
+		MemberVO loginMemberVO = (MemberVO)memberVO.getPrincipal();
+		projectScrapVO.setEmilAddr(loginMemberVO.getEmilAddr());
+		projectScrapVO.setPjId(pjId);
+
+		boolean isSuccess = this.projectService.insertProjectScrap(projectScrapVO);
+
+		return new ApiResponse(isSuccess);
+	}
+	/**
+	 * 스크랩한 프로젝트를 가져오는 컨트롤러
+	 * @param email
+	 * @return
+	 */
+	@GetMapping("/project/scraplist")
+	public ApiResponse readScrapList(@RequestParam String email) {
+		List<ProjectVO> projectVOList = this.projectService.readAllScrap(email);
+		return new ApiResponse(projectVOList);
+	}
+	/**
+	 * 스크랩을 취소하는 컨트롤러
+	 */
+	@PostMapping("/project/delete/scrap")
+	public ApiResponse deleteScrap(@RequestBody ProjectScrapDeleteVO projectScrapDeleteVO) {
+		boolean isSuccess = this.projectService.deleteScrap(projectScrapDeleteVO);
+		return new ApiResponse(isSuccess);
+	}
+	
 	/**
 	 * @param projectCommentWriteVO : 프로젝트 댓글 작성 데이터
 	 * @return

@@ -131,7 +131,7 @@
 		, #{cmpnyBizCtgry}
 		, #{cmpnyIndstrId.mjrId}
 		, #{cmpnyIndstrId.smjrId}
-		, #{address.addr} || #{address.detailAddress} || #{address.extraAddress} || #{address.postcode}
+		, #{cmpnyAddr}
 		, #{cmpnyPhnNum}
 		, #{cmpnySiteUrl} 
 		, #{cmpnyEmplyCnt}
@@ -160,8 +160,7 @@
 		, #{cmpnyRp}
 		, #{salt}
 		, #{cmpId}
-		, SYSDATE
-		)
+		, SYSDATE )
 	</insert>
 	
 	<!-- 개인회원 유형의 개인 정보를 추가로 insert하는 쿼리문이다. -->
@@ -194,21 +193,53 @@
 		)
 	</insert>
 
+	<resultMap type="com.ktdsuniversity.edu.bizmatch.member.vo.CompanyVO" 
+			   id="companyBrnInfoMap"
+			   autoMapping="true">
+		<id column="CMPNY_ID" property="cmpnyId" />
+		<result column="CMPNY_NM" property="cmpnyNm"/>
+		<result column="CMPNY_BIZ_CTGRY" property="cmpnyBizCtgry"/>
+		<result column="MJR_ID" property="mjrId"/>
+		<result column="SMJR_ID" property="smjrId"/>
+		<result column="CMPNY_SITE_URL" property="cmpnySiteUrl"/>
+		<result column="CMPNY_EMPLY_CNT" property="cmpnyEmplyCnt"/>
+		<result column="CMPNY_BRN" property="cmpnyBrn"/>
+		<result column="CMPNY_ADDR" property="cmpnyAddr"/>
+		<result column="MJR_NM" property="compnyLkIndstrMjrNm"/>
+		<result column="SMJR_NM" property="compnyLkIndstrSmjrNm"/>
+		<result column="LK_MJR_ID" property="compnyLkIndstrMjrId" />
+		<result column="LK_SMJR_ID" property="compnyLkIndstrSmjrId" />
+		<association property="memberVO"
+					 javaType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO"
+					 autoMapping="true">
+			<id column="EMIL_ADDR" property="emilAddr"/>
+			<association property="mbrLkIndstrVO"
+						 javaType="com.ktdsuniversity.edu.bizmatch.member.vo.MbrLkIndstrVO"
+						 autoMapping="true">
+				<id column="LK_INDSTR_ID" property="lkIndstrId"/>
+			</association>
+		</association>
+	</resultMap>
 	<select id="selectOneCompany" 
 			parameterType="string" 
-			resultMap="companyVOMap">
-		SELECT CMPNY_ID
-			 , CMPNY_NM
-		 	 , CMPNY_BIZ_CTGRY
-			 , MJR_ID
-			 , CMPNY_ADDR
-			 , CMPNY_PHN_NUM
-			 , CMPNY_SITE_URL
-			 , CMPNY_EMPLY_CNT
-			 , CMPNY_BRN
-			 , SMJR_ID
-		  FROM CMPNY_INFO
-		 WHERE CMPNY_BRN = #{_parameter}
+			resultMap="companyBrnInfoMap">
+		 SELECT CI.CMPNY_ID,
+			    CI.CMPNY_NM,
+			    CI.CMPNY_BIZ_CTGRY,
+			    CI.MJR_ID,
+			    CI.SMJR_ID,
+			    CI.CMPNY_SITE_URL,
+			    CI.CMPNY_EMPLY_CNT,
+			    CI.CMPNY_BRN,
+			    CI.CMPNY_ADDR,
+			    MLI.MJR_ID AS COMPNY_LK_INDSTR_MJR_ID,
+			    MLI.SMJR_ID AS COMPNY_LK_INDSTR_SMJR_ID
+		   FROM CMPNY_INFO CI
+		   JOIN MBR_INFO MI
+		     ON CI.CMPNY_ID = MI.CMP_ID 
+		   JOIN MBR_LK_INDSTR MLI
+		     ON MI.EMIL_ADDR = MLI.EMIL_ADDR 
+		  WHERE CI.CMPNY_BRN = #{_parameter}
 	</select>
 
 	<!-- 회원가입 중복 이메일 방지를 위해 사용하는 쿼리문이다. -->
@@ -357,6 +388,7 @@
 		</association>
 	</collection>
 	</resultMap>
+	
  	<!-- 마이페이지 기업정보 조회 -->
  	<select id="selectOneCompanyByEmilAddr" 
  			parameterType="string" 
