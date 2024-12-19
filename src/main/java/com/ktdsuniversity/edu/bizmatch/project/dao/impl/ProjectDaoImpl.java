@@ -48,7 +48,7 @@ public class ProjectDaoImpl extends SqlSessionDaoSupport implements ProjectDao{
 
 	@Override
 	public int deleteOneProject(String pjId) {
-		return this.getSqlSession().delete(NAMESPACE + ".deleteOneProject" , pjId);
+		return this.getSqlSession().update(NAMESPACE + ".deleteOneProject" , pjId);
 	}
 
 	@Override
@@ -270,6 +270,12 @@ public class ProjectDaoImpl extends SqlSessionDaoSupport implements ProjectDao{
 	@Override
 	public int deleteScrapProject(ProjectScrapDeleteVO projectScrapDeleteVO) {
 		return this.getSqlSession().delete(NAMESPACE+".deleteScrapProject", projectScrapDeleteVO);
+	}
+
+	@Override
+	public int deleteProjectFiles(String pjId) {
+		return this.getSqlSession().delete(NAMESPACE+".deleteProjectFiles", pjId);
+	
 	}
 
 }

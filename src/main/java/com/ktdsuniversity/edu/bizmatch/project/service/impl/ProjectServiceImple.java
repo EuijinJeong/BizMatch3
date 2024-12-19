@@ -216,7 +216,7 @@ public class ProjectServiceImple implements ProjectService {
 		List<ApplyProjectVO> applicantList = this.projectDao.selectAllApplyMember(applyProjectVO.getPjId());
 		
 		for (ApplyProjectVO applyProjectVO2 : applicantList) {
-			if(applyProjectVO2.getEmilAddr() == applyProjectVO.getEmilAddr()) {
+			if(applyProjectVO2.getEmilAddr().equals(applyProjectVO.getEmilAddr())) {
 				throw new ProjectApplyFailException("이미 지원 한 프로젝트 입니다.");
 			}
 		}
@@ -572,5 +572,11 @@ public class ProjectServiceImple implements ProjectService {
 	@Override
 	public boolean deleteScrap(ProjectScrapDeleteVO projectScrapDeleteVO) {
 		return this.projectDao.deleteScrapProject(projectScrapDeleteVO)>0;
+	}
+
+	@Override
+	public boolean deleteProjectFiles(String pjId) {
+		
+		return this.projectDao.deleteProjectFiles(pjId)>0;
 	}
 }

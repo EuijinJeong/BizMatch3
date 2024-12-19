@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.client.RestTemplate;
 
 import com.ktdsuniversity.edu.bizmatch.common.category.vo.CategoryVO;
+import com.ktdsuniversity.edu.bizmatch.common.exceptions.member.MypageEditFailException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.member.ResetPassword;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.member.SignUpCompanyException;
 import com.ktdsuniversity.edu.bizmatch.common.exceptions.member.SignUpFailException;
@@ -451,30 +452,20 @@ public class MemberController {
 	 * @return
 	 */
 	@PostMapping("/member/mypage/company/edit")
-	public Map<String, Object> doCompanyMyPageEdit(@RequestBody MemberCompanyModifyVO memberCompanyModifyVO 
+	public ApiResponse doCompanyMyPageEdit(@RequestBody MemberCompanyModifyVO memberCompanyModifyVO 
 												, Authentication memberVO) {
-		
-		if (memberCompanyModifyVO.getCmpnyNm() == null || memberCompanyModifyVO.getCmpnyAddr() == null || memberCompanyModifyVO.getCmpnyAccuntNum() == null) {
-			return Map.of("response",
-					false,
-					"message",
-					"필수 정보(회사명, 회사 주소, 회사 계좌번호)가 누락되었습니다. 모든 필수 정보를 입력해 주세요.",
-					"data",
-					memberCompanyModifyVO
-			);
-		}
 		
 		MemberVO member = (MemberVO) memberVO.getPrincipal();
 		boolean isSuccess = this.memberService.updateCompanyMemberMyPage(memberCompanyModifyVO, member);
 		
-//		if (isSuccess && memberCompanyModifyVO.getMbrPrmStkList() != null) {
-//			boolean skillsUpdated = memberService.updateMbrSkills(memberCompanyModifyVO.getMbrPrmStkList(), member.getEmilAddr());
-//			if (!skillsUpdated) {
-//				return Map.of("response", false, "message", "보유 기술 업데이트에 실패했습니다.");
-//			}
-//		}
+		if (isSuccess && memberCompanyModifyVO.getMbrPrmStkList() != null) {
+			boolean skillsUpdated = memberService.updateMbrSkills(memberCompanyModifyVO.getMbrPrmStkList(), member.getEmilAddr());
+			if (!skillsUpdated) {
+				throw new MypageEditFailException("보유기술 업데이트에 실패했습니다.");
+			}
+		}
 		
-		return Map.of("response", isSuccess, "data", memberCompanyModifyVO);
+		return new ApiResponse(isSuccess);
 	}
 	
 	/**

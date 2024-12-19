@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BoardException.class)
     @ResponseBody
     public ApiResponse handleBoardException(BoardException be) {
-    	return new ApiResponse(HttpStatus.BAD_REQUEST, be);
+    	return new ApiResponse(HttpStatus.BAD_REQUEST, be.getMessage());
     }
     
     /**
@@ -59,13 +59,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MemberPortfolioException.class)
     @ResponseBody
     public ApiResponse handleMemberPortfolioException(MemberPortfolioException mpe) {
-    	return new ApiResponse(HttpStatus.BAD_REQUEST, mpe);
+    	return new ApiResponse(HttpStatus.BAD_REQUEST, mpe.getMessage());
     }
     
     @ExceptionHandler(ResetPassword.class)
     @ResponseBody
     public ApiResponse handleResetPassword(ResetPassword rp) {
-        return new ApiResponse(HttpStatus.BAD_REQUEST, rp);
+        return new ApiResponse(HttpStatus.BAD_REQUEST, rp.getMessage());
     }
 
     /**
@@ -170,7 +170,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ProjectApplyFailException.class)
     @ResponseBody
     public ApiResponse handleProjectApplyFailException(ProjectApplyFailException pafe) {
-    	return new ApiResponse(HttpStatus.BAD_REQUEST, pafe);
+    	return new ApiResponse(HttpStatus.BAD_REQUEST, pafe.getMessage());
     }
     
     /**
@@ -183,7 +183,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ProjectWriteFailException.class)
     @ResponseBody
     public ApiResponse handleProjectWriteFailException(ProjectWriteFailException pwfe) {
-    	return new ApiResponse(HttpStatus.BAD_REQUEST, pwfe);
+    	return new ApiResponse(HttpStatus.BAD_REQUEST, pwfe.getMessage());
     }
     
     /**
@@ -196,7 +196,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ProjectDeleteException.class)
     @ResponseBody
     public ApiResponse handleProjectDeleteException(ProjectDeleteException pde) {
-    	return new ApiResponse(HttpStatus.BAD_REQUEST, pde);
+    	return new ApiResponse(HttpStatus.BAD_REQUEST, pde.getMessage());
     }
     
     /**
@@ -209,7 +209,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ProjectScrapException.class)
     @ResponseBody
     public ApiResponse handleProjectScrapException(ProjectScrapException pse) {
-    	return new ApiResponse(HttpStatus.BAD_REQUEST, pse);
+    	return new ApiResponse(HttpStatus.BAD_REQUEST, pse.getMessage());
     }
     
     /**
@@ -221,7 +221,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(PaymentServerSaveException.class)
     @ResponseBody
     public ApiResponse handlePaymentServerSaveException(PaymentServerSaveException psse) {
-    	return new ApiResponse(HttpStatus.BAD_REQUEST, psse);
+    	return new ApiResponse(HttpStatus.BAD_REQUEST, psse.getMessage());
     }
     
     /**
@@ -233,7 +233,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CreateDownPaymentException.class)
     @ResponseBody
     public ApiResponse handleCreateDownPaymentException(CreateDownPaymentException cdpe) {
-    	return new ApiResponse(HttpStatus.BAD_REQUEST, cdpe);
+    	return new ApiResponse(HttpStatus.BAD_REQUEST, cdpe.getMessage());
     }
     
     /**
@@ -244,7 +244,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(SessionNotFoundException.class)
     @ResponseBody
     public ApiResponse SessionNotFoundException(SessionNotFoundException snfe) {
-    	return new ApiResponse(HttpStatus.FORBIDDEN, snfe);
+    	return new ApiResponse(HttpStatus.FORBIDDEN, snfe.getMessage());
     }
     
     /**
@@ -256,7 +256,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(PaymentException.class)
     @ResponseBody
     public ApiResponse handlePaymentException(PaymentException pe) {
-    	return new ApiResponse(HttpStatus.BAD_REQUEST, pe);
+    	return new ApiResponse(HttpStatus.BAD_REQUEST, pe.getMessage());
     }
     
     /**
@@ -267,7 +267,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(IndustryException.class)
     @ResponseBody
     public ApiResponse handleIndustryException(IndustryException ie) {
-    	return new ApiResponse(HttpStatus.BAD_REQUEST, ie);
+    	return new ApiResponse(HttpStatus.BAD_REQUEST, ie.getMessage());
     }
     
     /**
@@ -278,12 +278,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MemberNotFoundException.class)
     @ResponseBody
     public ApiResponse handleMemberNotFoundException(MemberNotFoundException infe) {
-    	return new ApiResponse(HttpStatus.BAD_REQUEST, infe);
+    	return new ApiResponse(HttpStatus.BAD_REQUEST, infe.getMessage());
     }
     
     @ExceptionHandler(ProjectNotFoundException.class)
     @ResponseBody
     public ApiResponse handleProjectNotFoundException(ProjectNotFoundException pnfe) {
-    	return new ApiResponse(HttpStatus.BAD_REQUEST, pnfe);
+    	return new ApiResponse(HttpStatus.BAD_REQUEST, pnfe.getMessage());
     }
 }

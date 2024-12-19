@@ -66,4 +66,6 @@ public interface FileDao {
 	 * @return
 	 */
 	public List<ProjectApplyAttVO> selectAllProjectApplyAtt(String pjApplyId);
+	
+	public ProjectFileVO selectProjectFileById(String id);
 }

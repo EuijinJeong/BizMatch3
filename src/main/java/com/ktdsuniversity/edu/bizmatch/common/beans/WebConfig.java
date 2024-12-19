@@ -85,8 +85,10 @@ public class WebConfig implements WebMvcConfigurer, WebSocketConfigurer{
 	 */
 	@Override
 	public void addCorsMappings(final CorsRegistry registry) {
-		registry.addMapping("/**")
-				.allowedMethods("GET", "POST");
+		registry.addMapping("/**").allowedMethods("GET", "POST")
+
+
+				;
 	}
 	
 	/**
