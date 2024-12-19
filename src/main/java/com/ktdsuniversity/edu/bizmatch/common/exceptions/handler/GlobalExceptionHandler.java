@@ -138,7 +138,7 @@ public class GlobalExceptionHandler {
     }
     
     /**
-     * 파일 업로드 실패 요청 예외처리.
+     * 파일 업로드 실패 요청 예외처리
      * @param fufe
      * @return
      */
