@@ -117,7 +117,7 @@ public class SecurityConfig {
 									 			.requestMatchers("/kakao/**").permitAll()
 									 			.requestMatchers("/images/**").permitAll()
 									 			.requestMatchers("/api/**").permitAll()
-												.requestMatchers("/member/signup/**").permitAll()
+												.requestMatchers("/api/member/signup/**").permitAll()
 												.requestMatchers("/bizno/api/ask/**").permitAll()
 												.requestMatchers("/member/signin").permitAll()
 												.requestMatchers("/member/findpwd").permitAll()
