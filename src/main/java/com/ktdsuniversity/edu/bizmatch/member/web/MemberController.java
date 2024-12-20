@@ -121,7 +121,7 @@ public class MemberController {
 			throw new SignUpCompanyException("이용자명은 필수 입력사항입니다.", memberCompanySignUpVO);
 		}
 		
-		if(ParameterCheck.parameterCodeValid(memberCompanySignUpVO.getEmilAddr(), 7)) {
+		if(ParameterCheck.parameterCodeValid(memberCompanySignUpVO.getEmilAddr(), 5)) {
 			throw new SignUpCompanyException("이메일은 필수 입력사항입니다.", memberCompanySignUpVO);
 		}
 		if(ParameterCheck.parameterCodeValid(memberCompanySignUpVO.getEmilAddrCnfrmNmbr(), 0)) {
