@@ -60,9 +60,7 @@ app:
       /api/email/check/,
       /api/email/authnum/samecheck,
       /api/bizno/api/ask,
-      /api/member/signup/cmpnycheck,
-      /api/member/signup/company/**,
-      /api/member/signup/freelaner/**,
+      /api/member/signup/**,
       /api/member/resetpwd,
   interceptor:
     accesslog:
