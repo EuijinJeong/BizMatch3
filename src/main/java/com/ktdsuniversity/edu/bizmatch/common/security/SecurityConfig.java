@@ -76,7 +76,7 @@ public class SecurityConfig {
 //						.requestMatchers("/member/login")
 //						.requestMatchers("/member/regist/**")
 									.requestMatchers("/ws/**")
-									.requestMatchers("/api/member/signup/email/available/")
+									.requestMatchers("/api/member/signup/**")
 									.requestMatchers("/error/**")
 									.requestMatchers("favicon.ico")
 									.requestMatchers("/member/**-delete-me")
