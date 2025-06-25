@@ -5,10 +5,10 @@ spring:
     name: hello-spring
   # 데이터 연결을 위한 설정
   datasource:
-    url: jdbc:oracle:thin:@//ec2-3-34-180-91.ap-northeast-2.compute.amazonaws.com:1521/XE
+    url: jdbc:oracle:thin:@데이터베이스 주소 입력
     driver-class-name: oracle.jdbc.driver.OracleDriver
-    username: bizmatch
-    password: admin1234
+    username: 사용자명 입력
+    password: 비밀번호 입력
   servlet:
     multipart:
       # 애플리케이션이 받을 수 있는 최대 업로드 용량(100MB)
@@ -19,8 +19,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: jej001228@gmail.com
-    password: jpav snwr izmz ifzd
+    username: 
+    password: 
     properties:
       mail:
         smtp:
@@ -38,10 +38,10 @@ mybatis:
 app:
   jwt:
     issuer: hello-spring-security
-    secret-key: spring-security-secret-key-ramdom-token-key
+    secret-key: 
   iamport:
-    apiKey: 7126540884433771
-    apiSecret: gLYIyTzw9aGbZZcObqGfd4EpZ4WKxoeL3QaIDxXKKMquhtJDHt6tH44d4JS9jGBTEyZoVyPTKUBTXOO8
+    apiKey: 
+    apiSecret: 
   multipart:
     base-dir: /usr/local/src/tomcat/apache-tomcat-10.1.33/uploadfiles
     obfuscation:
