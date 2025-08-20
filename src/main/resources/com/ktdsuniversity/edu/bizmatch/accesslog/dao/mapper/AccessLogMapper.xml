@@ -4,7 +4,7 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ktdsuniversity.edu.bizmatch.accesslog.dao.AccessLogDao">
   
-  <insert id="insertNewAccessLog" 
+  <insert id="insertNewAccessLog"
   parameterType="com.ktdsuniversity.edu.bizmatch.accesslog.vo.AccessLogVO">
   INSERT INTO ACCSS_LOG
 	( ACCESS_LOG_ID
@@ -16,23 +16,22 @@
 	, ACCESS_IP
 	, LOGIN_SUCCESS_YN)
 	VALUES
-	( 'AL-' || TO_CHAR(SYSDATE, 'YYYYMMDD')|| '-' || LPAD(SEQ_ACCESS_LOG_PK.NEXTVAL, 6, '0')
-	, #{accessType}
-	, #{accessEmail}
-	, SYSDATE
-	, #{accessUrl}
-	, #{accessMethod}
-	, #{accessIp} 
-	, NVL(#{loginSuccessYn}, 'N'))
+	  ( 'AL-' || TO_CHAR(NOW(), 'YYYYMMDD') || '-' || LPAD(NEXTVAL('seq_access_log_pk')::text, 6, '0')
+	  , #{accessType}
+	  , #{accessEmail}
+	  , NOW()
+	  , #{accessUrl}
+	  , #{accessMethod}
+	  , #{accessIp}
+	  , COALESCE(#{loginSuccessYn}, 'N'))
   </insert>
-  
-  <select id="selectLoginFailCount"
-  resultType="_int" parameterType="string">
-  SELECT COUNT(1) 
+
+  <select id="selectLoginFailCount" resultType="_int" parameterType="string">
+  SELECT COUNT(1)
 	  FROM ACCSS_LOG
 	 WHERE ACCESS_IP = #{_parameter}
 	   AND ACCESS_TYPE ='LOGIN'
 	   AND LOGIN_SUCCESS_YN = 'N'
-	   AND ACCESS_TIME BETWEEN SYSDATE - 1/24 AND SYSDATE 
+	   AND ACCESS_TIME BETWEEN NOW() - INTERVAL '1 hour' AND NOW()
   </select>
 </mapper>
