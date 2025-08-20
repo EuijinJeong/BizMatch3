@@ -7,8 +7,8 @@ spring:
   datasource:
     url: jdbc:oracle:thin:@데이터베이스 주소 입력
     driver-class-name: oracle.jdbc.driver.OracleDriver
-    username: 사용자명 입력
-    password: 비밀번호 입력
+    username: modoo
+    password: modoo
   servlet:
     multipart:
       # 애플리케이션이 받을 수 있는 최대 업로드 용량(100MB)
@@ -86,6 +86,8 @@ app:
     acceptpath:
       http://3.34.180.91,
       http://localhost:3000,
+
+
 # Profile 분리
 ---
 spring:
@@ -99,4 +101,3 @@ app:
     base-dir: /usr/local/src/tomcat/apache-tomcat-10.1.33/uploadfiles
   cors:
     acceptpath:
-      http://3.34.180.91
