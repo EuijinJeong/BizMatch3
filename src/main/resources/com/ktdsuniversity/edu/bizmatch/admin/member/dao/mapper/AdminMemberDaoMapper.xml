@@ -5,8 +5,7 @@
 <mapper namespace="com.ktdsuniversity.edu.bizmatch.admin.member.dao.AdminMemberDao">
 
 	<!-- 회원의 회원가입 상태 활성화를 1로 바꾸는 쿼리문. -->
-	<update id="updateMemberSttActive" 
-			parameterType="java.util.List">
+	<update id="updateMemberSttActive" parameterType="java.util.List">
 		UPDATE MBR_INFO
 		   SET MBR_STT = 1
 		 WHERE EMIL_ADDR IN
@@ -17,12 +16,10 @@
 			 close=")">
 		#{email}
 	</foreach>
-</update>
+	</update>
 	
 	<!-- 이메일 정보로 한명의 회원 정보를 조회하는 쿼리문. -->
-	<select id="selectOneMember"
- 			parameterType="string"
- 			resultType = "com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO">
+	<select id="selectOneMember" parameterType="string" resultType = "com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO">
  		SELECT MBR_NM
 			  ,EMIL_ADDR
 			  ,PWD
@@ -52,9 +49,7 @@
  	</select>
 
  	
-	<select id="selectMemberCountByEmail"
-			parameterType="string"
-			resultType="int">
+	<select id="selectMemberCountByEmail" parameterType="string" resultType="int">
 		SELECT COUNT(*)
 		  FROM MBR_INFO
 		 WHERE EMIL_ADDR = #{_parameter}
@@ -63,8 +58,7 @@
 	</select>
 
 	
-	<select id="selectNotAssignedMemberList"
-			resultType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO">
+	<select id="selectNotAssignedMemberList" resultType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO">
 		SELECT MBR_NM,
 			   EMIL_ADDR,
 			   TO_CHAR(SGNUP_DT, 'YYYY-MM-DD') AS SGNUP_DT,
@@ -76,8 +70,7 @@
 	</select>
 	
 	<!-- 회원가입 승인 거절된 회원을 삭제하는 쿼리문. -->	
-	<delete id="deleteMember"
-			parameterType="list">
+	<delete id="deleteMember" parameterType="list">
 		DELETE
 		  FROM MBR_INFO
 		 WHERE EMIL_ADDR IN 
@@ -91,11 +84,12 @@
 	</delete>
 	
 	<!-- 전체 회원의 리스트를 조회하는 쿼리문. -->
-	<select id="selectMemberList"
-			resultType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO">
+	<select id="selectMemberList" resultType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO">
 		SELECT *
 		  FROM MBR_INFO MI
 	</select>
+
+
 	<update id="updateMemberPnlty" parameterType="list" >
 	UPDATE MBR_INFO
 	   SET PNLTY = PNLTY + 1
@@ -108,10 +102,12 @@
 			#{email}
 		</foreach>
 	</update>
+
+
 	<update id="updateMemberIsqt" parameterType="list" >
 	UPDATE MBR_INFO
 	   SET IS_QT = 1,
-	   	   QT_DT = SYSDATE,
+	   	   QT_DT = NOW(),
 	   	   MBR_PHN_NUM = null,
 	   	   BRTH_DT = null
 	 WHERE EMIL_ADDR IN
