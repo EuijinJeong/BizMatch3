@@ -5,28 +5,28 @@
 <mapper namespace="com.ktdsuniversity.edu.bizmatch.board.dao.BoardDao">
 
 	<!-- 게시글 목록 조회 쿼리 -->
-<select id="selectBoardList" resultType="com.ktdsuniversity.edu.bizmatch.board.vo.BoardVO">
-    SELECT 
-        i.PST_ID,
-        i.ATHR_ID,
-        i.PST_CTGRY,
-        i.PST_NM,
-        i.PST_CNTNT,
-        i.LST_MOD_DT,
-        i.IS_DLT,
-        i.DLT_DT,
-        i.PST_HT,
-        i.IS_PST_OPN,
-        m.MBR_NM
-    FROM IB_PST i
-    JOIN MBR_INFO m 
-        ON i.ATHR_ID = m.EMIL_ADDR
-    WHERE i.IS_DLT = 0 
-    ORDER BY 
-        CASE 
-            WHEN i.PST_CTGRY = 0 THEN 1
-        END, i.LST_MOD_DT DESC
-</select>
+	<select id="selectBoardList" resultType="com.ktdsuniversity.edu.bizmatch.board.vo.BoardVO">
+		SELECT
+			i.PST_ID,
+			i.ATHR_ID,
+			i.PST_CTGRY,
+			i.PST_NM,
+			i.PST_CNTNT,
+			i.LST_MOD_DT,
+			i.IS_DLT,
+			i.DLT_DT,
+			i.PST_HT,
+			i.IS_PST_OPN,
+			m.MBR_NM
+		FROM IB_PST i
+		JOIN MBR_INFO m
+			ON i.ATHR_ID = m.EMIL_ADDR
+		WHERE i.IS_DLT = 0
+		ORDER BY
+			CASE
+				WHEN i.PST_CTGRY = 0 THEN 1
+			END, i.LST_MOD_DT DESC
+	</select>
 	
 	<!-- 특정 게시글 조회 -->
 	<select id="selectOneBoard"
@@ -64,12 +64,12 @@
 			 , PST_HT
 			 , IS_PST_OPN)
 		VALUES
-			 ( IB_PST_PK_SEQ.NEXTVAL
+			 ( TO_CHAR(NOW(), 'YYYYMMDD') || LPAD(NEXTVAL('ib_pst_pk_seq')::text, 6, '0'),
 			 , #{athrId}
 			 , #{pstCtgry}
 			 , #{pstNm}
 			 , #{pstCntnt}
-			 , SYSDATE
+			 , NOW()
 			 , 0 
 			 , NULL
 			 , 0 
@@ -93,7 +93,7 @@
 			parameterType="string">
 		UPDATE IB_PST
    		   SET IS_DLT= '1' 
-      		 , DLT_DT= SYSDATE
+      		 , DLT_DT= NOW()
       	 WHERE PST_ID = #{_parameter}
 	</update>
 
@@ -107,7 +107,6 @@
 	
 
 	<!-- <select id="selectForPagination" 
-			
 			resultType="com.ktdsuniversity.edu.bizmatch.board.vo.BoardVO">
 		  SELECT *
 		    FROM ( SELECT ROWNUM as RNUM
@@ -166,7 +165,6 @@
 	<!-- <select id ="selectPaginationComment" 
 			parameterType="com.ktdsuniversity.edu.bizmatch.board.vo.BoardCommentPaginationVO"
 			resultType ="com.ktdsuniversity.edu.bizmatch.board.vo.BoardCommentVO">
-		
 		 		  SELECT *
 		    FROM ( SELECT ROWNUM as RNUM
 			 	 	    , S.*
@@ -205,10 +203,10 @@
 			 , DLT_DT
 			 , ATHR_ID )
 		VALUES 
-		     ( IB_CNT_PK_SEQ.NEXTVAL
+		     ( TO_CHAR(NOW(), 'YYYYMMDD') || LPAD(NEXTVAL('ib_cnt_pk_seq')::text, 6, '0')
 		     , #{pstId}
 		     , #{prntCmmntId}
-		     , SYSDATE
+		     , NOW()
 		     , #{cmmntCntnt}
 		     , 0 
 		     , NULL
@@ -220,7 +218,7 @@
 			parameterType="com.ktdsuniversity.edu.bizmatch.board.vo.BoardModifyCommentVO">
 		UPDATE IB_CNT
 		   SET 
-		       LST_MOD_DT = SYSDATE
+		       LST_MOD_DT = NOW()
 		     , CMMNT_CNTNT = #{cmmntCntnt}
 	 	 WHERE CMMNT_ID = #{cmmntId}
 	</update>
@@ -230,7 +228,7 @@
 			parameterType="string">
 		UPDATE IB_CNT
 		   SET IS_DLT= 1 
-		     , DLT_DT= SYSDATE
+		     , DLT_DT= NOW()
 		 WHERE CMMNT_ID =  #{_parameter}
 	</update>
 	

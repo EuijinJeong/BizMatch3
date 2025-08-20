@@ -16,8 +16,7 @@
 			<result property="cmmntId" column="CMMNT_ID"/>
 		</collection>
 	</resultMap>
-	<select id="selectAllReportReview" 
-			resultMap="reviewVOMap">
+	<select id="selectAllReportReview" resultMap="reviewVOMap">
 		SELECT PR.RVW_ID 
 			 , PR.RVW_CNTNT 
 			 , TO_CHAR(PR.RVW_DT, 'YYYY-MM-DD') RVW_DT
@@ -44,11 +43,7 @@
 		DELETE 
 		  FROM RVW_RPRT 
 		 WHERE RPRT_ID IN
-		<foreach collection="list" 
-				 item="rprtId" 
-				 open="(" 
-				 separator="," 
-				 close=")">
+		<foreach collection="list" item="rprtId" open="(" separator="," close=")">
 			#{rprtId}
 		</foreach>
 	</delete>
@@ -56,27 +51,18 @@
 	<update id="deleteReview" parameterType="string">
 		UPDATE PJ_RVW 
 		   SET IS_DLT = 1
-		     , DLT_DT = SYSDATE 
+		     , DLT_DT = NOW()
 		 WHERE RVW_ID IN 
-		 <foreach collection="list" 
-				 item="rprtId" 
-				 open="(" 
-				 separator="," 
-				 close=")">
+		 <foreach collection="list" item="rprtId" open="(" separator="," close=")">
 			#{rprtId}
 		</foreach>
 	</update>
 	
-	<update id="updateIsRprt" 
-			parameterType="list">
+	<update id="updateIsRprt" parameterType="list">
 		UPDATE RVW_RPRT 
 		   SET IS_RPRT = 1
 		 WHERE RPRT_ID IN 
-		 <foreach collection="list" 
-				 item="rprtId" 
-				 open="(" 
-				 separator="," 
-				 close=")">
+		 <foreach collection="list" item="rprtId" open="(" separator="," close=")">
 			#{rprtId}
 		</foreach>
 	</update>
