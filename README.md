@@ -11,12 +11,13 @@
 
 - **개발 기간**: 2024.07 ~ 2024.12
 - **참여 인원**: 4명 (본인: PM 및 백엔드 개발)
-- **배포 환경**: AWS EC2
+- **배포 환경**: AWS EC2 (http://3.34.180.91)
 
 <br>
 
 ## 🛠 기술 스택
 
+### Backend
 | 분류 | 기술 |
 |------|------|
 | Language | Java 17 |
@@ -24,16 +25,30 @@
 | Auth | JWT (jjwt 0.12.6) |
 | ORM | MyBatis 3.0.3 |
 | Database | Oracle |
-| View | JSP, JSTL |
 | Real-time | WebSocket |
 | Build | Maven |
-| Deploy | AWS EC2 |
 | Etc | Spring Mail, Jsoup (XSS 방어) |
+
+### Frontend
+| 분류 | 기술 |
+|------|------|
+| Framework | React |
+| 상태관리 | Redux Toolkit |
+| 라우팅 | React Router DOM |
+| 결제 | iamport |
+| 지도 | KakaoMap API |
+| Real-time | SockJS |
+
+### Infra
+| 분류 | 기술 |
+|------|------|
+| Deploy | AWS EC2 |
 
 <br>
 
 ## 📂 프로젝트 구조
 
+### Backend
 ```
 src/main/java/com/ktdsuniversity/edu/bizmatch/
 ├── member/         # 회원 가입·로그인·마이페이지 (기업/프리랜서)
@@ -53,6 +68,26 @@ src/main/java/com/ktdsuniversity/edu/bizmatch/
     └── utils/      # XSS 방어, 파라미터 유효성 검사
 ```
 
+### Frontend
+```
+src/
+├── components/
+│   ├── member/     # 회원가입, 로그인, 마이페이지 (기업/프리랜서)
+│   ├── project/    # 프로젝트 등록·검색·지원·댓글
+│   ├── payment/    # 결제 (착수금/잔금), 결제 내역
+│   ├── board/      # 게시판 목록·작성·수정·댓글
+│   ├── review/     # 리뷰 목록·카드
+│   ├── main/       # 메인 화면, 헤더, 푸터, 약관
+│   └── ui/         # 공통 모달, 레이아웃, 스피너 등
+├── admin/          # 관리자 페이지 (회원·프로젝트·리뷰 관리)
+├── stores/         # Redux Toolkit (슬라이스·썽크)
+├── pages/          # 페이지 단위 컴포넌트
+├── routers/        # React Router 라우팅 설정
+├── alarm/          # SockJS 실시간 알림
+└── utils/
+    └── hosts.js    # API 서버 호스트 환경 분기 (localhost / EC2)
+```
+
 <br>
 
 ## ✨ 주요 기능
@@ -61,23 +96,26 @@ src/main/java/com/ktdsuniversity/edu/bizmatch/
 - 기업/프리랜서 유형별 회원가입 및 로그인
 - Spring Security + JWT 기반 인증·인가
 - 이메일 인증, 비밀번호 재설정
-- 마이페이지 (포트폴리오, 보유 기술 관리)
+- 마이페이지 (포트폴리오, 보유 기술, 관심 산업 관리)
+- KakaoMap 주소 검색 연동
 
 **프로젝트**
 - 프로젝트 등록·수정·삭제·검색 (카테고리/키워드 필터)
 - 프로젝트 지원 및 파일 첨부
 - 스크랩 기능
+- 추가 모집 기능
 
 **결제**
-- 에스크로 방식 결제 (착수금·잔금 분리)
+- iamport 연동 결제
+- 에스크로 방식 (착수금·잔금 분리 처리)
 - 환불 처리
 
 **리뷰·신고**
 - 거래 완료 후 리뷰·평점 등록
 - 부적절 리뷰 신고 및 관리자 처리
 
-**실시간 채팅**
-- WebSocket 기반 1:1 채팅
+**실시간**
+- WebSocket + SockJS 기반 실시간 채팅 및 알림
 
 **관리자**
 - 회원 승인·정지, 프로젝트 관리, 신고 처리
@@ -101,19 +139,29 @@ src/main/java/com/ktdsuniversity/edu/bizmatch/
 
 ## ⚙️ 실행 방법
 
+### Backend
 ```bash
-# 1. 레포지토리 클론
 git clone https://github.com/EuijinJeong/BizMatch3.git
 cd BizMatch3
 
-# 2. application.properties 설정 (DB, Mail, JWT Secret 등)
-# src/main/resources/application.properties 참고
-
-# 3. 빌드 및 실행
+# application.properties 설정 (DB, Mail, JWT Secret 등)
 ./mvnw spring-boot:run
+```
+
+### Frontend
+```bash
+cd frontend
+npm install
+npm start
 ```
 
 > Oracle DB 연결 정보 및 JWT Secret Key는 환경변수 또는 별도 설정 파일로 관리해주세요.
 
 <br>
 
+## 📝 개선 예정
+
+- [ ] REST API 전환 (현재 JSP + React 혼용 → API 완전 분리)
+- [ ] JPA 도입 (현재 MyBatis)
+- [ ] 테스트 코드 작성
+- [ ] 브랜치 전략 적용 (feature 브랜치 → PR → merge)
