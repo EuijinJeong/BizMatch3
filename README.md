@@ -117,9 +117,3 @@ cd BizMatch3
 
 <br>
 
-## 📝 개선 예정
-
-- [ ] REST API 전환 (현재 JSP 기반 → API 분리)
-- [ ] JPA 도입 (현재 MyBatis)
-- [ ] 테스트 코드 작성
-- [ ] 브랜치 전략 적용 (feature 브랜치 → PR → merge)
