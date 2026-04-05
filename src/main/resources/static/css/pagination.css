@@ -1,0 +1,48 @@
+@charset "UTF-8";
+.page-div {
+  display: flex;
+  justify-content: center;
+}
+.pre-page-btn {
+  display: flex;
+  margin-right: 1vw;
+  gap: 1vw;
+}
+.page-number-btn {
+  display: flex;
+  gap: 10px;
+}
+.next-page-btn {
+  display: flex;
+  margin-left: 1vw;
+  gap: 1vw;
+}
+
+.white-text {
+  text-decoration: none;
+  color: black;
+}
+.white-text:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.3vh;
+  background-color: gray;
+  text-decoration-thickness: 1.3px; /* 강조를 위해 볼드 처리 */
+}
+.white-text {
+  color: white;
+  font-weight: 700;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding-left: 1.5vh;
+  padding-right: 1.5vh;
+  padding-top: 1vh;
+  padding-bottom: 1vh;
+  background-color: #7a88ff;
+  border-radius: 8px;
+}
+
+.active {
+  text-decoration: underline; /* 현재 페이지 언더라인 */
+  color: white;
+  text-underline-offset: 0.3vh;
+  text-decoration-thickness: 1.3px; /* 강조를 위해 볼드 처리 */
+}

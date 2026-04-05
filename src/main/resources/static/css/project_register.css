@@ -1,0 +1,371 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.project-register-title {
+  font-size: 3rem;
+}
+
+.project-register-page {
+  display: flex;
+  justify-content: center;
+  margin-top: 5rem;
+}
+
+.project-register-area {
+  width: 60%;
+}
+
+.project-register {
+  /* height: 100vh; */
+  padding: 2rem;
+  border-radius: 20px;
+  border: solid 1px #b0babf;
+  background-color: #f5f5f5;
+  padding-top: 5rem;
+}
+
+.project-category {
+  align-items: center;
+  display: grid;
+  grid-template-columns: 3.78rem 10rem 1fr 0.3rem 1fr;
+  grid-template-rows: 3.78rem;
+}
+
+.project-section-num {
+  width: 3.78rem;
+  height: 3.78rem;
+  /* margin: 0 12px 0 0; */
+  padding: 0.8rem;
+  border-radius: 50%;
+  border: solid 8px #f9f5ff;
+  background-color: #f4ebff;
+  font-weight: bold;
+  flex-basis: auto;
+}
+
+.project-section-name {
+  font-weight: bold;
+  flex-basis: 8rem;
+  flex-shrink: 0;
+}
+
+.level-category-area {
+  display: flex;
+}
+
+.level-category {
+  /* margin-left: 1rem; */
+  flex-grow: 1;
+  width: 5rem;
+  padding: 0.4rem;
+  border: solid 1px #dde2e4;
+  background-color: #fff;
+}
+
+.search-input {
+  padding: 0.4rem;
+  border: solid 1px #dde2e4;
+  background-color: #fff;
+  outline: none;
+}
+
+/* .project-register > div {
+  display: flex;
+} */
+
+.project-title,
+.project-contents,
+.project-schedule,
+.project-skill-size,
+.project-price,
+.project-apply-period,
+.file-attatchment,
+.project-team-size {
+  display: grid;
+  grid-template-columns: 3.78rem 10rem 1fr;
+  grid-template-rows: 3.78rem;
+  align-items: center;
+  /* margin-top: 1.2rem; */
+  /* gap: 1rem; */
+}
+
+.project-contents {
+  margin-top: 1rem;
+}
+
+.project-title {
+  margin-top: 1rem;
+}
+
+.project-schedule {
+  margin-top: 1rem;
+  display: flex;
+  grid-template-columns: 3.78rem 8rem 1fr;
+  grid-template-rows: 3.78rem;
+  align-items: center;
+}
+
+.project-title-input {
+  /* margin-left: 1rem; */
+  padding: 0.4rem;
+  border-radius: 0.2rem;
+  border: solid 1px #dde2e4;
+  background-color: #fff;
+  width: 100%;
+  outline: none;
+}
+
+.label {
+  font-weight: bold;
+  margin-left: 1.55vw;
+}
+
+.date-input {
+  margin-left: 1rem;
+  padding: 0.3rem;
+  border-radius: 0.2rem;
+  border: solid 1px #dde2e4;
+  background-color: #fff;
+  outline: none;
+}
+
+#finish-date {
+  margin-left: 10rem;
+}
+
+.project-contents {
+  /* display: flex; */
+  grid-template-rows: 30.56rem;
+  align-items: flex-start;
+  /* width: 100%; */
+}
+
+.project-skill-size {
+  grid-template-rows: 30rem;
+  align-items: flex-start;
+}
+
+.project-contents > .project-section-name {
+  padding-top: 1.3rem;
+}
+
+.project-contents-area {
+  display: flex;
+  align-items: flex-start;
+  /* margin-top: 2rem; */
+}
+
+/* .project-contents-area > .project-section-name {
+  margin-top: 1rem;
+} */
+
+.project-contents-input-area {
+  /* display: flex; */
+  width: 100%;
+  align-items: center;
+  /* margin-left: 3rem; */
+}
+
+.project-contents-input {
+  /* display: flex; */
+  width: 100%;
+  height: 50vh;
+  padding: 0.4rem;
+  border-radius: 0.2rem;
+  border: solid 1px #e4e4e7;
+  background-color: #fff;
+  outline: none;
+}
+
+.project-amount {
+  padding: 0.3rem;
+  border-radius: 0.2rem;
+  border: solid 1px #e4e4e7;
+  background-color: #fff;
+  outline: none;
+}
+
+.project-member-count {
+  outline: none;
+  padding: 0.4rem;
+  border-radius: 0.2rem;
+  border: solid 1px #e4e4e7;
+  background-color: #fff;
+}
+
+.important-message-area {
+  display: block;
+  text-align: right;
+}
+
+.important-message {
+  display: inline-block;
+  /* margin-left: 50rem; */
+  font-size: 12px;
+  line-height: 1.33;
+  letter-spacing: normal;
+  text-align: left;
+  color: #835101;
+  border-radius: 0.2rem;
+  background-color: #f8dd4e;
+}
+
+.btn-area {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.2rem;
+  margin-bottom: 3rem;
+}
+
+.project-register-btn {
+  background-color: #4758ee;
+  color: white;
+  border: none;
+  border-radius: 0.8rem;
+  padding: 1.2rem 1rem;
+  font-size: 1rem;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.3s;
+  /* width: 10rem; */
+}
+
+.project-register-btn:hover {
+  background-color: #3749d9;
+}
+
+.cancle-btn {
+  margin-left: 0.5rem;
+  padding: 1rem 2.3rem;
+  border-radius: 5rem;
+  border: solid 1px #000;
+  background-color: #fff;
+}
+
+.cancle-btn > span {
+  font-weight: bold;
+}
+
+.file-box {
+  /* display: flex; */
+  gap: 1rem;
+}
+
+input {
+  padding: 0.4rem;
+  border: solid 1px #dde2e4;
+  background-color: #fff;
+  outline: none;
+}
+
+.searchInput {
+  padding: 0.5rem;
+  width: 27.7rem;
+  padding-left: 2rem;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+li {
+  padding: 0.2rem;
+  border: 1px solid #ccc;
+  margin: 0.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* img {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 1rem;
+} */
+
+.fa-solid {
+  position: absolute;
+  left: 0.7rem;
+  top: 0.5rem;
+  color: gray;
+}
+
+.searchBox {
+  position: relative;
+}
+
+.resultBox {
+  position: relative;
+}
+
+.results {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  z-index: 2;
+  max-height: 200px;
+  overflow-y: auto;
+  display: none;
+  max-height: 10rem;
+  margin: 0;
+}
+
+.recommendSkill {
+  border: 1px solid #b0babf;
+  background-color: white;
+  padding: 1rem;
+}
+
+.skillStack-box {
+  width: 27.7rem;
+}
+
+.skill-circle {
+  border-radius: 2rem;
+  width: 4rem;
+  background-color: #dfdddd;
+  text-align: center;
+  padding: 0.3rem;
+  color: rgb(102, 101, 101);
+  cursor: pointer;
+}
+
+.selected {
+  background-color: #66ccff;
+  color: white;
+}
+.skill-box-container {
+  padding: 1rem 0;
+}
+
+.skill-circle-box {
+  padding: 0.5rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.result-skill-add-box {
+  padding-top: 1rem;
+  border-top: 1px solid gray;
+  height: 13rem;
+  color: gray;
+  overflow-y: auto;
+}
+
+/* 에러 메시지 스타일 */
+.error-message {
+  color: red;
+  font-size: 12px; /* 원하는 폰트 사이즈로 조절 */
+  margin-top: 5px;
+}
+
+/* 입력 필드 오류 시 테두리 스타일 */
+.input-error {
+  border-color: red;
+}

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ktdsuniversity.edu.bizmatch.admin.project.dao.AdminProjectDao">
+<resultMap
+      type="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectVO"
+      id="projectVOMap" autoMapping="true">
+      <id column="PJ_ID" property="pjId" />
+      <result column="INDSTR_NM" property="smjrNm"/>
+      <association property="memberVO"
+         javaType="com.ktdsuniversity.edu.bizmatch.member.vo.MemberVO"
+         autoMapping="true">
+         <id column="EMIL_ADDR" property="emilAddr" />
+      </association>
+      <association property="paymentVO" javaType="com.ktdsuniversity.edu.bizmatch.payment.vo.PaymentVO" autoMapping="true">
+         <id column="PYMNT_ID" property="pymntId"/>
+      </association>
+      <collection property="projectSkillList"
+                ofType="com.ktdsuniversity.edu.bizmatch.project.vo.ProjectSkillVO"
+                autoMapping="true">
+         <id column="PJ_PRM_STK_ID" property="pjPrmStkId"/>
+         <association property="prmStkVO"
+                   javaType="com.ktdsuniversity.edu.bizmatch.member.vo.PrmStkVO"
+                   autoMapping="true">
+            <id column="PRM_STK_ID" property="prmStkId"/>
+         </association>
+      </collection>
+   </resultMap>
+	<select id="selectAllProject" resultMap="projectVOMap">
+	 SELECT P.PJ_ID
+				, P.ORDR_ID
+				, P.OBTN_ID
+				, P.PJ_TTL
+				, TO_CHAR(P.RGSTR_DT,'YYYY-MM-DD') RGSTR_DT 
+				, TO_CHAR(P.STRT_DT, 'YYYY-MM-DD') STRT_DT 
+				, TO_CHAR(P.END_DT, 'YYYY-MM-DD') END_DT
+				, P.CNTRCT_ACCNT
+				, P.PJ_DESC
+				, P.IS_DLT
+				, TO_CHAR(P.DLT_DT, 'YYYY-MM-DD') DLT_DT
+				, P.LST_MOD_DT
+				, P.IS_RCRUT_ADD
+				, P.PJ_STT
+				, P.VIEW_CNT
+				, P.PJ_RCRUT_CNT
+				, TO_CHAR(P.PJ_RCRUT_STRT_DT, 'YYYY-MM-DD') PJ_RCRUT_STRT_DT
+				, TO_CHAR(P.PJ_RCRUT_END_DT,'YYYY-MM-DD') PJ_RCRUT_END_DT
+				, PI.PJ_INDSTR_ID
+				, PI.MJR_ID
+				, PI.SMJR_ID
+				, PPS.PJ_PRM_STK_ID 
+				, II.INDSTR_ID
+				, II.INDSTR_NM
+				, II.UPPR_INDSTR_ID
+				, PRM.PRM_STK_ID
+				, PRM.PRM_STK
+				, PY.PYMNT_ID 
+				, PY.GRNT_AMT 
+				, PY.CNTRCT_AMT 
+				, PY.GRNT_PD_DT 
+				, PY.CNTRCT_PD_DT 
+				, PY.ACCNT_NM 
+				, PY.PYMNT_TYP 
+				, PY.IMP_UID 
+				, PY.DPST_RFND_AMNT 
+				, PY.DPST_RFND_DT 
+				  FROM PJ_INFO P
+				  JOIN PJ_INDSTR PI
+				    ON P.PJ_ID = PI.PJ_ID 
+				  JOIN INDSTR_INFO II
+				    ON II.INDSTR_ID = PI.SMJR_ID
+				  JOIN PJ_PRM_STK PPS
+				    ON PPS.PJ_ID = P.PJ_ID 
+				  JOIN PRM_STK PRM
+				    ON PRM.PRM_STK_ID = PPS.PRM_STK_ID
+				  JOIN PYMNT_INFO PY
+				    ON PY.PJ_ID = P.PJ_ID
+	</select>
+
+	<update id="deleteOneProject" parameterType="string">
+		UPDATE PJ_INFO 
+		   SET IS_DLT = 1,
+		       DLT_DT = SYSDATE
+		 WHERE PJ_ID = {_parameter}
+	</update>
+	<update id="deleteProject" parameterType="list">
+	   UPDATE PJ_INFO
+	   SET IS_DLT = 1,
+	       DLT_DT = SYSDATE
+	   WHERE PJ_ID IN
+		<foreach item="pjId" collection="list" open="(" close=")" separator=",">
+	       #{pjId}
+	</foreach>
+	</update>
+</mapper>

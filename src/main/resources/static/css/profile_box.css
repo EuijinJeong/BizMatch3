@@ -1,0 +1,58 @@
+.profile {
+  display: flex;
+  justify-content: center;
+}
+
+.profile-box {
+  padding: 1%;
+  display: flex;
+  border-radius: 1rem;
+  width: 70%;
+  /* background-color: rgb(240, 240, 240); */
+  background-color: #f2f5fd;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 6px 6px rgba(0, 0, 0, 0.1);
+  font-size: 1rem;
+}
+
+.img {
+  width: 15%;
+  border-radius: 50%;
+  height: 100%;
+  margin-right: 3%;
+}
+
+.information {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: space-evenly;
+}
+
+.homepage-button {
+  display: flex;
+  position: relative;
+  width: 95%;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.button-box {
+  width: 10%;
+}
+
+.edit-button {
+  /* background-color: #b18ee8; */
+  background-color: #5985ff;
+  border-radius: 1rem;
+  color: white;
+  font-weight: bold;
+  width: 100%;
+  border: none;
+  padding: 1rem;
+  cursor:pointer;
+}
+
+.edit-button:hover{
+	background-color: #0000ff;
+}

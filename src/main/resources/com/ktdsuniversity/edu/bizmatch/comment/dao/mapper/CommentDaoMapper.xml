@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ktdsuniversity.edu.bizmatch.comment.dao.CommentDao">
+
+	<select id="selectComment" 
+			parameterType="string"
+			resultType="com.ktdsuniversity.edu.bizmatch.comment.vo.CommentVO">
+		 SELECT LEVEL as LV
+		 	  , p.PJ_CMMNT_ID
+		      , p.PJ_ID
+		      , p.PRNT_CMMNT_ID
+			  , p.CMMNT_CNTNT
+			  , p.CRTD_DT
+			  , p.LST_MOD_DT
+			  , p.IS_DLT
+			  , p.DLT_DT
+			  , p.ATHR_ID
+			  , m.MBR_NM
+	  	   FROM PJ_CMMNT p
+	  	  INNER JOIN MBR_INFO m
+	  	     ON p.ATHR_ID = m.EMIL_ADDR
+	 	  WHERE PJ_ID = #{_parameter}
+	   		<!-- AND DLT_DT IS NULL -->
+	   	  START WITH PRNT_CMMNT_ID IS NULL
+	   	    AND IS_DLT = '0'
+	   	CONNECT BY PRIOR PJ_CMMNT_ID = PRNT_CMMNT_ID
+	   	  ORDER SIBLINGS BY CRTD_DT DESC
+		<!-- CONNECT BY PRIOR PJ_CMMNT_ID = PRNT_CMMNT_ID     -->
+	</select>
+
+
+	<update id="updateOneComment"
+			parameterType="com.ktdsuniversity.edu.bizmatch.comment.vo.CommentModifyVO">
+	     UPDATE PJ_CMMNT
+			SET 
+			    CMMNT_CNTNT= #{cmmntCntnt}
+			  , LST_MOD_DT= SYSDATE
+		  WHERE PJ_CMMNT_ID= #{id} 
+			
+			
+	</update>
+	
+	<update id ="deleteChildComment">
+		UPDATE PJ_CMMNT
+		   SET DLT_DT = SYSDATE
+		     , IS_DLT = 1
+		 WHERE PJ_CMMNT_ID
+		    IN (
+				SELECT PJ_CMMNT_ID 
+				  FROM PJ_CMMNT
+				 START WITH PRNT_CMMNT_ID IS NULL
+	   	   		   AND IS_DLT = '1'
+	   		    CONNECT BY PRIOR PJ_CMMNT_ID = PRNT_CMMNT_ID
+	   		    )   
+	</update>
+		
+	 <update id="deleteOneComment"
+			parameterType="string">
+			
+		UPDATE PJ_CMMNT
+		   SET DLT_DT = SYSDATE
+		     , IS_DLT = 1
+		  WHERE PJ_CMMNT_ID = #{_parameter} 
+	</update>
+	<insert id= "insertNewComment" 
+			parameterType="com.ktdsuniversity.edu.bizmatch.comment.vo.CommentWriteVO"
+			>
+		INSERT INTO PJ_CMMNT
+			 ( PJ_CMMNT_ID
+			 , PJ_ID
+			 , PRNT_CMMNT_ID
+			 , CMMNT_CNTNT
+			 , CRTD_DT
+			 , LST_MOD_DT
+			 , IS_DLT
+			 , DLT_DT
+			 , ATHR_ID)
+		VALUES(
+			   PJ_CMMNT_PK_SEQ.NEXTVAL
+		     , #{pjId}
+		     , #{pjCmmntId} <!-- #{prntCmmntId} -->
+		     , #{cmmntCntnt}
+		     , SYSDATE
+		     , NULL
+		     , 0
+		     , NULL
+		     , #{athrId} )
+					
+	</insert>
+	
+	<select id="selectForPagination" 
+			parameterType="com.ktdsuniversity.edu.bizmatch.common.vo.PaginationVO"
+			resultType="com.ktdsuniversity.edu.bizmatch.comment.vo.CommentVO">
+		  SELECT *
+		    FROM ( SELECT ROWNUM as RNUM
+			 	 	    , S.*
+				     FROM ( SELECT LEVEL as LV
+					 	  , p.PJ_CMMNT_ID
+					      , p.PJ_ID
+					      , p.PRNT_CMMNT_ID
+						  , p.CMMNT_CNTNT
+						  , p.CRTD_DT
+						  , p.LST_MOD_DT
+						  , p.IS_DLT
+						  , p.DLT_DT
+						  , p.ATHR_ID
+						  , m.MBR_NM
+				  	   FROM PJ_CMMNT p
+				  	  INNER JOIN MBR_INFO m
+				  	     ON p.ATHR_ID = m.EMIL_ADDR
+				 	  WHERE PJ_ID = #{searchIdParam}
+				   	  START WITH PRNT_CMMNT_ID IS NULL
+				   	    AND IS_DLT = '0'
+				   	CONNECT BY PRIOR PJ_CMMNT_ID = PRNT_CMMNT_ID
+					ORDER SIBLINGS BY CRTD_DT DESC ) S
+					WHERE ROWNUM <![CDATA[<=]]> (#{currPageNo} + 1)*#{exposureListSize} )
+				  WHERE RNUM <![CDATA[>=]]> #{currPageNo} * #{exposureListSize} + 1
+	</select>
+	
+</mapper>

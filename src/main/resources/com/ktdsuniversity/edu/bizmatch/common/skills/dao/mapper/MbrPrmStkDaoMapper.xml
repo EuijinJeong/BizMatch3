@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ktdsuniversity.edu.bizmatch.common.skills.dao.MbrPrmStkDao">
+
+	<!-- 회원 보유 기술 추가 -->
+	<insert id="insertMbrSkill" parameterType="com.ktdsuniversity.edu.bizmatch.common.skills.vo.MbrPrmStkVO">
+	INSERT INTO MBR_PRM_STK 
+		( MBR_PRM_STK_ID
+		, PRM_STK_ID
+		, EMIL_ADDR)
+		VALUES
+		( 'MPS' || '-'||TO_CHAR(SYSDATE, 'YYYYMMDD')||'-'|| LPAD(MBR_PRM_STK_PK_SEQ.NEXTVAL, 6, '0')
+		, #{prmStkId}
+		, #{emilAddr} )
+	</insert>
+	<!-- 회원 보유 기술 가져오기 -->
+	<resultMap type="com.ktdsuniversity.edu.bizmatch.common.skills.vo.MbrPrmStkVO" id="MbrPrmStkVOMap" autoMapping="true">
+		<id column="MBR_PRM_STK_ID" property="mbrPrmStkId" />
+		<association property="prmStkVO" javaType="com.ktdsuniversity.edu.bizmatch.member.vo.PrmStkVO" autoMapping="true">
+			<id column="PRM_STK_ID" property="prmStkId" />
+		</association>
+	</resultMap>
+	<select id="selectMbrSkill" parameterType="string" resultMap="MbrPrmStkVOMap">
+	SELECT MPS.MBR_PRM_STK_ID 
+		 , PS.PRM_STK_ID 
+		 , MPS.EMIL_ADDR 
+		 , PS.PRM_STK
+	  FROM MBR_PRM_STK MPS
+	  JOIN PRM_STK PS
+	    ON PS.PRM_STK_ID = MPS.PRM_STK_ID 
+	 WHERE MPS.EMIL_ADDR = #{_parameter}
+	</select>
+	<!-- 회원 보유기술 지우기 -->
+	<delete id="deleteMbrSkill" parameterType="string">
+	DELETE FROM MBR_PRM_STK
+     WHERE EMIL_ADDR = #{_parameter}
+	</delete>
+
+	<select id="selectMbrCmpnySkill" parameterType="string" resultMap="MbrPrmStkVOMap">
+		SELECT MPS.MBR_PRM_STK_ID 
+			 , PS.PRM_STK_ID 
+			 , MPS.EMIL_ADDR 
+			 , PS.PRM_STK
+		  FROM MBR_PRM_STK MPS
+		  JOIN PRM_STK PS
+		    ON PS.PRM_STK_ID = MPS.PRM_STK_ID 
+		 WHERE MPS.EMIL_ADDR IN (SELECT EMIL_ADDR FROM MBR_INFO WHERE CMP_ID = #{_parameter})
+	</select>
+</mapper>
