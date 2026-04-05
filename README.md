@@ -158,10 +158,3 @@ npm start
 > Oracle DB 연결 정보 및 JWT Secret Key는 환경변수 또는 별도 설정 파일로 관리해주세요.
 
 <br>
-
-## 📝 개선 예정
-
-- [ ] REST API 전환 (현재 JSP + React 혼용 → API 완전 분리)
-- [ ] JPA 도입 (현재 MyBatis)
-- [ ] 테스트 코드 작성
-- [ ] 브랜치 전략 적용 (feature 브랜치 → PR → merge)
