@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://호스트:5432/데이터베이스명
+    driver-class-name: org.postgresql.Driver
+    username: 사용자명 입력
+    password: 비밀번호 입력
+
+mybatis:
+  mapper-locations: classpath:com/ktdsuniversity/edu/bizmatch/**/dao/mapper/postgresql/*.xml

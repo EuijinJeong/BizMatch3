@@ -1,14 +1,8 @@
 spring:
   profiles:
-    active: dev
+    active: dev,oracle   # postgresql/oracle 선택 가능
   application:
-    name: hello-spring
-  # 데이터 연결을 위한 설정
-  datasource:
-    url: jdbc:oracle:thin:@데이터베이스 주소 입력
-    driver-class-name: oracle.jdbc.driver.OracleDriver
-    username: 사용자명 입력
-    password: 비밀번호 입력
+    name: bizmatch
   servlet:
     multipart:
       # 애플리케이션이 받을 수 있는 최대 업로드 용량(100MB)
@@ -28,11 +22,9 @@ spring:
           timeout: 5000
           starttls:
             enable: true
-# mybatis 설정 파일의 경로 지정.
+# mybatis 설정 파일의 경로 지정. (mapper-locations는 oracle/postgresql 프로파일에서 지정)
 mybatis:
-  # mybatis-config.xml 파일의 위치를 지정.
   config-location: classpath:mybatis/mybatisconfig.xml
-  mapper-locations: classpath:com/ktdsuniversity/edu/bizmatch/**/dao/mapper/*.xml
 
 # Application 전용 설정. (Spring과 관계 없음.)
 app:

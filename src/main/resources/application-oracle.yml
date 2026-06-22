@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:oracle:thin:@데이터베이스 주소 입력
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+    username: 사용자명 입력
+    password: 비밀번호 입력
+
+mybatis:
+  mapper-locations: classpath:com/ktdsuniversity/edu/bizmatch/**/dao/mapper/*.xml
