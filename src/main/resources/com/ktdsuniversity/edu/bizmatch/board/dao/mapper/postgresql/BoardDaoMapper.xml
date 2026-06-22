@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ktdsuniversity.edu.bizmatch.board.dao.BoardDao">
+
+	<select id="selectBoardList" resultType="com.ktdsuniversity.edu.bizmatch.board.vo.BoardVO">
+	    SELECT
+	        i.PST_ID,
+	        i.ATHR_ID,
+	        i.PST_CTGRY,
+	        i.PST_NM,
+	        i.PST_CNTNT,
+	        i.LST_MOD_DT,
+	        i.IS_DLT,
+	        i.DLT_DT,
+	        i.PST_HT,
+	        i.IS_PST_OPN,
+	        m.MBR_NM
+	    FROM IB_PST i
+	    JOIN MBR_INFO m
+	        ON i.ATHR_ID = m.EMIL_ADDR
+	    WHERE i.IS_DLT = 0
+	    ORDER BY
+	        CASE
+	            WHEN i.PST_CTGRY = 0 THEN 1
+	        END, i.LST_MOD_DT DESC
+	</select>
+
+	<select id="selectOneBoard"
+			parameterType="string"
+			resultType="com.ktdsuniversity.edu.bizmatch.board.vo.BoardVO">
+		SELECT i.PST_ID,
+			   i.ATHR_ID,
+			   i.PST_CTGRY,
+			   i.PST_NM,
+			   i.PST_CNTNT,
+			   i.LST_MOD_DT,
+			   i.IS_DLT,
+			   i.DLT_DT,
+			   i.PST_HT,
+			   i.IS_PST_OPN,
+		       m.MBR_NM
+		  FROM IB_PST i
+		  JOIN MBR_INFO m
+		    ON i.ATHR_ID = m.EMIL_ADDR
+		 WHERE PST_ID = #{_parameter}
+	</select>
+
+	<insert id="insertPost"
+			parameterType="com.ktdsuniversity.edu.bizmatch.board.vo.BoardWriteVO">
+		INSERT INTO IB_PST
+			 ( PST_ID
+			 , ATHR_ID
+			 , PST_CTGRY
+			 , PST_NM
+			 , PST_CNTNT
+			 , LST_MOD_DT
+			 , IS_DLT
+			 , DLT_DT
+			 , PST_HT
+			 , IS_PST_OPN)
+		VALUES
+			 ( NEXTVAL('IB_PST_PK_SEQ')
+			 , #{athrId}
+			 , #{pstCtgry}
+			 , #{pstNm}
+			 , #{pstCntnt}
+			 , NOW()
+			 , 0
+			 , NULL
+			 , 0
+			 , #{isPstOpn} )
+	</insert>
+
+	<update id="updateModifyPost"
+			parameterType="com.ktdsuniversity.edu.bizmatch.board.vo.BoardModifyVO">
+		UPDATE IB_PST
+		   SET PST_CTGRY = #{pstCtgry}
+		   	 , PST_NM = #{pstNm}
+		  	 , PST_CNTNT = #{pstCntnt}
+		  	 , LST_MOD_DT = NOW()
+		     , IS_PST_OPN = #{isPstOpn}
+		 WHERE PST_ID = #{pstId}
+	</update>
+
+	<update id="updateDeletePost"
+			parameterType="string">
+		UPDATE IB_PST
+   		   SET IS_DLT = '1'
+      		 , DLT_DT = NOW()
+      	 WHERE PST_ID = #{_parameter}
+	</update>
+
+	<update id="updateIncreaseViews"
+			parameterType="string">
+		UPDATE IB_PST
+   		   SET PST_HT = PST_HT + 1
+   		 WHERE PST_ID = #{_parameter}
+	</update>
+
+	<!-- CONNECT BY PRIOR → WITH RECURSIVE
+	     ORDER SIBLINGS BY LST_MOD_DT DESC 재현: inverted-epoch sort_path -->
+	<select id="selectBoardComment"
+			parameterType="string"
+			resultType="com.ktdsuniversity.edu.bizmatch.board.vo.BoardCommentVO">
+		WITH RECURSIVE cte AS (
+		    SELECT 1 AS LV
+		         , i.CMMNT_ID
+		         , i.PST_ID
+		         , i.PRNT_CMMNT_ID
+		         , i.LST_MOD_DT
+		         , i.CMMNT_CNTNT
+		         , i.IS_DLT
+		         , i.DLT_DT
+		         , i.ATHR_ID
+		         , m.MBR_NM
+		         , ARRAY[LPAD((9999999999 - EXTRACT(EPOCH FROM i.LST_MOD_DT)::bigint)::text, 11, '0')] AS sort_path
+		      FROM IB_CNT i
+		     INNER JOIN MBR_INFO m ON i.ATHR_ID = m.EMIL_ADDR
+		     WHERE i.PST_ID = #{_parameter}
+		       AND i.PRNT_CMMNT_ID IS NULL
+		       AND i.IS_DLT = '0'
+		    UNION ALL
+		    SELECT cte.LV + 1
+		         , i.CMMNT_ID
+		         , i.PST_ID
+		         , i.PRNT_CMMNT_ID
+		         , i.LST_MOD_DT
+		         , i.CMMNT_CNTNT
+		         , i.IS_DLT
+		         , i.DLT_DT
+		         , i.ATHR_ID
+		         , m.MBR_NM
+		         , cte.sort_path || LPAD((9999999999 - EXTRACT(EPOCH FROM i.LST_MOD_DT)::bigint)::text, 11, '0')
+		      FROM IB_CNT i
+		     INNER JOIN MBR_INFO m ON i.ATHR_ID = m.EMIL_ADDR
+		     INNER JOIN cte ON i.PRNT_CMMNT_ID = cte.CMMNT_ID
+		)
+		SELECT LV, CMMNT_ID, PST_ID, PRNT_CMMNT_ID, LST_MOD_DT,
+		       CMMNT_CNTNT, IS_DLT, DLT_DT, ATHR_ID, MBR_NM
+		  FROM cte
+		 ORDER BY sort_path ASC
+	</select>
+
+	<insert id="insertBoardComment"
+			parameterType="com.ktdsuniversity.edu.bizmatch.board.vo.BoardCommentWriteVO">
+		INSERT INTO IB_CNT
+			 ( CMMNT_ID
+			 , PST_ID
+			 , PRNT_CMMNT_ID
+			 , LST_MOD_DT
+			 , CMMNT_CNTNT
+			 , IS_DLT
+			 , DLT_DT
+			 , ATHR_ID )
+		VALUES
+		     ( NEXTVAL('IB_CNT_PK_SEQ')
+		     , #{pstId}
+		     , #{prntCmmntId}
+		     , NOW()
+		     , #{cmmntCntnt}
+		     , 0
+		     , NULL
+		     , #{athrId} )
+	</insert>
+
+	<update id="updateBoardComment"
+			parameterType="com.ktdsuniversity.edu.bizmatch.board.vo.BoardModifyCommentVO">
+		UPDATE IB_CNT
+		   SET
+		       LST_MOD_DT = NOW()
+		     , CMMNT_CNTNT = #{cmmntCntnt}
+		 WHERE CMMNT_ID = #{cmmntId}
+	</update>
+
+	<update id="updateDeleteState"
+			parameterType="string">
+		UPDATE IB_CNT
+		   SET IS_DLT = 1
+		     , DLT_DT = NOW()
+		 WHERE CMMNT_ID = #{_parameter}
+	</update>
+
+</mapper>

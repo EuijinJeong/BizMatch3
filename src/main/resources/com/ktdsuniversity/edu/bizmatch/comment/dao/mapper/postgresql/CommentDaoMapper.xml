@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ktdsuniversity.edu.bizmatch.comment.dao.CommentDao">
+
+	<!-- CONNECT BY PRIOR → WITH RECURSIVE
+	     ORDER SIBLINGS BY CRTD_DT DESC 재현:
+	     inverted-epoch 텍스트를 배열로 누적 → ORDER BY sort_path ASC -->
+	<select id="selectComment"
+			parameterType="string"
+			resultType="com.ktdsuniversity.edu.bizmatch.comment.vo.CommentVO">
+		WITH RECURSIVE cte AS (
+		    SELECT 1 AS LV
+		         , p.PJ_CMMNT_ID
+		         , p.PJ_ID
+		         , p.PRNT_CMMNT_ID
+		         , p.CMMNT_CNTNT
+		         , p.CRTD_DT
+		         , p.LST_MOD_DT
+		         , p.IS_DLT
+		         , p.DLT_DT
+		         , p.ATHR_ID
+		         , m.MBR_NM
+		         , ARRAY[LPAD((9999999999 - EXTRACT(EPOCH FROM p.CRTD_DT)::bigint)::text, 11, '0')] AS sort_path
+		      FROM PJ_CMMNT p
+		     INNER JOIN MBR_INFO m ON p.ATHR_ID = m.EMIL_ADDR
+		     WHERE p.PJ_ID = #{_parameter}
+		       AND p.PRNT_CMMNT_ID IS NULL
+		       AND p.IS_DLT = '0'
+		    UNION ALL
+		    SELECT cte.LV + 1
+		         , p.PJ_CMMNT_ID
+		         , p.PJ_ID
+		         , p.PRNT_CMMNT_ID
+		         , p.CMMNT_CNTNT
+		         , p.CRTD_DT
+		         , p.LST_MOD_DT
+		         , p.IS_DLT
+		         , p.DLT_DT
+		         , p.ATHR_ID
+		         , m.MBR_NM
+		         , cte.sort_path || LPAD((9999999999 - EXTRACT(EPOCH FROM p.CRTD_DT)::bigint)::text, 11, '0')
+		      FROM PJ_CMMNT p
+		     INNER JOIN MBR_INFO m ON p.ATHR_ID = m.EMIL_ADDR
+		     INNER JOIN cte ON p.PRNT_CMMNT_ID = cte.PJ_CMMNT_ID
+		)
+		SELECT LV, PJ_CMMNT_ID, PJ_ID, PRNT_CMMNT_ID, CMMNT_CNTNT,
+		       CRTD_DT, LST_MOD_DT, IS_DLT, DLT_DT, ATHR_ID, MBR_NM
+		  FROM cte
+		 ORDER BY sort_path ASC
+	</select>
+
+	<update id="updateOneComment"
+			parameterType="com.ktdsuniversity.edu.bizmatch.comment.vo.CommentModifyVO">
+	     UPDATE PJ_CMMNT
+			SET
+			    CMMNT_CNTNT = #{cmmntCntnt}
+			  , LST_MOD_DT = NOW()
+		  WHERE PJ_CMMNT_ID = #{id}
+	</update>
+
+	<!-- CONNECT BY → WITH RECURSIVE CTE in UPDATE -->
+	<update id="deleteChildComment">
+		WITH RECURSIVE cte AS (
+		    SELECT PJ_CMMNT_ID
+		      FROM PJ_CMMNT
+		     WHERE PRNT_CMMNT_ID IS NULL AND IS_DLT = '1'
+		    UNION ALL
+		    SELECT p.PJ_CMMNT_ID
+		      FROM PJ_CMMNT p
+		     INNER JOIN cte ON p.PRNT_CMMNT_ID = cte.PJ_CMMNT_ID
+		)
+		UPDATE PJ_CMMNT
+		   SET DLT_DT = NOW()
+		     , IS_DLT = 1
+		 WHERE PJ_CMMNT_ID IN (SELECT PJ_CMMNT_ID FROM cte)
+	</update>
+
+	<update id="deleteOneComment"
+			parameterType="string">
+		UPDATE PJ_CMMNT
+		   SET DLT_DT = NOW()
+		     , IS_DLT = 1
+		  WHERE PJ_CMMNT_ID = #{_parameter}
+	</update>
+
+	<insert id="insertNewComment"
+			parameterType="com.ktdsuniversity.edu.bizmatch.comment.vo.CommentWriteVO">
+		INSERT INTO PJ_CMMNT
+			 ( PJ_CMMNT_ID
+			 , PJ_ID
+			 , PRNT_CMMNT_ID
+			 , CMMNT_CNTNT
+			 , CRTD_DT
+			 , LST_MOD_DT
+			 , IS_DLT
+			 , DLT_DT
+			 , ATHR_ID)
+		VALUES(
+			   NEXTVAL('PJ_CMMNT_PK_SEQ')
+		     , #{pjId}
+		     , #{pjCmmntId}
+		     , #{cmmntCntnt}
+		     , NOW()
+		     , NULL
+		     , 0
+		     , NULL
+		     , #{athrId} )
+	</insert>
+
+	<!-- CONNECT BY + ROWNUM 페이지네이션 → WITH RECURSIVE + LIMIT/OFFSET -->
+	<select id="selectForPagination"
+			parameterType="com.ktdsuniversity.edu.bizmatch.common.vo.PaginationVO"
+			resultType="com.ktdsuniversity.edu.bizmatch.comment.vo.CommentVO">
+		WITH RECURSIVE cte AS (
+		    SELECT 1 AS LV
+		         , p.PJ_CMMNT_ID
+		         , p.PJ_ID
+		         , p.PRNT_CMMNT_ID
+		         , p.CMMNT_CNTNT
+		         , p.CRTD_DT
+		         , p.LST_MOD_DT
+		         , p.IS_DLT
+		         , p.DLT_DT
+		         , p.ATHR_ID
+		         , m.MBR_NM
+		         , ARRAY[LPAD((9999999999 - EXTRACT(EPOCH FROM p.CRTD_DT)::bigint)::text, 11, '0')] AS sort_path
+		      FROM PJ_CMMNT p
+		     INNER JOIN MBR_INFO m ON p.ATHR_ID = m.EMIL_ADDR
+		     WHERE p.PJ_ID = #{searchIdParam}
+		       AND p.PRNT_CMMNT_ID IS NULL
+		       AND p.IS_DLT = '0'
+		    UNION ALL
+		    SELECT cte.LV + 1
+		         , p.PJ_CMMNT_ID
+		         , p.PJ_ID
+		         , p.PRNT_CMMNT_ID
+		         , p.CMMNT_CNTNT
+		         , p.CRTD_DT
+		         , p.LST_MOD_DT
+		         , p.IS_DLT
+		         , p.DLT_DT
+		         , p.ATHR_ID
+		         , m.MBR_NM
+		         , cte.sort_path || LPAD((9999999999 - EXTRACT(EPOCH FROM p.CRTD_DT)::bigint)::text, 11, '0')
+		      FROM PJ_CMMNT p
+		     INNER JOIN MBR_INFO m ON p.ATHR_ID = m.EMIL_ADDR
+		     INNER JOIN cte ON p.PRNT_CMMNT_ID = cte.PJ_CMMNT_ID
+		)
+		SELECT LV, PJ_CMMNT_ID, PJ_ID, PRNT_CMMNT_ID, CMMNT_CNTNT,
+		       CRTD_DT, LST_MOD_DT, IS_DLT, DLT_DT, ATHR_ID, MBR_NM
+		  FROM cte
+		 ORDER BY sort_path ASC
+		 LIMIT #{exposureListSize}
+		OFFSET #{currPageNo} * #{exposureListSize}
+	</select>
+
+</mapper>
