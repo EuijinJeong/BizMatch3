@@ -95,11 +95,6 @@
 		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>
 			<artifactId>tomcat-embed-jasper</artifactId>
-			<!-- <version>10.1.30</version>-->
-			<!-- Spring Boot에서 관리하는 라이브러리의 경우는
-				버전을 작성하지 않는다.
-				이유 : Spring Boot와 연관성 때문에, 버전을 작성할 경우 애플리케이션이
-				올바르게 동작하지 않을 수 있기 때문에.-->
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
